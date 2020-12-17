@@ -1,0 +1,16 @@
+image: alpine
+
+stages:
+  - install
+  - deploy
+
+include:
+  # General Jobs
+  - local: ci/node-serverless.yml 
+  - local: ci/java-docker.yml
+  # Specific jobs
+  - local: lifx-service/ci.yml
+  - local: hue-service/ci.yml
+  - local: db-service/ci.yml
+  - local: telegram-service/ci.yml
+  - local: fritz-service/ci.yml

@@ -1,0 +1,26 @@
+service: lifx-service
+frameworkVersion: '2'
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+custom: 
+  webpack:
+    includeModules: true
+    packager: "npm"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: eu-central-1
+
+functions:
+  api:
+    handler: src/handler.api
+    events:
+      - http: 
+          path: /
+          method: ANY
+          cors: true

@@ -1,0 +1,14 @@
+.install_node_sls_job:
+  image: node:latest
+  stage: install
+  when: manual
+  script:
+    - npm install
+
+.deploy_node_sls_job:
+  image: node:latest
+  stage: deploy
+  before_script:
+    - npm install -g serverless@latest
+  script:
+    - serverless deploy

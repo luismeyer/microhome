@@ -1,0 +1,24 @@
+# Install node dependencies
+install:hue-service:
+  extends: .install_node_sls_job
+  artifacts:
+    paths:
+      - hue-service/node_modules/
+  cache:
+    untracked: true
+    key: "$CI_BUILD_REF_NAME"
+    paths:
+      - hue-service/node_modules/
+  before_script:
+    - cd hue-service
+
+
+# Deploy service with the serverless framework
+deploy:hue-service:
+  extends: .deploy_node_sls_job
+  needs:
+    - job: install:hue-service
+      artifacts: true
+  before_script:
+    - npm install -g serverless@latest
+    - cd hue-service

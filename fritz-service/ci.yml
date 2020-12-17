@@ -1,0 +1,24 @@
+# Install node dependencies
+install:fritz-service:
+  extends: .install_node_sls_job
+  artifacts:
+    paths:
+      - fritz-service/node_modules/
+  cache:
+    untracked: true
+    key: "$CI_BUILD_REF_NAME"
+    paths:
+      - fritz-service/node_modules/
+  before_script:
+    - cd fritz-service
+
+
+# Deploy service with the serverless framework
+deploy:fritz-service:
+  extends: .deploy_node_sls_job
+  needs:
+    - job: install:fritz-service
+      artifacts: true
+  before_script:
+    - npm install -g serverless@latest
+    - cd fritz-service

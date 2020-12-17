@@ -1,0 +1,24 @@
+# Install node dependencies
+install:db-service:
+  extends: .install_java_docker_job
+  artifacts:
+    paths:
+      - db-service/target/
+  before_script:
+    - cd db-service
+
+# Deploy service with the serverless framework
+deploy:db-service:
+  extends: .deploy_java_docker_job
+  needs:
+    - job: install:db-service
+      artifacts: true
+  before_script:
+    - pip install awscli
+    - apt-get update
+    - apt-get install zip
+    - cd db-service
+  script:
+    - rm -rf .idea src .m2
+    - zip -r service .
+    - aws s3 mv service.zip s3://home-assistant-db-service-build/

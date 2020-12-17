@@ -1,0 +1,28 @@
+{
+  "name": "lifx-service",
+  "version": "1.6.0",
+  "description": "",
+  "main": "handler.js",
+  "dependencies": {
+    "@types/color-convert": "^2.0.0",
+    "@types/node-fetch": "^2.5.7",
+    "color-convert": "^2.0.1",
+    "node-fetch": "^2.6.1",
+    "translate": "^1.1.2"
+  },
+  "devDependencies": {
+    "prettier": "2.2.1",
+    "serverless-dotenv-plugin": "^3.1.0",
+    "serverless-offline": "^6.7.0",
+    "serverless-webpack": "^5.3.5",
+    "ts-loader": "^8.0.11",
+    "typescript": "^4.1.2",
+    "webpack": "^5.7.0",
+    "webpack-node-externals": "^2.5.2"
+  },
+  "scripts": {
+    "start": "sls offline"
+  },
+  "author": "",
+  "license": "ISC"
+}
