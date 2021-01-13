@@ -269,3 +269,5 @@ target
 wp_home_assistant_bot
 home_assistant_dev_bot
 .mvn
+.aws-sam
+test
