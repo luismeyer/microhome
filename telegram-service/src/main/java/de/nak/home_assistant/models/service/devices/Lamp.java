@@ -10,7 +10,7 @@ public class Lamp {
         if (color == null) {
             return "⚪️";
         }
-        
+
         switch(color.toLowerCase()) {
             case "red":
                 return "🔴";
