@@ -1,5 +1,9 @@
 package de.nak.home_assistant.commands;
 
+import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.request.SendMessage;
 import de.nak.home_assistant.CustomKeyboard;
 import de.nak.home_assistant.models.database.ModuleResponse;
 import de.nak.home_assistant.models.telegram.CallbackActions;
@@ -7,35 +11,27 @@ import de.nak.home_assistant.models.telegram.CallbackData;
 import de.nak.home_assistant.models.telegram.Command;
 import de.nak.home_assistant.services.database.ModuleService;
 import de.nak.home_assistant.services.database.UserService;
-import org.telegram.abilitybots.api.objects.Ability;
-import org.telegram.abilitybots.api.objects.MessageContext;
-import org.telegram.abilitybots.api.sender.MessageSender;
-import org.telegram.abilitybots.api.util.AbilityExtension;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.telegram.abilitybots.api.objects.Locality.ALL;
-import static org.telegram.abilitybots.api.objects.Privacy.PUBLIC;
+public class Settings extends Command {
 
-public class Settings implements AbilityExtension {
+    private final TelegramBot bot;
 
-    public static Command COMMAND = new Command("einstellungen", "Öffnet das Konfigurationsmenü");
-
-    private final MessageSender sender;
-
-    public Settings(MessageSender sender) {
-        this.sender = sender;
+    public Settings(TelegramBot bot) {
+        this.bot = bot;
+        this.name = "einstellungen";
+        this.description = "Öffnet das Konfigurationsmenü";
     }
 
-    private void replyToSettings(MessageContext ctx) {
-        long userId = ctx.user().getId();
-        long chatId = ctx.chatId();
+    public Settings() {
+        this(null);
+    }
+
+    public void reply(Update update) {
+        long userId = update.message().from().id();
+        long chatId = update.message().chat().id();
 
         UserService userService = new UserService(userId);
 
@@ -49,35 +45,13 @@ public class Settings implements AbilityExtension {
                     int action = userHasModule ? CallbackActions.DEACTIVATE_MODULE : CallbackActions.ACTIVATE_MODULE;
                     CallbackData cb = new CallbackData().setAction(action).setId(module.getId(), null);
 
-                    List<InlineKeyboardButton> buttons = Collections.singletonList(CustomKeyboard.generateSwitch(userHasModule, cb));
-                    InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder().keyboard(Collections.singletonList(buttons)).build();
+                    InlineKeyboardMarkup markup = new InlineKeyboardMarkup(CustomKeyboard.generateSwitch(userHasModule, cb));
 
-                    SendMessage msg = CustomKeyboard.generateDefaultMessage(chatId);
-                    msg.setText("Modul: " + module.getName());
-                    msg.setReplyMarkup(markup);
-                    return msg;
+                    return new SendMessage(chatId, "Modul: " + module.getName()).replyMarkup(markup);
                 })
                 .collect(Collectors.toList());
 
-        messages.forEach(m -> {
-            try {
-                sender.execute(m);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
-        });
+        messages.forEach(bot::execute);
 
-    }
-
-    // Register the Ability in AbilityBot
-    public Ability settings() {
-        return Ability.builder()
-                .name(COMMAND.getName())
-                .info("Starts the bot")
-                .privacy(PUBLIC)
-                .locality(ALL)
-                .input(0)
-                .action(this::replyToSettings)
-                .build();
     }
 }

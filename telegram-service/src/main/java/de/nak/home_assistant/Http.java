@@ -3,7 +3,10 @@ package de.nak.home_assistant;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
@@ -20,7 +23,6 @@ public class Http {
             new BasicHeader("Content-type", "application/json"),
             new BasicHeader("Authorization", "Basic " + Env.getDBToken()));
 
-    //HTTP POST request
     public static HttpResponse sendPost(String url, String json) {
 
         HttpClient httpClient = HttpClientBuilder.create().build();

@@ -1,88 +1,54 @@
 package de.nak.home_assistant;
 
+import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.BotCommand;
+import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.SetMyCommands;
 import de.nak.home_assistant.commands.*;
 import de.nak.home_assistant.models.telegram.Command;
-import org.telegram.abilitybots.api.bot.AbilityBot;
-import org.telegram.abilitybots.api.objects.Flag;
-import org.telegram.abilitybots.api.objects.Reply;
-import org.telegram.abilitybots.api.util.AbilityExtension;
-import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
-import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
+public class Bot {
 
-public class Bot extends AbilityBot {
+    TelegramBot api = new TelegramBot(Env.getBotToken());
+    public static List<Command> FIXED_COMMANDS = Arrays.asList(new Start(), new Settings());
 
-    public static List<Command> FIXED_COMMANDS = Arrays.asList(Start.COMMAND, Settings.COMMAND);
+    public Bot() {
+        BotCommand[] commands = FIXED_COMMANDS
+                .stream()
+                .map(c -> new BotCommand(c.getName(), c.getDescription()))
+                .toArray(BotCommand[]::new);
 
-    protected Bot() {
-        super(Env.getBotToken(), Env.getBotUsername());
+        SetMyCommands setMyCommands = new SetMyCommands(commands);
+        api.execute(setMyCommands);
+    }
 
-        SetMyCommands setMyCommands = SetMyCommands
-                .builder()
-                .commands(FIXED_COMMANDS
-                        .stream()
-                        .map(c -> BotCommand
-                                .builder()
-                                .command(c.getName())
-                                .description(c.getDescription())
-                                .build())
-                        .collect(Collectors.toList()))
-                .build();
+    public void handleUpdate(Update update) {
 
-        try {
-            sender.execute(setMyCommands);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
+        if (update.inlineQuery() != null) {
+            Callback callback = new Callback(api);
+            callback.replyToButtons(update.message().chat().id(), update.callbackQuery());
         }
+
+        if (update.message().replyToMessage() != null) {
+            Input inputCommand = new Input(api);
+            inputCommand.replyToReply(update.message());
+        }
+
+        handleCommand(update);
     }
 
-    @Override
-    public int creatorId() {
-        // Not necessary
-        return 0;
-    }
+    private void handleCommand(Update update) {
+        String text = update.message().text();
+        Command[] commands = { new Start(api), new Settings(api), new Lifx(api), new Hue(api), new Fritz(api) };
 
-    public Reply replyToButtons() {
-        Callback callback = new Callback(sender);
+        Command command = Arrays.stream(commands)
+                .filter(handler -> text.startsWith(handler.getCommand()))
+                .findFirst()
+                .orElse(new Fallback(api));
 
-        return Reply.of(upd ->
-                callback.replyToButtons(getChatId(upd), upd.getCallbackQuery()),
-                Flag.CALLBACK_QUERY);
+        command.reply(update);
     }
-
-    public Reply replyToText() {
-        Input inputCommand = new Input(sender);
-        return Reply.of(upd -> {
-            try {
-                inputCommand.replyToReply(upd.getMessage());
-            } catch (TelegramApiException e) {
-                        e.printStackTrace();
-            }
-        },
-        Flag.REPLY);
-    }
-
-    public AbilityExtension start() {
-        return new Start(sender);
-    }
-    public AbilityExtension settings() {
-        return new Settings(sender);
-    }
-
-    public AbilityExtension lifx() {
-        return new Lifx(sender);
-    }
-    public AbilityExtension hue() {
-        return new Hue(sender);
-    }
-    public AbilityExtension fritz() {
-        return new Fritz(sender);
-    }
-
 }

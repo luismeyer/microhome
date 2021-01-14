@@ -1,8 +1,8 @@
 package de.nak.home_assistant.models.service.devices;
 
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import de.nak.home_assistant.models.telegram.CallbackActions;
 import de.nak.home_assistant.models.telegram.CallbackData;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 public class Lamp {
 
@@ -51,9 +51,7 @@ public class Lamp {
                 .setAction(CallbackActions.SELECT_DEVICE)
                 .setId(moduleId, id);
 
-        return InlineKeyboardButton.builder()
-                .text( (on ? colorToEmoji(color) + " " : "⚫️ ") + name)
-                .callbackData(cbData.toJson())
-                .build();
+        return new InlineKeyboardButton((on ? colorToEmoji(color) + " " : "⚫️ ") + name)
+                .callbackData(cbData.toJson());
     }
 }

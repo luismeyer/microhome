@@ -15,10 +15,13 @@ Resources:
       MemorySize: 512
       Environment: 
         Variables:
-          PARAM1: VALUE
+          DB_URL: "http://host.docker.internal:8080/"
+          DB_TOKEN: ""
+          BOT_TOKEN: ""
+          BOT_USERNAME: "wp_home_assistant_bot"
       Events:
         HelloWorld:
           Type: Api 
           Properties:
             Path: /api
-            Method: get
+            Method: any

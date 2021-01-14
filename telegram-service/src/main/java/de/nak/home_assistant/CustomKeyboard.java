@@ -1,102 +1,75 @@
 package de.nak.home_assistant;
 
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
+import com.pengrad.telegrambot.request.SendMessage;
 import de.nak.home_assistant.models.service.devices.Device;
 import de.nak.home_assistant.models.database.ModuleResponse;
 import de.nak.home_assistant.models.telegram.CallbackActions;
 import de.nak.home_assistant.models.telegram.CallbackData;
+import de.nak.home_assistant.models.telegram.Command;
 import de.nak.home_assistant.services.database.UserService;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CustomKeyboard {
 
     public static ReplyKeyboardMarkup generateMarkup(List<ModuleResponse> moduleResponses) {
-        ReplyKeyboardMarkup markup = new ReplyKeyboardMarkup();
 
-        KeyboardRow row1 = new KeyboardRow();
+
+        String[] row1;
         if (moduleResponses != null) {
-            moduleResponses.forEach(module -> {
-                row1.add("/" + module.getName());
-            });
+            row1 = moduleResponses
+                    .stream()
+                    .map(module -> "/" + module.getName())
+                    .toArray(String[]::new);
+        } else {
+            row1 = new String[]{};
         }
 
+        String[] row2 = Bot.FIXED_COMMANDS
+                .stream()
+                .map(Command::getCommand)
+                .toArray(String[]::new);
 
-        KeyboardRow row2 = new KeyboardRow();
-        Bot.FIXED_COMMANDS.forEach(c -> row2.add(c.getCommand()));
-
-        markup.setKeyboard(Arrays.asList(row1, row2));
-
-        return markup;
+        return new ReplyKeyboardMarkup(row1, row2);
     };
 
     public static InlineKeyboardMarkup generateDeviceButtons(List<List<Device>> devices, int moduleId) {
-        List<List<InlineKeyboardButton>> buttons = devices
+        InlineKeyboardButton[][] buttons = devices
                 .stream()
                 .map(row -> row
                         .stream()
                         .map(device -> device.toInlineButton(moduleId))
-                        .collect(Collectors.toList()))
-                .collect(Collectors.toList());
+                        .toArray(InlineKeyboardButton[]::new))
+                .toArray(InlineKeyboardButton[][]::new);
 
-        return InlineKeyboardMarkup.builder()
-                .keyboard(buttons)
-                .build();
+        return new InlineKeyboardMarkup(buttons);
     }
 
     public static InlineKeyboardMarkup generateFunctionButtons(List<String> functions, String deviceId, int moduleId) {
-        List<InlineKeyboardButton> row = functions
+        InlineKeyboardButton[] row = functions
                 .stream()
-                .map(name -> InlineKeyboardButton
-                        .builder()
-                        .text(name)
+                .map(name -> new InlineKeyboardButton(name)
                         .callbackData(new CallbackData()
                                 .setAction(CallbackActions.ACTION_DEVICE)
                                 .setId(moduleId, deviceId)
                                 .setFunction(name)
-                                .toJson())
-                        .build())
-                .collect(Collectors.toList());
+                                .toJson()))
+                .toArray(InlineKeyboardButton[]::new);
 
-        return InlineKeyboardMarkup.builder()
-                .keyboard(Arrays.asList(row))
-                .build();
+        return new InlineKeyboardMarkup().addRow(row);
     }
 
-    public static SendMessage generateMessageWithKeyboard(long userId, long chatId) {
+    public static SendMessage generateMessageWithKeyboard(long userId, long chatId, String text) {
         List<ModuleResponse> userModuleResponses = new UserService(userId).getModules();
 
-        return SendMessage
-                .builder()
-                .chatId(String.valueOf(chatId))
-                .replyMarkup(CustomKeyboard.generateMarkup(userModuleResponses))
-                .text("")
-                .build();
-    }
-
-    public static SendMessage generateDefaultMessage(long chatId, String text) {
-        return SendMessage
-                .builder()
-                .chatId(String.valueOf(chatId))
-                .text(text)
-                .build();
-    }
-
-    public static SendMessage generateDefaultMessage(long chatId) {
-        return generateDefaultMessage(chatId, "");
+        return new SendMessage(chatId, text)
+                .replyMarkup(CustomKeyboard.generateMarkup(userModuleResponses));
     }
 
     public static InlineKeyboardButton generateSwitch(boolean on, CallbackData dbData) {
-        return InlineKeyboardButton
-                .builder()
-                .text(on ? "deaktivieren" : "aktivieren")
-                .callbackData(dbData.toJson())
-                .build();
+        return new InlineKeyboardButton(on ? "deaktivieren" : "aktivieren").callbackData(dbData.toJson());
     }
 }
