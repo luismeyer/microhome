@@ -22,7 +22,8 @@ public class Callback {
         this.bot = bot;
     }
 
-    public void replyToButtons(long chatId, CallbackQuery callbackQuery) {
+    public void replyToButtons(CallbackQuery callbackQuery) {
+        long chatId = callbackQuery.message().chat().id();
         long userId = callbackQuery.from().id();
         CallbackData cbData = new CallbackData().fromJson(callbackQuery.data());
         List<BaseRequest<?, ?>> messages = new ArrayList<>();

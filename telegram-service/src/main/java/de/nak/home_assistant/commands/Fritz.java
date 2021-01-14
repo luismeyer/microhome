@@ -45,7 +45,7 @@ public class Fritz extends Command {
         int moduleId = moduleResponse.get().getId();
         List<SendMessage> messages = new ArrayList<>();
 
-        String[] args = messageArgs(update.message().text(), this.name);
+        String[] args = messageArgs(update.message().text());
         boolean hasArgs = args.length > 0;
         boolean tokenSuccess = false;
         UserService userService = new UserService(userId);

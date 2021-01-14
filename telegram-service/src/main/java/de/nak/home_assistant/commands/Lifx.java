@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import de.nak.home_assistant.CustomKeyboard;
+import de.nak.home_assistant.Utils;
 import de.nak.home_assistant.actions.DeviceList;
 import de.nak.home_assistant.models.database.ModuleResponse;
 import de.nak.home_assistant.models.telegram.Command;
@@ -43,10 +44,8 @@ public class Lifx extends Command {
         int moduleId = moduleResponse.get().getId();
         List<SendMessage> messages = new ArrayList<>();
 
-        String[] args = update.message().text()
-                .replace(this.getCommand(), "")
-                .split(" ");
 
+        String[] args = Utils.messageArgs(update.message().text());
         boolean hasArgs = args.length > 0;
         boolean tokenSuccess = false;
         UserService userService = new UserService(userId);

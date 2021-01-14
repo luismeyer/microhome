@@ -19,15 +19,16 @@ public class ModuleToggle {
             ServiceRequest serviceRequest = userService.activateModule(moduleId);
             ServiceService serviceService = new ServiceService(new AuthResponse());
             AuthResponse authResponse = serviceService.makeRequest(serviceRequest);
+
             if (authResponse.isSuccess()){
                 text = authResponse.getResult();
-            }else{
+            } else {
                 text = "Etwas ist schief gegangen" + authResponse.getError();
             }
         } else {
             if (userService.deactivateModule(moduleId)){
                 text = "Modul deaktiviert";
-            }else {
+            } else {
                 text = "Etwas ist schief gegangen";
             }
         }

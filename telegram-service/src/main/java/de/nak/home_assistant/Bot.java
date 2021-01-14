@@ -27,27 +27,36 @@ public class Bot {
 
     public void handleUpdate(Update update) {
 
-        if (update.inlineQuery() != null) {
+        if (update.callbackQuery() != null) {
             Callback callback = new Callback(api);
-            callback.replyToButtons(update.message().chat().id(), update.callbackQuery());
+            callback.replyToButtons(update.callbackQuery());
+            return;
         }
 
         if (update.message().replyToMessage() != null) {
             Input inputCommand = new Input(api);
             inputCommand.replyToReply(update.message());
+            return;
         }
 
         handleCommand(update);
     }
 
     private void handleCommand(Update update) {
+        Fallback fallback = new Fallback(api);
+
+        if (update.message() == null) {
+            fallback.reply(update);
+            return;
+        }
+
         String text = update.message().text();
         Command[] commands = { new Start(api), new Settings(api), new Lifx(api), new Hue(api), new Fritz(api) };
 
         Command command = Arrays.stream(commands)
                 .filter(handler -> text.startsWith(handler.getCommand()))
                 .findFirst()
-                .orElse(new Fallback(api));
+                .orElse(fallback);
 
         command.reply(update);
     }
