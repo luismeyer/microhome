@@ -46,10 +46,12 @@ public class ModuleController {
     @ResponseStatus(code = HttpStatus.OK)
     @GetMapping(path = "")
     public @ResponseBody
-    List<ModuleResponse> getAllModuls() {
-        List<Module> moduleList = new ArrayList<Module>();
-        moduleRepository.findAll().forEach(modul -> moduleList.add(modul));
-        return moduleList.stream().map(modul -> new ModuleResponse().setName(modul.getName()).setId(modul.getId()).setServiceRequest(new
-                ServiceRequest().setServiceUrl(modul.getServiceURL()))).collect(Collectors.toList());
+    List<ModuleResponse> getAllModules() {
+        List<Module> moduleList = new ArrayList<>();
+        moduleRepository.findAll().forEach(moduleList::add);
+
+        return moduleList.stream()
+                .map(module -> new ModuleResponse().setName(module.getName()).setId(module.getId()).setServiceRequest(new ServiceRequest().setServiceUrl(module.getServiceURL())))
+                .collect(Collectors.toList());
     }
 }

@@ -1,11 +1,7 @@
 package de.nak.web_cloud.homebot.controller;
 
-import de.nak.web_cloud.homebot.controller.ModuleController;
 import de.nak.web_cloud.homebot.entity.module.Module;
 import de.nak.web_cloud.homebot.entity.module.ModuleRepository;
-import de.nak.web_cloud.homebot.entity.user.User;
-import de.nak.web_cloud.homebot.entity.usermodule.UserModule;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +39,7 @@ class ModuleControllerTest {
     String authorization;
 
     @BeforeEach
-    void befor(){
+    void before(){
         String originalInput = serviceUser+":"+servicePassword;
         authorization =  "Basic " + Base64.getEncoder().encodeToString(originalInput.getBytes());
     }
@@ -66,7 +62,6 @@ class ModuleControllerTest {
 
     @Test
     void createWithIllegalArguments () throws Exception {
-        int moduleid = 12345;
         Module module = new Module();
         module.setBasisAction("/test");
         module.setFunctions("eins,zwei,drei");
@@ -82,17 +77,21 @@ class ModuleControllerTest {
 
    @Test
     void getAllModules () throws Exception {
-       int moduleid = 12345;
        Module module = new Module();
        List<Module> moduleList = new LinkedList<Module>();
        module.setBasisAction("/test");
        module.setFunctions("eins,zwei,drei");
        module.setId(12345);
+       module.setName("name");
+       module.setServiceURL("serviceUrl");
        moduleList.add(module);
+
        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/module")
                .header("Authorization",authorization);
        when(moduleRepository.findAll()).thenReturn(moduleList);
+
        MvcResult result = mvc.perform(requestBuilder).andReturn();
+
        assertTrue(result.getResponse().getContentAsString().contains(String.valueOf(module.getId())));
        assertEquals(200,result.getResponse().getStatus());
     }
