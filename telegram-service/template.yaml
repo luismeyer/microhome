@@ -20,7 +20,7 @@ Resources:
           BOT_TOKEN: ""
           BOT_USERNAME: "wp_home_assistant_bot"
       Events:
-        HelloWorld:
+        WebhookApi:
           Type: Api 
           Properties:
             Path: /api
