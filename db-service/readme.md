@@ -12,7 +12,7 @@ Name										                        get	    post    delete  put
 /user/{userid}/module/{moduleId}/devices/{deviceId}/functions       x	    o       o       o 
 /user/{userid}/module/{moduleId}/devices/{deviceId}/functions/{function} x	o       o       o		
 
-#Enviroment Variablen
+##Enviroment Variablen
 ServiceUser
 ServicePassword
 DatasourceUrl
@@ -21,3 +21,9 @@ DatasourcePassword
 DatasourceDriver
 hibernatedll
 maxDbConLifetime
+
+## DynamoDB
+Starte DynamoDB
+```shell
+docker run -p 8000:8000 amazon/dynamodb-local:latest
+```

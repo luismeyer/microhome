@@ -1,37 +1,42 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: AWS Serverless Spring Boot API - db-service
+
 Globals:
-  Api:
-    EndpointConfiguration: REGIONAL
+  Function:
+    Timeout: 20
+    MemorySize: 512
+    Runtime: java8
+    Environment:
+      Variables:
+        ServiceUser: ""
+        ServicePassword: ""
+        DatasourceUrl: ""
+        DatasourceUsername: ""
+        DatasourcePassword: ""
 
 Resources:
-  DBServiceFunction:
+  DBServiceCreateModule:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: de.nak.web_cloud.homebot.StreamLambdaHandler::handleRequest
-      Runtime: java8
-      CodeUri: .
-      MemorySize: 512
+      Handler: de.nak.telegram_home_assistant.handler.ModuleHandler::handleRequest
       Policies: AWSLambdaBasicExecutionRole
-      Timeout: 60
-      Environment:
-        Variables:
-          ServiceUser: ""
-          ServicePassword: ""
-          DatasourceUrl: ""
-          DatasourceUsername: ""
-          DatasourcePassword: ""
+      CodeUri: .
       Events:
         GetResource:
           Type: Api
           Properties:
-            Path: /{proxy+}
-            Method: any
+            Path: /module
+            Method: post
 
-Outputs:
-  DBServiceAPI:
-    Description: URL for application
-    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/ping'
-    Export:
-      Name: DBServiceAPI
+  OrdersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ModuleTable
+      AttributeDefinitions:
+        - AttributeName: Id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
