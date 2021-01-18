@@ -3,44 +3,49 @@ package de.nak.telegram_home_assistant.model;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import de.nak.telegram_home_assistant.entity.usermodule.UserModule;
 
-import java.util.Set;
+import java.util.List;
 
-@DynamoDBTable(tableName="ModuleTable")
+@DynamoDBTable(tableName="UserTable")
 public class User {
 
-    public User(Integer id, Long telegramId, Set<UserModule> modules) {
+    public User(String id, Long telegramId, List<Module> modules) {
         this.id = id;
         this.telegramId = telegramId;
         this.modules = modules;
     }
 
-    private Integer id;
+    public User() {
+    }
+
+    private String id;
     private Long telegramId;
-    private Set<UserModule> modules;
+    private List<Module> modules;
 
     @DynamoDBHashKey(attributeName="Id")
-    public Integer getId() {
+    public String getId() {
         return id;
     }
-    public void setId(Integer id) {
+    public User setId(String id) {
         this.id = id;
+        return this;
     }
 
     @DynamoDBAttribute(attributeName="TelegramId")
     public Long getTelegramId() {
         return telegramId;
     }
-    public void setTelegramId(Long telegramId) {
+    public User setTelegramId(Long telegramId) {
         this.telegramId = telegramId;
+        return this;
     }
 
     @DynamoDBAttribute(attributeName="Modules")
-    public Set<UserModule> getModules() {
+    public List<Module> getModules() {
         return modules;
     }
-    public void setModules(Set<UserModule> modules) {
+    public User setModules(List<Module> modules) {
         this.modules = modules;
+        return this;
     }
 }

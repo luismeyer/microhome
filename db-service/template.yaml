@@ -9,17 +9,19 @@ Globals:
     Runtime: java8
     Environment:
       Variables:
-        ServiceUser: ""
-        ServicePassword: ""
+        AUTH_USER: ""
+        AUTH_PASSWORD: ""
         DatasourceUrl: ""
         DatasourceUsername: ""
         DatasourcePassword: ""
+        AWS_ACCESS_KEY_ID: ""
+        AWS_SECRET_ACCESS_KEY: ""
 
 Resources:
-  DBServiceCreateModule:
+  DBServicePostModule:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: de.nak.telegram_home_assistant.handler.ModuleHandler::handleRequest
+      Handler: de.nak.telegram_home_assistant.handler.module.PostModule::handleRequest
       Policies: AWSLambdaBasicExecutionRole
       CodeUri: .
       Events:
@@ -28,6 +30,110 @@ Resources:
           Properties:
             Path: /module
             Method: post
+
+  DBServiceGetModules:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: de.nak.telegram_home_assistant.handler.module.GetModules::handleRequest
+      Policies: AWSLambdaBasicExecutionRole
+      CodeUri: .
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /module
+            Method: get
+
+  DBServiceDeleteModule:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: de.nak.telegram_home_assistant.handler.module.DeleteModule::handleRequest
+      Policies: AWSLambdaBasicExecutionRole
+      CodeUri: .
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /module/{id}
+            Method: delete
+
+  DBServicePostUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: de.nak.telegram_home_assistant.handler.user.PostUser::handleRequest
+      Policies: AWSLambdaBasicExecutionRole
+      CodeUri: .
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /user/{id}
+            Method: post
+
+  DBServiceGetUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: de.nak.telegram_home_assistant.handler.user.GetUsers::handleRequest
+      Policies: AWSLambdaBasicExecutionRole
+      CodeUri: .
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /user
+            Method: get
+
+  DBServiceDeleteUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: de.nak.telegram_home_assistant.handler.user.DeleteUser::handleRequest
+      Policies: AWSLambdaBasicExecutionRole
+      CodeUri: .
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /user/{id}
+            Method: delete
+
+  DBServicePutUserModule:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: de.nak.telegram_home_assistant.handler.user.PutUserModule::handleRequest
+      Policies: AWSLambdaBasicExecutionRole
+      CodeUri: .
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /user/{userId}/module/{moduleId}
+            Method: put
+
+  DBServiceDeleteUserModule:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: de.nak.telegram_home_assistant.handler.user.DeleteUserModule::handleRequest
+      Policies: AWSLambdaBasicExecutionRole
+      CodeUri: .
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /user/{userId}/module/{moduleId}
+            Method: delete
+
+  DBServiceGetUserModules:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: de.nak.telegram_home_assistant.handler.user.GetUserModules::handleRequest
+      Policies: AWSLambdaBasicExecutionRole
+      CodeUri: .
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /user/{userId}/module
+            Method: get
 
   OrdersTable:
     Type: AWS::DynamoDB::Table

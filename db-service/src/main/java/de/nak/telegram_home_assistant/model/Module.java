@@ -3,34 +3,46 @@ package de.nak.telegram_home_assistant.model;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.github.reinert.jjschema.Attributes;
 
 import java.util.Set;
 
 @DynamoDBTable(tableName="ModuleTable")
 public class Module {
 
-    public Module(String id, String name, String baseAction, String serviceURL, Set<String> functions) {
+    public Module(int id, String name, String baseAction, String serviceUrl, Set<String> functions) {
         this.id = id;
         this.name = name;
         this.baseAction = baseAction;
-        this.serviceURL = serviceURL;
+        this.serviceUrl = serviceUrl;
         this.functions = functions;
     }
 
     public Module() {
     }
 
-    private String id;
+    @Attributes(required=true)
+    private int id;
+
+    @Attributes(required=true)
     private String name;
+
+    @Attributes(required=true)
     private String baseAction;
-    private String serviceURL;
+
+    @Attributes(required=true)
+    private String serviceUrl;
+
+    @Attributes(required=true, uniqueItems=true)
     private Set<String> functions;
 
+    private String token;
+
     @DynamoDBHashKey(attributeName="Id")
-    public String getId() {
+    public int getId() {
         return id;
     }
-    public Module setId(String id) {
+    public Module setId(int id) {
         this.id = id;
         return this;
     }
@@ -54,11 +66,11 @@ public class Module {
     }
 
     @DynamoDBAttribute(attributeName="ServiceUrl")
-    public String getServiceURL() {
-        return serviceURL;
+    public String getServiceUrl() {
+        return serviceUrl;
     }
-    public Module setServiceURL(String serviceURL) {
-        this.serviceURL = serviceURL;
+    public Module setServiceUrl(String serviceUrl) {
+        this.serviceUrl = serviceUrl;
         return this;
     }
 
@@ -70,4 +82,14 @@ public class Module {
         this.functions = functions;
         return this;
     }
+
+    @DynamoDBAttribute(attributeName="Token")
+    public String getToken() {
+        return token;
+    }
+    public Module setToken(String token) {
+        this.token = token;
+        return this;
+    }
+
 }

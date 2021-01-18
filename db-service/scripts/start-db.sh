@@ -8,6 +8,13 @@ export AWS_PAGER=""
 echo "Creating tables..."
 aws dynamodb create-table \
   --table-name ModuleTable \
+  --attribute-definitions AttributeName=Id,AttributeType=N \
+  --key-schema AttributeName=Id,KeyType=HASH \
+  --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
+  --endpoint-url http://localhost:8000
+
+aws dynamodb create-table \
+  --table-name UserTable \
   --attribute-definitions AttributeName=Id,AttributeType=S \
   --key-schema AttributeName=Id,KeyType=HASH \
   --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
