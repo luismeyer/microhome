@@ -7,6 +7,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import de.nak.telegram_home_assistant.Json;
 import de.nak.telegram_home_assistant.controller.response.RandomString;
+import de.nak.telegram_home_assistant.dynamodb.UserRepository;
 import de.nak.telegram_home_assistant.handler.AHandler;
 import de.nak.telegram_home_assistant.model.Module;
 import de.nak.telegram_home_assistant.model.User;
@@ -23,20 +24,15 @@ public class DeleteUserModule extends AHandler implements RequestHandler<APIGate
             return errorResponse.get();
         }
 
-        String rawTelegramId = requestEvent.getPathParameters().get("userId");
-        String rawModuleId = requestEvent.getPathParameters().get("moduleId");
+        String telegramId = requestEvent.getPathParameters().get("userId");
+        String moduleId = requestEvent.getPathParameters().get("moduleId");
 
-        if (rawTelegramId == null || rawModuleId == null) {
+        if (telegramId == null || moduleId == null) {
             return Json.invalidDataResponse("Missing path parameters");
         }
 
-        Long telegramId = Long.parseLong(rawTelegramId);
-        int moduleId = Integer.parseInt(rawModuleId);
-
-        Optional<User> oUser = dynamoDBClient.mapper.scan(User.class, new DynamoDBScanExpression())
-                .stream()
-                .filter(u -> u.getTelegramId().equals(telegramId))
-                .findFirst();
+        Optional<User> oUser = new UserRepository(dynamoDBClient)
+                .findUserByTelegramId(Long.parseLong(telegramId));
 
         if (!oUser.isPresent()) {
             return Json.invalidDataResponse("Wrong userid");
@@ -44,12 +40,11 @@ public class DeleteUserModule extends AHandler implements RequestHandler<APIGate
 
         User user = oUser.get();
 
-        List<Module> newModules = user.getModules()
+        user.setModules(user.getModules()
                 .stream()
-                .filter(u -> u.getId() != moduleId)
-                .collect(Collectors.toList());
+                .filter(u -> u.getId() != Integer.parseInt(moduleId))
+                .collect(Collectors.toList()));
 
-        user.setModules(newModules);
         dynamoDBClient.mapper.save(user);
 
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();

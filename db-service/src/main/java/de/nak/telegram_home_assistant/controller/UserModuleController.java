@@ -1,35 +1,13 @@
 package de.nak.telegram_home_assistant.controller;
 
-import de.nak.telegram_home_assistant.controller.response.*;
-import de.nak.telegram_home_assistant.entity.module.Module;
-import de.nak.telegram_home_assistant.entity.module.ModuleRepository;
-import de.nak.telegram_home_assistant.entity.user.*;
-import de.nak.telegram_home_assistant.entity.usermodule.UserModule;
-import de.nak.telegram_home_assistant.entity.usermodule.UserModuleRepository;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller    // This means that this class is a Controller
 @RequestMapping(path = "/user")
 public class UserModuleController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserModuleController.class);
+    /*private static final Logger LOG = LoggerFactory.getLogger(UserModuleController.class);
 
     @Autowired
     private UserRepository repository;
@@ -49,15 +27,6 @@ public class UserModuleController {
         userModuleRepository.findAll().forEach(modulList::add);
         return modulList;
     }
-
-    /**
-     * Creates new resource for user
-     * Maps Post Request with following Parameters
-     *
-     * @param userid User identifier
-     * @param b      UrlBuilder
-     * @return HttpResponse
-     */
 
     @ResponseStatus(code = HttpStatus.CREATED) //positive response code
     @PostMapping(path = "/{userid}") // Map ONLY POST Requests
@@ -254,6 +223,6 @@ public class UserModuleController {
         userModuleRepository.deleteAll();
         repository.deleteAll();
         moduleRepository.deleteAll();
-    }
+    }*/
 
 }

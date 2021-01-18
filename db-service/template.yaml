@@ -4,25 +4,21 @@ Description: AWS Serverless Spring Boot API - db-service
 
 Globals:
   Function:
-    Timeout: 20
+    Timeout: 60
     MemorySize: 512
     Runtime: java8
     Environment:
       Variables:
         AUTH_USER: ""
         AUTH_PASSWORD: ""
-        DatasourceUrl: ""
-        DatasourceUsername: ""
-        DatasourcePassword: ""
-        AWS_ACCESS_KEY_ID: ""
-        AWS_SECRET_ACCESS_KEY: ""
 
 Resources:
   DBServicePostModule:
     Type: AWS::Serverless::Function
     Properties:
       Handler: de.nak.telegram_home_assistant.handler.module.PostModule::handleRequest
-      Policies: AWSLambdaBasicExecutionRole
+      Policies:
+        - AmazonDynamoDBFullAccess
       CodeUri: .
       Events:
         GetResource:
@@ -35,7 +31,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: de.nak.telegram_home_assistant.handler.module.GetModules::handleRequest
-      Policies: AWSLambdaBasicExecutionRole
+      Policies:
+        - AmazonDynamoDBFullAccess
       CodeUri: .
       Events:
         GetResource:
@@ -48,33 +45,36 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: de.nak.telegram_home_assistant.handler.module.DeleteModule::handleRequest
-      Policies: AWSLambdaBasicExecutionRole
+      Policies:
+        - AmazonDynamoDBFullAccess
       CodeUri: .
       Events:
         GetResource:
           Type: Api
           Properties:
-            Path: /module/{id}
+            Path: /module/{moduleId}
             Method: delete
 
   DBServicePostUser:
     Type: AWS::Serverless::Function
     Properties:
       Handler: de.nak.telegram_home_assistant.handler.user.PostUser::handleRequest
-      Policies: AWSLambdaBasicExecutionRole
+      Policies:
+        - AmazonDynamoDBFullAccess
       CodeUri: .
       Events:
         GetResource:
           Type: Api
           Properties:
-            Path: /user/{id}
+            Path: /user/{userId}
             Method: post
 
   DBServiceGetUser:
     Type: AWS::Serverless::Function
     Properties:
       Handler: de.nak.telegram_home_assistant.handler.user.GetUsers::handleRequest
-      Policies: AWSLambdaBasicExecutionRole
+      Policies:
+        - AmazonDynamoDBFullAccess
       CodeUri: .
       Events:
         GetResource:
@@ -87,20 +87,22 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: de.nak.telegram_home_assistant.handler.user.DeleteUser::handleRequest
-      Policies: AWSLambdaBasicExecutionRole
+      Policies:
+        - AmazonDynamoDBFullAccess
       CodeUri: .
       Events:
         GetResource:
           Type: Api
           Properties:
-            Path: /user/{id}
+            Path: /user/{userId}
             Method: delete
 
   DBServicePutUserModule:
     Type: AWS::Serverless::Function
     Properties:
       Handler: de.nak.telegram_home_assistant.handler.user.PutUserModule::handleRequest
-      Policies: AWSLambdaBasicExecutionRole
+      Policies:
+        - AmazonDynamoDBFullAccess
       CodeUri: .
       Events:
         GetResource:
@@ -113,7 +115,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: de.nak.telegram_home_assistant.handler.user.DeleteUserModule::handleRequest
-      Policies: AWSLambdaBasicExecutionRole
+      Policies:
+        - AmazonDynamoDBFullAccess
       CodeUri: .
       Events:
         GetResource:
@@ -126,7 +129,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: de.nak.telegram_home_assistant.handler.user.GetUserModules::handleRequest
-      Policies: AWSLambdaBasicExecutionRole
+      Policies:
+        - AmazonDynamoDBFullAccess
       CodeUri: .
       Events:
         GetResource:
@@ -135,10 +139,36 @@ Resources:
             Path: /user/{userId}/module
             Method: get
 
-  OrdersTable:
+  DBServiceGetUserModule:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: de.nak.telegram_home_assistant.handler.user.GetUserModule::handleRequest
+      Policies:
+        - AmazonDynamoDBFullAccess
+      CodeUri: .
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /user/{userId}/module/{moduleId}
+            Method: get
+
+  ModuleTable:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: ModuleTable
+      AttributeDefinitions:
+        - AttributeName: Id
+          AttributeType: N
+      KeySchema:
+        - AttributeName: Id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  UserTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: UserTable
       AttributeDefinitions:
         - AttributeName: Id
           AttributeType: S

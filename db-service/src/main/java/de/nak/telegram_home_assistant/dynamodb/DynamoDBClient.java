@@ -14,7 +14,8 @@ public class DynamoDBClient {
         AmazonDynamoDBClientBuilder builder = AmazonDynamoDBClientBuilder
                 .standard();
 
-        boolean isLocal = System.getenv("AWS_SAM_LOCAL").equals("true");
+        String awsSamLocal = System.getenv("AWS_SAM_LOCAL");
+        boolean isLocal = awsSamLocal != null ? awsSamLocal.equals("true") : false;
 
         if (isLocal) {
             AwsClientBuilder.EndpointConfiguration endpointConfiguration = new AwsClientBuilder.EndpointConfiguration("http://host.docker.internal:8000", "eu-central-1");

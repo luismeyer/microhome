@@ -2,8 +2,11 @@ package de.nak.telegram_home_assistant;
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import com.google.gson.Gson;
+import de.nak.telegram_home_assistant.model.response.ErrorResponseBody;
 
 import java.util.Base64;
+import java.util.Collections;
 
 public class Security {
 
@@ -46,10 +49,13 @@ public class Security {
         return false;
     }
 
-    public static APIGatewayProxyResponseEvent unauthorizedResponse() {
+    public static APIGatewayProxyResponseEvent unauthorizedResponse(String message) {
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
         response.setStatusCode(401);
 
+        ErrorResponseBody body = new ErrorResponseBody()
+                .setMessages(Collections.singletonList(message));
+        response.setBody(new Gson().toJson(body));
         return response;
     }
 }

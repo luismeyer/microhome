@@ -6,13 +6,10 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import de.nak.telegram_home_assistant.Json;
-import de.nak.telegram_home_assistant.controller.response.ModuleResponse;
-import de.nak.telegram_home_assistant.controller.response.RandomString;
-import de.nak.telegram_home_assistant.controller.response.ServiceRequest;
-import de.nak.telegram_home_assistant.controller.response.ServiceRequestBody;
+import de.nak.telegram_home_assistant.dynamodb.UserRepository;
 import de.nak.telegram_home_assistant.handler.AHandler;
-import de.nak.telegram_home_assistant.model.Module;
 import de.nak.telegram_home_assistant.model.User;
+import de.nak.telegram_home_assistant.model.response.ModuleServiceResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,25 +23,21 @@ public class GetUserModules extends AHandler implements RequestHandler<APIGatewa
             return errorResponse.get();
         }
 
-        String rawTelegramId = requestEvent.getPathParameters().get("userId");
-        if (rawTelegramId == null) {
+        String telegramId = requestEvent.getPathParameters().get("userId");
+        if (telegramId == null) {
             return Json.invalidDataResponse("Missing telegram id");
         }
 
-        Long telegramId = Long.parseLong(rawTelegramId);
-
-        Optional<User> oUser = dynamoDBClient.mapper.scan(User.class, new DynamoDBScanExpression())
-                .stream()
-                .filter(u -> u.getTelegramId().equals(telegramId))
-                .findFirst();
+        Optional<User> oUser = new UserRepository(dynamoDBClient)
+                .findUserByTelegramId(Long.parseLong(telegramId));
 
         if (!oUser.isPresent()) {
             return Json.invalidDataResponse("Wrong userid");
         }
 
-        List<ModuleResponse> moduleResponses = oUser.get().getModules()
+        List<ModuleServiceResponse> moduleResponses = oUser.get().getModules()
                 .stream()
-                .map(m -> new ModuleResponse()
+                .map(m -> new ModuleServiceResponse()
                         .setId(m.getId())
                         .setName(m.getName()))
                 .collect(Collectors.toList());

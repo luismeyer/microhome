@@ -18,7 +18,7 @@ public class DeleteModule extends AHandler implements RequestHandler<APIGatewayP
             return errorResponse.get();
         }
 
-        String id = request.getPathParameters().get("id");
+        String id = request.getPathParameters().get("moduleId");
         if (id == null) {
             return Json.invalidDataResponse("Missing id in path");
         }

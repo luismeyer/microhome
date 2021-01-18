@@ -14,12 +14,13 @@ import java.util.*;
 public class PostUser extends AHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
+        System.out.println("handle: " + requestEvent);
         Optional<APIGatewayProxyResponseEvent> errorResponse = defaultHandleRequest(requestEvent);
         if (errorResponse.isPresent()) {
             return errorResponse.get();
         }
 
-        String id = requestEvent.getPathParameters().get("id");
+        String id = requestEvent.getPathParameters().get("userId");
         if (id == null) {
             return Json.invalidDataResponse("Missing id in path");
         }

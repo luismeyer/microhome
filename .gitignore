@@ -272,3 +272,4 @@ home_assistant_dev_bot
 .mvn
 .aws-sam
 test
+local/

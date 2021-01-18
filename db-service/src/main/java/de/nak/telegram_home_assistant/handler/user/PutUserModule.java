@@ -5,8 +5,12 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import de.nak.telegram_home_assistant.Json;
 import de.nak.telegram_home_assistant.controller.response.RandomString;
+import de.nak.telegram_home_assistant.controller.response.ServiceRequest;
+import de.nak.telegram_home_assistant.controller.response.ServiceRequestBody;
+import de.nak.telegram_home_assistant.dynamodb.UserRepository;
 import de.nak.telegram_home_assistant.handler.AHandler;
 import de.nak.telegram_home_assistant.model.Module;
 import de.nak.telegram_home_assistant.model.User;
@@ -33,10 +37,8 @@ public class PutUserModule extends AHandler implements RequestHandler<APIGateway
         Long telegramId = Long.parseLong(rawTelegramId);
         int moduleId = Integer.parseInt(rawModuleId);
 
-        Optional<User> oUser = dynamoDBClient.mapper.scan(User.class, new DynamoDBScanExpression())
-                .stream()
-                .filter(u -> u.getTelegramId().equals(telegramId))
-                .findFirst();
+        UserRepository userRepository = new UserRepository(dynamoDBClient);
+        Optional<User> oUser = userRepository.findUserByTelegramId(telegramId);
 
         String editToken = new RandomString().nextString();
         Module module = dynamoDBClient.mapper.load(Module.class, moduleId).setToken(editToken);
@@ -61,9 +63,21 @@ public class PutUserModule extends AHandler implements RequestHandler<APIGateway
         dynamoDBClient.mapper.save(user);
 
         User updatedUser = dynamoDBClient.mapper.load(User.class, user.getId());
+        Module updatedModule = userRepository.findUserModule(updatedUser, moduleId).orElse(null);
+
+        if (updatedModule == null) {
+            return Json.invalidDataResponse("Something went wrong");
+        }
+
+        ServiceRequest serviceRequest = new ServiceRequest()
+                .setServiceUrl(updatedModule.getServiceUrl())
+                .setBody(new ServiceRequestBody()
+                        .setAction("auth")
+                        .setData(updatedModule.getToken()));
+
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
         response.setStatusCode(200);
-        response.setBody(gson.toJson(updatedUser));
+        response.setBody(gson.toJson(serviceRequest));
         return response;
     }
 }

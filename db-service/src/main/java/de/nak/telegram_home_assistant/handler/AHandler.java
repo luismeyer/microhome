@@ -16,7 +16,7 @@ public abstract class AHandler {
 
     protected Optional<APIGatewayProxyResponseEvent> defaultHandleRequest(APIGatewayProxyRequestEvent request, Class<?> type) {
         if (!Security.authorize(request)) {
-            return Optional.of(Security.unauthorizedResponse());
+            return Optional.of(Security.unauthorizedResponse("Not authorized"));
         }
 
         APIGatewayProxyResponseEvent errorResponse = Json.validateRequest(type, request);
@@ -29,7 +29,7 @@ public abstract class AHandler {
 
     protected Optional<APIGatewayProxyResponseEvent> defaultHandleRequest(APIGatewayProxyRequestEvent request) {
         if (!Security.authorize(request)) {
-            return Optional.of(Security.unauthorizedResponse());
+            return Optional.of(Security.unauthorizedResponse("Not authorized"));
         }
 
         return Optional.empty();

@@ -2,8 +2,6 @@ package de.nak.telegram_home_assistant.controller;
 
 import de.nak.telegram_home_assistant.controller.response.ModuleResponse;
 import de.nak.telegram_home_assistant.controller.response.ServiceRequest;
-import de.nak.telegram_home_assistant.entity.module.Module;
-import de.nak.telegram_home_assistant.entity.module.ModuleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,7 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "/module")
 public class ModuleController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ModuleController.class);
+    /*private static final Logger LOG = LoggerFactory.getLogger(ModuleController.class);
 
     @Autowired
     private ModuleRepository moduleRepository;
@@ -53,5 +51,5 @@ public class ModuleController {
         return moduleList.stream()
                 .map(module -> new ModuleResponse().setName(module.getName()).setId(module.getId()).setServiceRequest(new ServiceRequest().setServiceUrl(module.getServiceURL())))
                 .collect(Collectors.toList());
-    }
+    }*/
 }
