@@ -1,82 +1,67 @@
 package de.nak.home_assistant.commands;
 
-import de.nak.home_assistant.CustomKeyboard;
+import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.request.DeleteMessage;
+import com.pengrad.telegrambot.request.GetChat;
+import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.UnpinChatMessage;
+import com.pengrad.telegrambot.response.GetChatResponse;
 import de.nak.home_assistant.actions.DeviceAction;
 import de.nak.home_assistant.models.telegram.CallbackData;
-import org.telegram.abilitybots.api.sender.MessageSender;
-import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
-import org.telegram.telegrambots.meta.api.methods.pinnedmessages.UnpinChatMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import org.telegram.telegrambots.meta.api.objects.Chat;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class Input {
 
-    private final MessageSender sender;
+    private final TelegramBot bot;
 
-    public Input(MessageSender sender) {
-        this.sender = sender;
+    public Input(TelegramBot bot) {
+        this.bot = bot;
     }
 
-    private void sendError(long chatId) throws TelegramApiException {
-        SendMessage msg = CustomKeyboard.generateDefaultMessage(chatId);
-        msg.setText("Ich weiß nicht was ich tun soll");
-        sender.execute(msg);
+    private void sendError(long chatId) {
+        SendMessage msg = new SendMessage(chatId, "Ich weiß nicht was ich tun soll");
+        bot.execute(msg);
     }
 
-    public void replyToReply(Message reply) throws TelegramApiException {
-        long chatId = reply.getChatId();
-        sender.execute(DeleteMessage
-                .builder()
-                .chatId(String.valueOf(chatId))
-                .messageId(reply.getReplyToMessage().getMessageId())
-                .build());
+    public void replyToReply(Message reply) {
+        long chatId = reply.chat().id();
 
-        if (!reply.isReply()) {
+        if (reply.replyToMessage() == null) {
             sendError(chatId);
             return;
         }
 
-        Chat chat = sender.execute(GetChat.builder().chatId(String.valueOf(chatId)).build());
-        Message originalMessage = chat.getPinnedMessage();
+        // Delete input hint
+        bot.execute(new DeleteMessage(chatId, reply.replyToMessage().messageId()));
+
+        GetChatResponse chatResponse = bot.execute(new GetChat(chatId));
+        Message originalMessage = chatResponse.chat().pinnedMessage();
 
         if (originalMessage == null) {
             sendError(chatId);
             return;
         }
 
-        sender.execute(UnpinChatMessage
-                .builder()
-                .chatId(String.valueOf(chatId))
-                .messageId(originalMessage.getMessageId())
-                .build());
+        bot.execute(new UnpinChatMessage(chatId).messageId(originalMessage.messageId()));
 
-        InlineKeyboardMarkup markup = originalMessage.getReplyMarkup();
+        InlineKeyboardMarkup markup = originalMessage.replyMarkup();
         if (markup == null
-                || markup.getKeyboard() == null
-                || markup.getKeyboard().get(0).size() == 0
-                || markup.getKeyboard().get(0).get(0) == null) {
+                || markup.inlineKeyboard() == null
+                || markup.inlineKeyboard()[0].length == 0
+                || markup.inlineKeyboard()[0][0] == null) {
 
             sendError(chatId);
             return;
         }
 
-        InlineKeyboardButton button = originalMessage.getReplyMarkup().getKeyboard().get(0).get(0);
-        String cbString = button.getCallbackData();
+        InlineKeyboardButton button = markup.inlineKeyboard()[0][0];
+        String cbString = button.callbackData();
         CallbackData cbData = new CallbackData().fromJson(cbString);
 
-        long userId = reply.getFrom().getId();
-        DeviceAction.generateMessages(userId, chatId, cbData, originalMessage, reply.getText())
-                .forEach(m -> {
-                    try {
-                        sender.execute(m);
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
-                });
+        long userId = reply.from().id();
+        DeviceAction.generateMessages(userId, chatId, cbData, originalMessage, reply.text())
+                .forEach(bot::execute);
     }
 }

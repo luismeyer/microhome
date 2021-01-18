@@ -1,42 +1,39 @@
 package de.nak.home_assistant.commands;
 
+import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.CallbackQuery;
+import com.pengrad.telegrambot.request.AnswerCallbackQuery;
+import com.pengrad.telegrambot.request.BaseRequest;
+import com.pengrad.telegrambot.request.SendMessage;
 import de.nak.home_assistant.CustomKeyboard;
 import de.nak.home_assistant.actions.DeviceAction;
 import de.nak.home_assistant.actions.DeviceSelect;
 import de.nak.home_assistant.actions.ModuleToggle;
 import de.nak.home_assistant.models.telegram.CallbackActions;
 import de.nak.home_assistant.models.telegram.CallbackData;
-import org.telegram.abilitybots.api.sender.MessageSender;
-import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Callback {
 
-    private final MessageSender sender;
+    private final TelegramBot bot;
 
-    public Callback(MessageSender sender) {
-        this.sender = sender;
+    public Callback(TelegramBot bot) {
+        this.bot = bot;
     }
 
-    public void replyToButtons(long chatId, CallbackQuery callbackQuery) {
-        long userId = callbackQuery.getFrom().getId();
-        CallbackData cbData = new CallbackData().fromJson(callbackQuery.getData());
-        List<BotApiMethod<?>> messages = new ArrayList<>();
-
-        SendMessage message = CustomKeyboard.generateMessageWithKeyboard(userId, chatId);
+    public void replyToButtons(CallbackQuery callbackQuery) {
+        long chatId = callbackQuery.message().chat().id();
+        long userId = callbackQuery.from().id();
+        CallbackData cbData = new CallbackData().fromJson(callbackQuery.data());
+        List<BaseRequest<?, ?>> messages = new ArrayList<>();
 
         switch (cbData.getAction()) {
             case CallbackActions.SELECT_DEVICE:
                 messages.add(DeviceSelect.generateMessage(userId, chatId, cbData));
                 break;
             case CallbackActions.ACTION_DEVICE:
-                messages.addAll(DeviceAction.generateMessages(userId, chatId, cbData, callbackQuery.getMessage(), null));
+                messages.addAll(DeviceAction.generateMessages(userId, chatId, cbData, callbackQuery.message(), null));
                 break;
             case CallbackActions.ACTIVATE_MODULE:
                 messages.add(ModuleToggle.generateMessage(userId, chatId, cbData, true));
@@ -45,26 +42,12 @@ public class Callback {
                 messages.add(ModuleToggle.generateMessage(userId, chatId, cbData, false));
                 break;
             default:
-                message.setText("Etwas fehlt");
+                SendMessage message = CustomKeyboard.generateMessageWithKeyboard(userId, chatId, "Etwas fehlt");
                 messages.add(message);
         }
 
-        messages.forEach(botApiMethod -> {
-            try {
-                sender.execute(botApiMethod);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
-        });
+        messages.forEach(bot::execute);
 
-        try {
-            sender.execute(AnswerCallbackQuery
-                    .builder()
-                    .callbackQueryId(callbackQuery.getId())
-                    .build());
-
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        bot.execute(new AnswerCallbackQuery(callbackQuery.id()));
     }
 }

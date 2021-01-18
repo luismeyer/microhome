@@ -1,21 +1,17 @@
 package de.nak.home_assistant.actions;
 
+import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.request.ForceReply;
+import com.pengrad.telegrambot.request.BaseRequest;
+import com.pengrad.telegrambot.request.EditMessageText;
+import com.pengrad.telegrambot.request.PinChatMessage;
+import com.pengrad.telegrambot.request.SendMessage;
 import de.nak.home_assistant.CustomKeyboard;
 import de.nak.home_assistant.models.service.ServiceRequest;
 import de.nak.home_assistant.models.service.SimpleResponse;
 import de.nak.home_assistant.models.telegram.CallbackData;
 import de.nak.home_assistant.services.ServiceService;
 import de.nak.home_assistant.services.database.DeviceService;
-import org.glassfish.jersey.internal.inject.Custom;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.groupadministration.SetChatAdministratorCustomTitle;
-import org.telegram.telegrambots.meta.api.methods.groupadministration.SetChatTitle;
-import org.telegram.telegrambots.meta.api.methods.pinnedmessages.PinChatMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ForceReplyKeyboard;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,33 +19,23 @@ import java.util.List;
 
 public class DeviceAction {
 
-    public static List<BotApiMethod<?>> generateMessages(long userId, long chatId, CallbackData cbData, Message inMessage, String data) {
+    public static List<BaseRequest<?, ?>> generateMessages(long userId, long chatId, CallbackData cbData, Message inMessage, String data) {
         String deviceId = cbData.getDeviceId();
         int moduleId = cbData.getModuleId();
 
-        List<BotApiMethod<?>> messages = new ArrayList<>();
-
+        List<BaseRequest<?, ?>> messages = new ArrayList<>();
         String function = cbData.getFunction();
+
         // Ask for data input if required and not given
         if (function.endsWith("*") && data == null) {
-            SendMessage msg = CustomKeyboard.generateDefaultMessage(chatId);
-            msg.setText("Antworte auf diese Nachricht mit den Eingabe Daten");
-            msg.setReplyMarkup(ForceReplyKeyboard.builder().forceReply(true).build());
+            SendMessage msg = new SendMessage(chatId, "Antworte auf diese Nachricht mit den Eingabe Daten")
+                    .replyMarkup(new ForceReply());
 
-            PinChatMessage pin = PinChatMessage.builder()
-                    .chatId(String.valueOf(chatId))
-                    .messageId(inMessage.getMessageId())
-                    .disableNotification(true)
-                    .build();
+            PinChatMessage pin = new PinChatMessage(chatId, inMessage.messageId()).disableNotification(true);
 
-            if (inMessage.getReplyMarkup().getKeyboard().get(0).size() > 1) {
-                EditMessageText edit = EditMessageText
-                        .builder()
-                        .chatId(String.valueOf(chatId))
-                        .messageId(inMessage.getMessageId())
-                        .text(inMessage.getText())
-                        .replyMarkup(CustomKeyboard.generateFunctionButtons(Arrays.asList(cbData.getFunction()), deviceId, moduleId))
-                        .build();
+            if (inMessage.replyMarkup().inlineKeyboard()[0].length > 1) {
+                EditMessageText edit = new EditMessageText(chatId, inMessage.messageId(), inMessage.text())
+                        .replyMarkup(CustomKeyboard.generateFunctionButtons(Arrays.asList(cbData.getFunction()), deviceId, moduleId));
 
                 messages.add(edit);
             }
@@ -70,13 +56,14 @@ public class DeviceAction {
         ServiceService service = new ServiceService(new SimpleResponse());
         SimpleResponse response = service.makeRequest(serviceRequest);
 
-        SendMessage message = CustomKeyboard.generateMessageWithKeyboard(userId, chatId);
+        String statusMessage = "";
         if (response.isSuccess()) {
 
+            /* TODO: update edit message logic
             SendMessage sendMessage = DeviceSelect.generateMessage(userId, chatId, cbData);
 
             if (!sendMessage.getText().equals(inMessage.getText()) || sendMessage.getReplyMarkup() != inMessage.getReplyMarkup()) {
-                
+
                 messages.add(EditMessageText.builder()
                         .chatId(String.valueOf(chatId))
                         .messageId(inMessage.getMessageId())
@@ -84,14 +71,14 @@ public class DeviceAction {
                         .replyMarkup((InlineKeyboardMarkup) sendMessage.getReplyMarkup())
                         .build()
                 );
-            }
+            }*/
 
-            message.setText("Wir hatten erfolg!!");
+            statusMessage = "Wir hatten erfolg!!";
         } else {
-            message.setText("Hat irgendwie nicht geklappt!! " + response.getError());
+            statusMessage = "Hat irgendwie nicht geklappt!! " + response.getError();
         }
 
-        messages.add(message);
+        messages.add(CustomKeyboard.generateMessageWithKeyboard(userId, chatId, statusMessage));
         return messages;
     }
 }

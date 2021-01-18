@@ -1,12 +1,12 @@
 package de.nak.home_assistant.actions;
 
+import com.pengrad.telegrambot.request.SendMessage;
 import de.nak.home_assistant.CustomKeyboard;
 import de.nak.home_assistant.models.service.AuthResponse;
 import de.nak.home_assistant.models.service.ServiceRequest;
 import de.nak.home_assistant.models.telegram.CallbackData;
 import de.nak.home_assistant.services.ServiceService;
 import de.nak.home_assistant.services.database.UserService;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 public class ModuleToggle {
 
@@ -19,21 +19,20 @@ public class ModuleToggle {
             ServiceRequest serviceRequest = userService.activateModule(moduleId);
             ServiceService serviceService = new ServiceService(new AuthResponse());
             AuthResponse authResponse = serviceService.makeRequest(serviceRequest);
+
             if (authResponse.isSuccess()){
                 text = authResponse.getResult();
-            }else{
+            } else {
                 text = "Etwas ist schief gegangen" + authResponse.getError();
             }
         } else {
             if (userService.deactivateModule(moduleId)){
                 text = "Modul deaktiviert";
-            }else {
+            } else {
                 text = "Etwas ist schief gegangen";
             }
         }
 
-        SendMessage message = CustomKeyboard.generateMessageWithKeyboard(userId, chatId);
-        message.setText(text);
-        return message;
+        return CustomKeyboard.generateMessageWithKeyboard(userId, chatId, text);
     }
 }

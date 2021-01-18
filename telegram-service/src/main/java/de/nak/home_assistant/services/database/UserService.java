@@ -22,7 +22,9 @@ public class UserService {
 
     public boolean createUser() {
         String url = Env.getDBUrl() + "user/" + userId;
-        return Http.hasPositiveHTTPStatusCode(Http.sendPost(url, "{}"));
+
+        HttpResponse res = Http.sendPost(url, "{}");
+        return Http.hasPositiveHTTPStatusCode(res);
     }
 
     public List<ModuleResponse> getModules() {

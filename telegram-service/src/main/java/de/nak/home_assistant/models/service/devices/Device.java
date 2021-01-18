@@ -1,12 +1,8 @@
 package de.nak.home_assistant.models.service.devices;
 
 import com.google.gson.Gson;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import de.nak.home_assistant.models.ISerializable;
-import de.nak.home_assistant.models.telegram.CallbackActions;
-import de.nak.home_assistant.models.telegram.CallbackData;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-
-import java.util.Optional;
 
 public class Device implements ISerializable {
 

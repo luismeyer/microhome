@@ -1,75 +1,69 @@
 package de.nak.home_assistant.commands;
 
+import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.SendMessage;
 import de.nak.home_assistant.CustomKeyboard;
+import de.nak.home_assistant.Utils;
 import de.nak.home_assistant.actions.DeviceList;
 import de.nak.home_assistant.models.database.ModuleResponse;
+import de.nak.home_assistant.models.telegram.Command;
 import de.nak.home_assistant.services.database.ModuleService;
 import de.nak.home_assistant.services.database.UserService;
-import org.telegram.abilitybots.api.objects.Ability;
-import org.telegram.abilitybots.api.objects.MessageContext;
-import org.telegram.abilitybots.api.sender.MessageSender;
-import org.telegram.abilitybots.api.util.AbilityExtension;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.telegram.abilitybots.api.objects.Locality.ALL;
-import static org.telegram.abilitybots.api.objects.Privacy.PUBLIC;
+public class Lifx extends Command {
 
-public class Lifx implements AbilityExtension {
+    private final TelegramBot bot;
 
-    private static final String COMMAND_NAME = "lifx";
-    private final MessageSender sender;
-
-    public Lifx(MessageSender sender) {
-        this.sender = sender;
+    public Lifx(TelegramBot bot) {
+        this.bot = bot;
+        this.name = "lifx";
+        this.description = "Öffnet das Lifx Gerätemenü";
     }
 
-    private void sendMessage(SendMessage message) {
-        try {
-            sender.execute(message);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+    public Lifx() {
+        this(null);
     }
 
-    private void replyToLifx(MessageContext ctx) {
-        long userId = ctx.user().getId();
-        long chatId = ctx.chatId();
+    @Override
+    public void reply(Update update) {
+        long userId = update.message().from().id();
+        long chatId = update.message().chat().id();
 
-        Optional<ModuleResponse> moduleResponse = new ModuleService().findModuleByName(COMMAND_NAME);
+        Optional<ModuleResponse> moduleResponse = new ModuleService().findModuleByName(this.name);
         if (!moduleResponse.isPresent()) {
-            SendMessage msg = CustomKeyboard.generateDefaultMessage(chatId, "Interner Fehler (es wurde kein Modul mit dem Name " + COMMAND_NAME + " gefunden)");
-            sendMessage(msg);
+            SendMessage msg = new SendMessage(chatId, "Interner Fehler (es wurde kein Modul mit dem Name " + this.name + " gefunden)");
+            bot.execute(msg);
             return;
         }
 
         int moduleId = moduleResponse.get().getId();
         List<SendMessage> messages = new ArrayList<>();
 
-        boolean hasArgs = ctx.arguments().length > 0;
+
+        String[] args = Utils.messageArgs(update.message().text());
+        boolean hasArgs = args.length > 0;
         boolean tokenSuccess = false;
         UserService userService = new UserService(userId);
 
 
         if (hasArgs) {
-            String token = ctx.arguments()[0];
+            String token = args[0];
             tokenSuccess = userService.setToken(moduleId, token);
         }
 
         // Send success message
         if (tokenSuccess) {
-            messages.add(CustomKeyboard.generateDefaultMessage(chatId, "Lifx-Token wurde geupdated 🥳"));
+            messages.add(new SendMessage(chatId,"Lifx-Token wurde geupdated 🥳"));
         }
 
         // Remove module and send error if token couldn't be updated
         if (!tokenSuccess && hasArgs) {
-            SendMessage msg = CustomKeyboard.generateMessageWithKeyboard(userId, chatId);
-            msg.setText("Fehler beim Lifx-Token update :(");
-
+            SendMessage msg = CustomKeyboard.generateMessageWithKeyboard(userId, chatId, "Fehler beim Lifx-Token update :(");
             messages.add(msg);
         }
 
@@ -78,18 +72,7 @@ public class Lifx implements AbilityExtension {
             messages.add(DeviceList.generateMessage(userId, chatId, moduleId));
         }
 
-        messages.forEach(this::sendMessage);
+        messages.forEach(bot::execute);
     }
 
-    // Registers the Ability in the AbilityBot
-    public Ability lifx() {
-        return Ability.builder()
-                .name(COMMAND_NAME)
-                .info("Lifx Overview")
-                .privacy(PUBLIC)
-                .locality(ALL)
-                .input(0)
-                .action(this::replyToLifx)
-                .build();
-    }
 }

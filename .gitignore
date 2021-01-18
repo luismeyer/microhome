@@ -207,6 +207,7 @@ typings/
 .env
 .env.test
 .env*.local
+.env.*
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -269,3 +270,5 @@ target
 wp_home_assistant_bot
 home_assistant_dev_bot
 .mvn
+.aws-sam
+test
