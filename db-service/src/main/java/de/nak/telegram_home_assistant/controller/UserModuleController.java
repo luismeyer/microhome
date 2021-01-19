@@ -1,10 +1,5 @@
 package de.nak.telegram_home_assistant.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-@Controller    // This means that this class is a Controller
-@RequestMapping(path = "/user")
 public class UserModuleController {
 
     /*private static final Logger LOG = LoggerFactory.getLogger(UserModuleController.class);

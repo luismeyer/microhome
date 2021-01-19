@@ -1,11 +1,9 @@
 package de.nak.telegram_home_assistant.handler.user;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import de.nak.telegram_home_assistant.Json;
 import de.nak.telegram_home_assistant.controller.response.RandomString;
 import de.nak.telegram_home_assistant.controller.response.ServiceRequest;
@@ -19,20 +17,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class PutUserModule extends AHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class PutUserModule extends AHandler
+        implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
-        Optional<APIGatewayProxyResponseEvent> errorResponse = defaultHandleRequest(requestEvent);
+        this.request = requestEvent;
+
+        Optional<APIGatewayProxyResponseEvent> errorResponse = defaultHandleRequest(USER_ID_PARAM, MODULE_ID_PARAM);
         if (errorResponse.isPresent()) {
             return errorResponse.get();
         }
 
-        String rawTelegramId = requestEvent.getPathParameters().get("userId");
-        String rawModuleId = requestEvent.getPathParameters().get("moduleId");
-
-        if (rawTelegramId == null || rawModuleId == null) {
-            return Json.invalidDataResponse("Missing path parameters");
-        }
+        String rawTelegramId = requestEvent.getPathParameters().get(USER_ID_PARAM);
+        String rawModuleId = requestEvent.getPathParameters().get(MODULE_ID_PARAM);
 
         Long telegramId = Long.parseLong(rawTelegramId);
         int moduleId = Integer.parseInt(rawModuleId);
@@ -52,9 +49,7 @@ public class PutUserModule extends AHandler implements RequestHandler<APIGateway
         }
 
         User user = oUser.get();
-        List<Module> newModules = user.getModules()
-                .stream()
-                .filter(m -> m.getId() != module.getId())
+        List<Module> newModules = user.getModules().stream().filter(m -> m.getId() != module.getId())
                 .collect(Collectors.toList());
 
         newModules.add(module);
@@ -69,11 +64,8 @@ public class PutUserModule extends AHandler implements RequestHandler<APIGateway
             return Json.invalidDataResponse("Something went wrong");
         }
 
-        ServiceRequest serviceRequest = new ServiceRequest()
-                .setServiceUrl(updatedModule.getServiceUrl())
-                .setBody(new ServiceRequestBody()
-                        .setAction("auth")
-                        .setData(updatedModule.getToken()));
+        ServiceRequest serviceRequest = new ServiceRequest().setServiceUrl(updatedModule.getServiceUrl())
+                .setBody(new ServiceRequestBody().setAction("auth").setData(updatedModule.getToken()));
 
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
         response.setStatusCode(200);

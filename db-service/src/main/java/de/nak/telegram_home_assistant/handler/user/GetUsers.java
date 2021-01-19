@@ -14,7 +14,9 @@ import java.util.Optional;
 public class GetUsers extends AHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
-        Optional<APIGatewayProxyResponseEvent> errorResponse = defaultHandleRequest(requestEvent);
+        this.request = requestEvent;
+        
+        Optional<APIGatewayProxyResponseEvent> errorResponse = defaultHandleRequest();
         if (errorResponse.isPresent()) {
             return errorResponse.get();
         }

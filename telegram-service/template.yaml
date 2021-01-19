@@ -9,10 +9,10 @@ Resources:
   TelegramServiceFunction:
     Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: .
+      CodeUri: target/telegram-service-1.0-SNAPSHOT.jar
       Handler: de.nak.home_assistant.Handler::handleRequest
       Runtime: java8
-      MemorySize: 512
+      MemorySize: 1024
       Environment: 
         Variables:
           DB_URL: "http://host.docker.internal:8080/"

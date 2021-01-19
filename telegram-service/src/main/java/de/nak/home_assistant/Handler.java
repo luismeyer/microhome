@@ -1,12 +1,7 @@
 package de.nak.home_assistant;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
@@ -22,16 +17,14 @@ import static de.nak.home_assistant.Env.checkEnvVariables;
  */
 public class Handler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
-    public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context)  {
+    public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         headers.put("X-Custom-Header", "application/json");
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent().withHeaders(headers);
 
         if (input.getBody() == null) {
-            return response
-                    .withStatusCode(400)
-                    .withBody("{ \"error\": \"Missing Event body\" }");
+            return response.withStatusCode(400).withBody("{ \"error\": \"Missing Event body\" }");
         }
 
         try {
@@ -45,8 +38,6 @@ public class Handler implements RequestHandler<APIGatewayProxyRequestEvent, APIG
         Bot bot = new Bot();
         bot.handleUpdate(update);
 
-        return response
-                .withStatusCode(200)
-                .withBody("{ \"success\": true }");
+        return response.withStatusCode(200).withBody("{ \"success\": true }");
     }
 }

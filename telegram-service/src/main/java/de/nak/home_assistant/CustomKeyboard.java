@@ -22,7 +22,7 @@ public class CustomKeyboard {
         if (moduleResponses != null) {
             row1 = moduleResponses
                     .stream()
-                    .map(module -> "/" + module.getName())
+                    .map(module -> module.getName())
                     .toArray(String[]::new);
         } else {
             row1 = new String[]{};
@@ -30,7 +30,7 @@ public class CustomKeyboard {
 
         String[] row2 = Bot.FIXED_COMMANDS
                 .stream()
-                .map(Command::getCommand)
+                .map(Command::getName)
                 .toArray(String[]::new);
 
         return new ReplyKeyboardMarkup(row1, row2);

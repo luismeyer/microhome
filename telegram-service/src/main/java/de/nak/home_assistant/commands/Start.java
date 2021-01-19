@@ -30,7 +30,7 @@ public class Start extends Command {
         String text;
         if (success){
             text = "🚀 Willkommen beim Home Assistant Bot" +
-                    "\n\n⚙️ Als nächstes kannst du mit dem " + this.getCommand() + " Kommando deine Module verwalten." +
+                    "\n\n⚙️ Als nächstes kannst du mit dem '" + new Settings().getName() + "' Kommando deine Module verwalten." +
                     "\n🏁 Wenn du schon Module hinzugfügt hast kannst du auch direkt loslegen in dem du diese im Menü auswählst";
         } else {
             text = "Fehler beim Anmelden. Versuch es später erneut. :)";

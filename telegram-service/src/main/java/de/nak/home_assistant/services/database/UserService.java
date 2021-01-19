@@ -22,7 +22,6 @@ public class UserService {
 
     public boolean createUser() {
         String url = Env.getDBUrl() + "user/" + userId;
-
         HttpResponse res = Http.sendPost(url, "{}");
         return Http.hasPositiveHTTPStatusCode(res);
     }
@@ -33,7 +32,8 @@ public class UserService {
 
         if (Http.hasPositiveHTTPStatusCode(httpResponse)) {
             String json = Http.getResponseBody(httpResponse);
-            Type moduleListType = new TypeToken<ArrayList<ModuleResponse>>() {}.getType();
+            Type moduleListType = new TypeToken<ArrayList<ModuleResponse>>() {
+            }.getType();
             return new Gson().fromJson(json, moduleListType);
         }
 

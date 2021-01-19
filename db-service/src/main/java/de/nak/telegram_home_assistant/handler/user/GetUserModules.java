@@ -1,6 +1,5 @@
 package de.nak.telegram_home_assistant.handler.user;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
@@ -18,15 +17,14 @@ import java.util.stream.Collectors;
 public class GetUserModules extends AHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
-        Optional<APIGatewayProxyResponseEvent> errorResponse = defaultHandleRequest(requestEvent);
+        this.request = requestEvent;
+
+        Optional<APIGatewayProxyResponseEvent> errorResponse = defaultHandleRequest(USER_ID_PARAM);
         if (errorResponse.isPresent()) {
             return errorResponse.get();
         }
 
-        String telegramId = requestEvent.getPathParameters().get("userId");
-        if (telegramId == null) {
-            return Json.invalidDataResponse("Missing telegram id");
-        }
+        String telegramId = requestEvent.getPathParameters().get(USER_ID_PARAM);
 
         Optional<User> oUser = new UserRepository(dynamoDBClient)
                 .findUserByTelegramId(Long.parseLong(telegramId));

@@ -14,7 +14,9 @@ import java.util.Optional;
 public class GetModules extends AHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
-        Optional<APIGatewayProxyResponseEvent> errorResponse = defaultHandleRequest(request);
+        this.request = request;
+
+        Optional<APIGatewayProxyResponseEvent> errorResponse = defaultHandleRequest();
         if (errorResponse.isPresent()) {
             return errorResponse.get();
         }

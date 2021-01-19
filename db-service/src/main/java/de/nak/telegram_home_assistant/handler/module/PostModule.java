@@ -13,7 +13,9 @@ import java.util.*;
 public class PostModule extends AHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
-        Optional<APIGatewayProxyResponseEvent> errorResponse = defaultHandleRequest(request, Module.class);
+        this.request = request;
+
+        Optional<APIGatewayProxyResponseEvent> errorResponse = defaultHandleRequest(Module.class);
         if (errorResponse.isPresent()) {
             return errorResponse.get();
         }

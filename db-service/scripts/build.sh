@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Building project..."
-sam build
+mvn package
 
 echo "Starting api..."
 sam local start-api -n .env.json

@@ -5,11 +5,11 @@ Description: AWS Serverless Spring Boot API - db-service
 Globals:
   Function:
     Timeout: 60
-    MemorySize: 512
+    MemorySize: 1024
     Runtime: java8
     Environment:
       Variables:
-        AUTH_USER: ""
+        AUTH_USER: "Admin"
         AUTH_PASSWORD: ""
 
 Resources:
@@ -19,7 +19,7 @@ Resources:
       Handler: de.nak.telegram_home_assistant.handler.module.PostModule::handleRequest
       Policies:
         - AmazonDynamoDBFullAccess
-      CodeUri: .
+      CodeUri: target/userdb-0.0.1-SNAPSHOT.jar
       Events:
         GetResource:
           Type: Api
@@ -33,7 +33,7 @@ Resources:
       Handler: de.nak.telegram_home_assistant.handler.module.GetModules::handleRequest
       Policies:
         - AmazonDynamoDBFullAccess
-      CodeUri: .
+      CodeUri: target/userdb-0.0.1-SNAPSHOT.jar
       Events:
         GetResource:
           Type: Api
@@ -47,7 +47,7 @@ Resources:
       Handler: de.nak.telegram_home_assistant.handler.module.DeleteModule::handleRequest
       Policies:
         - AmazonDynamoDBFullAccess
-      CodeUri: .
+      CodeUri: target/userdb-0.0.1-SNAPSHOT.jar
       Events:
         GetResource:
           Type: Api
@@ -61,7 +61,7 @@ Resources:
       Handler: de.nak.telegram_home_assistant.handler.user.PostUser::handleRequest
       Policies:
         - AmazonDynamoDBFullAccess
-      CodeUri: .
+      CodeUri: target/userdb-0.0.1-SNAPSHOT.jar
       Events:
         GetResource:
           Type: Api
@@ -75,7 +75,7 @@ Resources:
       Handler: de.nak.telegram_home_assistant.handler.user.GetUsers::handleRequest
       Policies:
         - AmazonDynamoDBFullAccess
-      CodeUri: .
+      CodeUri: target/userdb-0.0.1-SNAPSHOT.jar
       Events:
         GetResource:
           Type: Api
@@ -89,7 +89,7 @@ Resources:
       Handler: de.nak.telegram_home_assistant.handler.user.DeleteUser::handleRequest
       Policies:
         - AmazonDynamoDBFullAccess
-      CodeUri: .
+      CodeUri: target/userdb-0.0.1-SNAPSHOT.jar
       Events:
         GetResource:
           Type: Api
@@ -103,7 +103,7 @@ Resources:
       Handler: de.nak.telegram_home_assistant.handler.user.PutUserModule::handleRequest
       Policies:
         - AmazonDynamoDBFullAccess
-      CodeUri: .
+      CodeUri: target/userdb-0.0.1-SNAPSHOT.jar
       Events:
         GetResource:
           Type: Api
@@ -117,7 +117,7 @@ Resources:
       Handler: de.nak.telegram_home_assistant.handler.user.DeleteUserModule::handleRequest
       Policies:
         - AmazonDynamoDBFullAccess
-      CodeUri: .
+      CodeUri: target/userdb-0.0.1-SNAPSHOT.jar
       Events:
         GetResource:
           Type: Api
@@ -131,7 +131,7 @@ Resources:
       Handler: de.nak.telegram_home_assistant.handler.user.GetUserModules::handleRequest
       Policies:
         - AmazonDynamoDBFullAccess
-      CodeUri: .
+      CodeUri: target/userdb-0.0.1-SNAPSHOT.jar
       Events:
         GetResource:
           Type: Api
@@ -145,7 +145,7 @@ Resources:
       Handler: de.nak.telegram_home_assistant.handler.user.GetUserModule::handleRequest
       Policies:
         - AmazonDynamoDBFullAccess
-      CodeUri: .
+      CodeUri: target/userdb-0.0.1-SNAPSHOT.jar
       Events:
         GetResource:
           Type: Api

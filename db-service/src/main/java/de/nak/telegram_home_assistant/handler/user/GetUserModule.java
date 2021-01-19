@@ -1,6 +1,5 @@
 package de.nak.telegram_home_assistant.handler.user;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
@@ -16,19 +15,19 @@ import de.nak.telegram_home_assistant.model.response.ModuleServiceResponse;
 
 import java.util.Optional;
 
-public class GetUserModule extends AHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class GetUserModule extends AHandler
+        implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
-        Optional<APIGatewayProxyResponseEvent> errorResponse = defaultHandleRequest(requestEvent);
+        this.request = requestEvent;
+
+        Optional<APIGatewayProxyResponseEvent> errorResponse = defaultHandleRequest(USER_ID_PARAM, MODULE_ID_PARAM);
         if (errorResponse.isPresent()) {
             return errorResponse.get();
         }
 
-        String telegramId = requestEvent.getPathParameters().get("userId");
-        String moduleId =   requestEvent.getPathParameters().get("moduleId");
-        if (telegramId == null || moduleId == null) {
-            return Json.invalidDataResponse("Missing path parameters\")");
-        }
+        String telegramId = requestEvent.getPathParameters().get(USER_ID_PARAM);
+        String moduleId = requestEvent.getPathParameters().get(MODULE_ID_PARAM);
 
         UserRepository userRepository = new UserRepository(dynamoDBClient);
 
@@ -43,14 +42,10 @@ public class GetUserModule extends AHandler implements RequestHandler<APIGateway
         }
         Module module = oModule.get();
 
-        ModuleServiceResponse moduleResponse = new ModuleServiceResponse()
-                .setId(module.getId())
+        ModuleServiceResponse moduleResponse = new ModuleServiceResponse().setId(module.getId())
                 .setName(module.getName())
-                .setServiceRequest(new ServiceRequest()
-                        .setServiceUrl(module.getServiceUrl())
-                        .setBody(new ServiceRequestBody()
-                                .setAction(module.getBaseAction())
-                                .setToken(module.getToken())));
+                .setServiceRequest(new ServiceRequest().setServiceUrl(module.getServiceUrl()).setBody(
+                        new ServiceRequestBody().setAction(module.getBaseAction()).setToken(module.getToken())));
 
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
         response.setStatusCode(200);
