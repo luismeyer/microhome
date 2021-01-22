@@ -39,6 +39,7 @@ export const addUserModule: APIGatewayProxyHandler = authorizedHandler(
         token: module.token,
         action: "auth",
         deviceId: "",
+        data: module.token,
       },
     };
 

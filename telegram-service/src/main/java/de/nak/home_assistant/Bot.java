@@ -37,6 +37,10 @@ public class Bot {
             return;
         }
 
+        if (update.message().text() == null) {
+            return;
+        }
+
         handleCommand(update);
     }
 
