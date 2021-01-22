@@ -1,12 +1,12 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { FunctionsResponse } from "../../models/module";
+import { ModuleResponse } from "../../models/module";
 import { findUserByTelegramId } from "../../models/user";
 import { errorResponse, stringify, successResponse } from "../../response";
 import { authorizedHandler, validateNumber } from "../../validation/access";
 
-export const getUserModuleDevice: APIGatewayProxyHandler = authorizedHandler(
+export const getUserModule: APIGatewayProxyHandler = authorizedHandler(
   async (event) => {
-    const { deviceid, userid, moduleid } = event.pathParameters;
+    const { userid, moduleid } = event.pathParameters;
 
     const { input: userId, error: userError } = validateNumber(userid);
     if (userError) return errorResponse(userError);
@@ -18,16 +18,18 @@ export const getUserModuleDevice: APIGatewayProxyHandler = authorizedHandler(
     if (!user) return errorResponse("Wrong userId");
 
     const module = user.modules.find(({ id }) => id === moduleId);
-    if (!module) return errorResponse("Wrong moduleId");
+    if (!module)
+      return errorResponse("User is not subscribed to this serviceId");
 
-    const response: FunctionsResponse = {
-      functions: module.functions,
+    const response: ModuleResponse = {
+      id: module.id,
+      name: module.name,
       serviceRequest: {
         serviceUrl: module.serviceUrl,
-        serviceBody: {
+        body: {
           token: module.token,
-          action: "get",
-          deviceId: deviceid,
+          action: module.baseAction,
+          deviceId: "",
         },
       },
     };

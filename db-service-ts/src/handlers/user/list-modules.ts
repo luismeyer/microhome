@@ -6,7 +6,9 @@ import { authorizedHandler, validateNumber } from "../../validation/access";
 
 export const listUserModules: APIGatewayProxyHandler = authorizedHandler(
   async (event) => {
-    const { input: userId, error } = validateNumber(event.pathParameters.id);
+    const { input: userId, error } = validateNumber(
+      event.pathParameters.userid
+    );
     if (error) return errorResponse(error);
 
     const user = await findUserByTelegramId(userId);
@@ -17,7 +19,7 @@ export const listUserModules: APIGatewayProxyHandler = authorizedHandler(
       name: module.name,
       serviceRequest: {
         serviceUrl: module.serviceUrl,
-        serviceBody: {
+        body: {
           token: module.token,
           deviceId: "",
           action: "",

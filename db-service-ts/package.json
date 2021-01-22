@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "serverless offline",
+    "start": "serverless offline --httpPort 8080",
     "generate:validators": "typescript-json-schema src/models/module.ts Module",
     "lint": "tslint '*.ts'"
   },

@@ -7,7 +7,7 @@ import { authorizedHandler, validateNumber } from "../../validation/access";
 
 export const createUser: APIGatewayProxyHandler = authorizedHandler(
   async (event) => {
-    const { input, error } = validateNumber(event.pathParameters.id);
+    const { input, error } = validateNumber(event.pathParameters.userid);
     if (error) return errorResponse(error);
 
     const existingUser = await findUserByTelegramId(input);

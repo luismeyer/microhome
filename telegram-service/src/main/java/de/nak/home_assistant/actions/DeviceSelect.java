@@ -21,14 +21,16 @@ public class DeviceSelect {
         ServiceService service = new ServiceService(new DeviceResponse());
         DeviceResponse deviceResponse = service.makeRequest(functionsResponse.getServiceRequest());
 
+        InlineKeyboardMarkup keyboardMarkup = CustomKeyboard.generateFunctionButtons(functionsResponse.getFunctions(),
+                deviceId, moduleId);
+
         SendMessage message;
         if (deviceResponse.isSuccess()) {
-
-            InlineKeyboardMarkup keyboardMarkup = CustomKeyboard.generateFunctionButtons(functionsResponse.getFunctions(), deviceId, moduleId);
             message = new SendMessage(chatId, deviceResponse.getResult().toString()).replyMarkup(keyboardMarkup);
 
         } else {
-            message = new SendMessage(chatId, "Etwas ist schiefgegangen: " + deviceResponse.getError());
+            message = new SendMessage(chatId, "Etwas ist schiefgegangen: " + deviceResponse.getError())
+                    .replyMarkup(keyboardMarkup);
         }
 
         return message;

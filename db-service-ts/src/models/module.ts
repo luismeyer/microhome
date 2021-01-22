@@ -26,7 +26,7 @@ export type ModuleResponse = {
 
 export type ServiceRequest = {
   serviceUrl: string;
-  serviceBody?: {
+  body?: {
     token: string;
     deviceId: string;
     action: string;

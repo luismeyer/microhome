@@ -1,19 +1,17 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { ModuleResponse } from "../../models/module";
+import { FunctionsResponse } from "../../models/module";
 import { findUserByTelegramId } from "../../models/user";
 import { errorResponse, stringify, successResponse } from "../../response";
 import { authorizedHandler, validateNumber } from "../../validation/access";
 
-export const getUserModule: APIGatewayProxyHandler = authorizedHandler(
+export const getUserModuleDevice: APIGatewayProxyHandler = authorizedHandler(
   async (event) => {
-    const { input: userId, error: userError } = validateNumber(
-      event.pathParameters.userid
-    );
+    const { deviceid, userid, moduleid } = event.pathParameters;
+
+    const { input: userId, error: userError } = validateNumber(userid);
     if (userError) return errorResponse(userError);
 
-    const { input: moduleId, error: moduleError } = validateNumber(
-      event.pathParameters.moduleid
-    );
+    const { input: moduleId, error: moduleError } = validateNumber(moduleid);
     if (moduleError) return errorResponse(moduleError);
 
     const user = await findUserByTelegramId(userId);
@@ -22,15 +20,14 @@ export const getUserModule: APIGatewayProxyHandler = authorizedHandler(
     const module = user.modules.find(({ id }) => id === moduleId);
     if (!module) return errorResponse("Wrong moduleId");
 
-    const response: ModuleResponse = {
-      id: module.id,
-      name: module.name,
+    const response: FunctionsResponse = {
+      functions: module.functions,
       serviceRequest: {
         serviceUrl: module.serviceUrl,
-        serviceBody: {
+        body: {
           token: module.token,
-          action: module.baseAction,
-          deviceId: "",
+          action: "get",
+          deviceId: deviceid,
         },
       },
     };
