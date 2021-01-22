@@ -1,10 +1,9 @@
-import * as dotenv from "dotenv";
-import { v3 } from "node-hue-api";
 import convert from "color-convert";
-import { OAuthTokens } from "node-hue-api/lib/api/http/RemoteApi";
+import * as dotenv from "dotenv";
 import fetch from "node-fetch";
-
-import { ErrorResponse, TokensResponse, Error, Lamp, ApiLamp } from "./typings";
+import { v3 } from "node-hue-api";
+import { OAuthTokens } from "node-hue-api/lib/api/http/RemoteApi";
+import { ApiLamp, Error, ErrorResponse, Lamp, TokensResponse } from "./typings";
 
 dotenv.config();
 
@@ -53,14 +52,14 @@ export const createErrorResponse = (error: string | Error): ErrorResponse => ({
 
 export const editDBToken = (token: string, editToken: string) => {
   console.log("New Token: ", token);
-  const url = `${DB_SERVICE_URL}/user/token/${editToken}?token=${token}`;
+  const url = `${DB_SERVICE_URL}user/token/${editToken}?token=${token}`;
   return fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: DB_SERVICE_HEADER,
     },
-  }).then((r) => r);
+  });
 };
 
 export const generateTokens = async (
@@ -85,7 +84,7 @@ export const transformLight = (light: ApiLamp): Lamp => {
   let brightness;
   let saturation;
 
-  if(light.state.hue) {
+  if (light.state.hue) {
     hue = light.state.hue / 182;
     brightness = light.state.bri / 2.54;
     saturation = light.state.sat / 2.54;

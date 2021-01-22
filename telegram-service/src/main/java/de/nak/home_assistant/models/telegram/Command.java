@@ -15,10 +15,6 @@ public abstract class Command {
         return description;
     }
 
-    public String getCommand() {
-        return "/" + name;
-    }
-
     public abstract void reply(Update update);
 
 }

@@ -241,15 +241,6 @@ dist
 # TernJS port file
 .tern-port
 
-# Stores VSCode versions used for testing VSCode extensions
-.vscode-test
-
-### VisualStudioCode ###
-.vscode/*
-!.vscode/tasks.json
-!.vscode/launch.json
-*.code-workspace
-
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history
@@ -272,3 +263,6 @@ home_assistant_dev_bot
 .mvn
 .aws-sam
 test
+local
+bin
+.project

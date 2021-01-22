@@ -16,9 +16,7 @@ public class Bot {
     public static List<Command> FIXED_COMMANDS = Arrays.asList(new Start(), new Settings());
 
     public Bot() {
-        BotCommand[] commands = FIXED_COMMANDS
-                .stream()
-                .map(c -> new BotCommand(c.getName(), c.getDescription()))
+        BotCommand[] commands = FIXED_COMMANDS.stream().map(c -> new BotCommand(c.getName(), c.getDescription()))
                 .toArray(BotCommand[]::new);
 
         SetMyCommands setMyCommands = new SetMyCommands(commands);
@@ -39,7 +37,16 @@ public class Bot {
             return;
         }
 
+        if (update.message().text() == null) {
+            return;
+        }
+
         handleCommand(update);
+    }
+
+    private boolean commandMatcher(String inputText, Command handler) {
+        String input = inputText.toLowerCase();
+        return input.startsWith(handler.getName()) || input.startsWith("/" + handler.getName());
     }
 
     private void handleCommand(Update update) {
@@ -53,9 +60,7 @@ public class Bot {
         String text = update.message().text();
         Command[] commands = { new Start(api), new Settings(api), new Lifx(api), new Hue(api), new Fritz(api) };
 
-        Command command = Arrays.stream(commands)
-                .filter(handler -> text.startsWith(handler.getCommand()))
-                .findFirst()
+        Command command = Arrays.stream(commands).filter(handler -> commandMatcher(text, handler)).findFirst()
                 .orElse(fallback);
 
         command.reply(update);
