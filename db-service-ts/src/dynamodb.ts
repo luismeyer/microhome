@@ -1,20 +1,47 @@
 import { DynamoDB } from "aws-sdk";
 
-export const { MODULE_TABLE } = process.env;
+export const { MODULE_TABLE, USER_TABLE } = process.env;
 if (!MODULE_TABLE) {
   throw new Error("Missing Env Variable: 'DYNAMODB_TABLE'");
 }
 
+if (!USER_TABLE) {
+  throw new Error("Missing Env Variable: 'USER_TABLE'");
+}
+
 const dynamoDb = new DynamoDB.DocumentClient();
 
-export const putItem = (params: DynamoDB.DocumentClient.PutItemInput) =>
-  dynamoDb.put(params).promise();
+export const putItem = (
+  tablename: string,
+  item: DynamoDB.DocumentClient.PutItemInput["Item"]
+) => dynamoDb.put({ TableName: tablename, Item: item }).promise();
 
-export const getItem = (params: DynamoDB.DocumentClient.GetItemInput) =>
-  dynamoDb.get(params).promise();
+export const getItem = (tablename: string, key: DynamoDB.DocumentClient.Key) =>
+  dynamoDb
+    .get({
+      TableName: tablename,
+      Key: key,
+    })
+    .promise();
 
-export const updateItem = (params: DynamoDB.DocumentClient.UpdateItemInput) =>
-  dynamoDb.update(params).promise();
+export const scanItems = (
+  tablename: string,
+  filter?: DynamoDB.DocumentClient.ScanInput["ScanFilter"]
+) =>
+  dynamoDb
+    .scan({
+      TableName: tablename,
+      ScanFilter: filter,
+    })
+    .promise();
 
-export const scanItems = (params: DynamoDB.DocumentClient.ScanInput) =>
-  dynamoDb.scan(params).promise();
+export const deleteItem = (
+  tablename: string,
+  key: DynamoDB.DocumentClient.Key
+) =>
+  dynamoDb
+    .delete({
+      TableName: tablename,
+      Key: key,
+    })
+    .promise();

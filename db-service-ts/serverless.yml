@@ -5,6 +5,7 @@ frameworkVersion: '2'
 plugins:
   - serverless-offline
   - serverless-webpack
+  - serverless-dotenv-plugin
 
 provider:
   name: aws
@@ -12,6 +13,7 @@ provider:
   region: eu-central-1
   environment:
     MODULE_TABLE: ModuleTable
+    USER_TABLE: UserTable
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -25,7 +27,7 @@ provider:
 
 functions:
   createModule:
-    handler: src/module/create.create
+    handler: src/handlers/module/create.createModule
     events:
       - http:
           path: module
@@ -33,7 +35,7 @@ functions:
           cors: true
 
   listModules:
-    handler: src/module/list.list
+    handler: src/handlers/module/list.listModule
     events:
       - http:
           path: module
@@ -41,16 +43,89 @@ functions:
           cors: true
         
   getModule:
-    handler: src/module/get.get
+    handler: src/handlers/module/get.getModule
     events:
       - http:
           path: module/{id}
           method: get
           cors: true        
 
+  createUser:
+    handler: src/handlers/user/create.createUser
+    events:
+      - http:
+          path: user/{id}
+          method: post
+          cors: true
+
+  deleteUser:
+    handler: src/handlers/user/delete.deleteUser
+    events:
+      - http:
+          path: user/{id}
+          method: delete
+          cors: true     
+  
+  listUsers:
+    handler: src/handlers/user/list.listUsers
+    events:
+      - http:
+          path: user/
+          method: get
+          cors: true
+          
+  listUserModules:
+    handler: src/handlers/user/list-modules.listUserModules
+    events:
+      - http:
+          path: user/{id}/module
+          method: get
+          cors: true
+  
+  getUserModule:
+    handler: src/handlers/user/get-module.getUserModule
+    events:
+      - http:
+          path: user/{userid}/module/{moduleid}
+          method: get
+          cors: true
+  
+  addUserModule:
+    handler: src/handlers/user/add-module.addUserModule
+    events:
+      - http:
+          path: user/{userid}/module/{moduleid}
+          method: put
+          cors: true
+
+  getUserModuleDevice:
+    handler: src/handlers/user/get-module-device.getUserModuleDevice
+    events:
+      - http:
+          path: user/{userid}/module/{moduleid}/devices/{deviceid}/functions
+          method: get
+          cors: true
+
 resources:
   Resources:
-    TodosDynamoDbTable:
+    UserDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.USER_TABLE}
+
+    ModuleDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:

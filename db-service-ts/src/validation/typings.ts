@@ -1,4 +1,4 @@
-export type ParseResult<T> = {
+export type ValidationResult<T> = {
   input: T;
   error?: string;
 };

@@ -1,8 +1,10 @@
 import { ValidationError } from "runtypes";
 import { Module, ModuleObject } from "../models/module";
-import { ParseResult } from "./typings";
+import { ValidationResult } from "./typings";
 
-export const validateModuleInput = (input: string): ParseResult<Module> => {
+export const validateModuleInput = (
+  input: string
+): ValidationResult<Module> => {
   try {
     const moduleObject = ModuleObject.check(JSON.parse(input));
 
