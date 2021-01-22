@@ -12,6 +12,15 @@ export const findUserByTelegramId = (
 ): Promise<User | undefined> =>
   scanItems(USER_TABLE).then((res) =>
     res.Items?.map((item) => item as User).find(
-      (item: User) => item.telegramId === telegramId
+      (item) => item.telegramId === telegramId
+    )
+  );
+
+export const findUserByEditToken = (
+  editToken: string
+): Promise<User | undefined> =>
+  scanItems(USER_TABLE).then((res) =>
+    res.Items?.map((item) => item as User).find((item) =>
+      item.modules.some((m) => m.token === editToken)
     )
   );

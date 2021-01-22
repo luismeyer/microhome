@@ -1,21 +1,18 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { putItem, USER_TABLE } from "../../dynamodb";
-import { findUserByTelegramId } from "../../models/user";
+import { findUserByEditToken } from "../../models/user";
 import { errorResponse, stringify, successResponse } from "../../response";
-import { authorizedHandler, validateNumber } from "../../validation/access";
+import { authorizedHandler } from "../../validation/access";
 
 export const updateUserToken: APIGatewayProxyHandler = authorizedHandler(
   async (event) => {
-    const { userid, edittoken } = event.pathParameters;
+    const { edittoken } = event.pathParameters;
     const { token } = event.queryStringParameters;
 
     if (!token) return errorResponse("Missing token");
 
-    const { input, error } = validateNumber(userid);
-    if (error) return errorResponse(error);
-
-    const user = await findUserByTelegramId(input);
-    if (!user) return errorResponse("Wrong userid");
+    const user = await findUserByEditToken(edittoken);
+    if (!user) return errorResponse("Couldn't find user");
 
     const module = user.modules.find((m) => m.token === edittoken);
     if (!module) return errorResponse("Wrong edittoken");

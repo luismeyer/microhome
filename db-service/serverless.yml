@@ -141,7 +141,7 @@ functions:
     handler: src/handlers/user/token.updateUserToken
     events:
       - http:
-          path: user/{userid}/token/{edittoken}
+          path: user/token/{edittoken}
           method: post
           cors: true
   
