@@ -1,4 +1,4 @@
-service: db-service-ts
+service: db-service
 
 frameworkVersion: '2'
 
@@ -7,6 +7,10 @@ plugins:
   - serverless-webpack
   - serverless-dotenv-plugin
 
+custom:
+  webpack:
+    includeModules: true
+    
 provider:
   name: aws
   runtime: nodejs12.x
