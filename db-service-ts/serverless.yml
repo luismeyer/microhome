@@ -1,0 +1,68 @@
+service: db-service-ts
+
+frameworkVersion: '2'
+
+plugins:
+  - serverless-offline
+  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: eu-central-1
+  environment:
+    MODULE_TABLE: ModuleTable
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.MODULE_TABLE}"
+
+functions:
+  createModule:
+    handler: src/module/create.create
+    events:
+      - http:
+          path: module
+          method: post
+          cors: true
+
+  listModules:
+    handler: src/module/list.list
+    events:
+      - http:
+          path: module
+          method: get
+          cors: true
+        
+  getModule:
+    handler: src/module/get.get
+    events:
+      - http:
+          path: module/{id}
+          method: get
+          cors: true        
+
+resources:
+  Resources:
+    TodosDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.MODULE_TABLE}
