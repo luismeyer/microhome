@@ -1,6 +1,19 @@
-import { APIGatewayProxyEvent } from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyHandler } from "aws-lambda";
+import { unauthorizedResponse } from "../response";
 import { AUTH_PASSWORD, AUTH_USER } from "../utils";
 import { ValidationResult } from "./typings";
+
+export const authorizedHandler = (handler: APIGatewayProxyHandler) => {
+  const authHandler: APIGatewayProxyHandler = (event, context) => {
+    if (authorized(event)) {
+      return handler(event, context, undefined);
+    }
+
+    return Promise.resolve(unauthorizedResponse());
+  };
+
+  return authHandler;
+};
 
 export const authorized = (event: APIGatewayProxyEvent) => {
   const token = Buffer.from(`${AUTH_USER}:${AUTH_PASSWORD}`).toString("base64");
