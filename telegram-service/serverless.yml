@@ -1,0 +1,27 @@
+service: telegram-service
+
+frameworkVersion: '2'
+
+plugins:
+  - serverless-dotenv-plugin
+
+provider:
+  name: aws
+  runtime: java8
+  region: eu-central-1
+
+custom:
+  dotenv:
+    basePath: ../
+    
+package:
+  artifact: target/telegram-service.jar
+
+functions:
+  api:
+    handler: de.nak.home_assistant.Handler
+    events:
+      - http:
+          path: api
+          method: any
+          cors: true
