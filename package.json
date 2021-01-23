@@ -1,0 +1,12 @@
+{
+  "name": "telegram-home-assistant",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:luismeyer/telegram-home-assistant.git",
+  "author": "Luis Meyer <luis.meyer@nordakademie.de>",
+  "license": "MIT",
+  "scripts": {
+    "encrypt": "gpg --symmetric --cipher-algo AES256 .env.production",
+    "decrypt": "gpg --decrypt --output secrets/.env .env.production.gpg"
+  }
+}
