@@ -9,19 +9,20 @@ dotenv.config();
 
 const {
   DB_SERVICE_URL,
-  CLIENT_ID,
-  CLIENT_SECRET,
+  HUE_CLIENT_ID,
+  HUE_CLIENT_SECRET,
   DB_SERVICE_HEADER,
 } = process.env;
 
 if (!DB_SERVICE_HEADER)
   throw new Error("Missing env Variable DB_SERVICE_HEADER");
 if (!DB_SERVICE_URL) throw new Error("Missing env Variable DB_SERVICE_URL");
-if (!CLIENT_ID) throw new Error("Missing env Variable CLIENT_ID");
-if (!CLIENT_SECRET) throw new Error("Missing env Variable CLIENT_SECRET");
+if (!HUE_CLIENT_ID) throw new Error("Missing env Variable HUE_CLIENT_ID");
+if (!HUE_CLIENT_SECRET)
+  throw new Error("Missing env Variable HUE_CLIENT_SECRET");
 
 export const connectToApi = (accessToken: string, refreshToken: string) => {
-  const remoteBootstrap = v3.api.createRemote(CLIENT_ID, CLIENT_SECRET);
+  const remoteBootstrap = v3.api.createRemote(HUE_CLIENT_ID, HUE_CLIENT_SECRET);
 
   return remoteBootstrap
     .connectWithTokens(accessToken, refreshToken)
@@ -33,7 +34,7 @@ export const connectToApi = (accessToken: string, refreshToken: string) => {
 };
 
 export const codeToToken = (code: string) => {
-  const remoteBootstrap = v3.api.createRemote(CLIENT_ID, CLIENT_SECRET);
+  const remoteBootstrap = v3.api.createRemote(HUE_CLIENT_ID, HUE_CLIENT_SECRET);
   return remoteBootstrap
     .connectWithCode(code)
     .then((api) => api.remote.getRemoteAccessCredentials());
@@ -65,7 +66,7 @@ export const editDBToken = (token: string, editToken: string) => {
 export const generateTokens = async (
   refreshToken: string
 ): Promise<ErrorResponse | TokensResponse> => {
-  const remoteBootstrap = v3.api.createRemote(CLIENT_ID, CLIENT_SECRET);
+  const remoteBootstrap = v3.api.createRemote(HUE_CLIENT_ID, HUE_CLIENT_SECRET);
   const result = await remoteBootstrap.remoteApi
     .refreshTokens(refreshToken)
     .then(createTokensResponse)

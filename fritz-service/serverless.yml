@@ -9,6 +9,8 @@ custom:
   webpack:
     includeModules: true
     packager: "npm"
+  dotenv:
+    basePath: ../
 
 provider:
   apiGateway:

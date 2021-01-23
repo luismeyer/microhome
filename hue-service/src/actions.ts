@@ -1,34 +1,33 @@
-import * as dotenv from "dotenv";
 import convert from "color-convert";
+import * as dotenv from "dotenv";
 import translate from "translate";
+import { LambdaBody } from "./handler";
+import {
+  connectToApi,
+  createErrorResponse,
+  generateTokens,
+  transformLight,
+} from "./hue";
+import {
+  ApiLamp,
+  ApiResponse,
+  AuthResponse,
+  ErrorResponse,
+  Lamp,
+  LampResponse,
+  LampsResponse,
+  Maybe,
+} from "./typings";
 
 dotenv.config();
 
-import { LambdaBody } from "./handler";
-import {
-  generateTokens,
-  connectToApi,
-  transformLight,
-  createErrorResponse,
-} from "./hue";
-import {
-  ErrorResponse,
-  ApiResponse,
-  Maybe,
-  LampsResponse,
-  LampResponse,
-  AuthResponse,
-  Lamp,
-  ApiLamp,
-} from "./typings";
-
 const { LightState } = require("node-hue-api").v3.lightStates;
 
-const { GOOGLE_API_KEY, CLIENT_ID } = process.env;
+const { GOOGLE_API_KEY, HUE_CLIENT_ID } = process.env;
 translate.key = GOOGLE_API_KEY;
 
 if (!GOOGLE_API_KEY) throw new Error("Missing env Variable: GOOGLE_API_KEY");
-if (!CLIENT_ID) throw new Error("Missing env Variable CLIENT_ID");
+if (!HUE_CLIENT_ID) throw new Error("Missing env Variable HUE_CLIENT_ID");
 
 const checkBaseParams = (body: LambdaBody): Maybe<ErrorResponse> => {
   if (!body.token) {
@@ -143,7 +142,7 @@ export const handleAuthAction = (
   const appId = "nordakademie_telegram_bot";
   return {
     success: true,
-    result: `https://api.meethue.com/oauth2/auth?clientid=${CLIENT_ID}&appid=${appId}&deviceid=${appId}&state=${body.data}&response_type=code`,
+    result: `https://api.meethue.com/oauth2/auth?clientid=${HUE_CLIENT_ID}&appid=${appId}&deviceid=${appId}&state=${body.data}&response_type=code`,
   };
 };
 
