@@ -23,20 +23,19 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Install Serverless Framework
+      run: npm install -g serverless
+    
+    - name: Serverless AWS authentication
+      run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
+
     - name: Decrypt Secrets
-      working-directory: .
       run: gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.PASSPHRASE }}" --output .env.production .env.production.gpg
 
-    - name: Change working-directory
-      run: cd ${{ github.event.inputs.service }}
-
     - name: Install
+      working-directory: ${{ github.event.inputs.service }}
       run: yarn
 
-    - name: Serverless deploy
-      uses: serverless/github-action@master
-      with:
-        args: deploy --env production
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - name: Deploy Lambda functions
+      working-directory: ${{ github.event.inputs.service }}
+      run: sls deploy --env production
