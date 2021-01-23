@@ -1,25 +1,36 @@
 import convert from "color-convert";
-import * as dotenv from "dotenv";
 import fetch from "node-fetch";
 import { v3 } from "node-hue-api";
 import { OAuthTokens } from "node-hue-api/lib/api/http/RemoteApi";
 import { ApiLamp, Error, ErrorResponse, Lamp, TokensResponse } from "./typings";
 
-dotenv.config();
-
 const {
   DB_SERVICE_URL,
   HUE_CLIENT_ID,
   HUE_CLIENT_SECRET,
-  DB_SERVICE_HEADER,
+  DB_AUTH_USER,
+  DB_AUTH_PASSWORD,
 } = process.env;
 
-if (!DB_SERVICE_HEADER)
-  throw new Error("Missing env Variable DB_SERVICE_HEADER");
-if (!DB_SERVICE_URL) throw new Error("Missing env Variable DB_SERVICE_URL");
-if (!HUE_CLIENT_ID) throw new Error("Missing env Variable HUE_CLIENT_ID");
-if (!HUE_CLIENT_SECRET)
+if (!DB_SERVICE_URL) {
+  throw new Error("Missing env Variable DB_SERVICE_URL");
+}
+
+if (!HUE_CLIENT_ID) {
+  throw new Error("Missing env Variable HUE_CLIENT_ID");
+}
+
+if (!HUE_CLIENT_SECRET) {
   throw new Error("Missing env Variable HUE_CLIENT_SECRET");
+}
+
+if (!DB_AUTH_USER) {
+  throw new Error("Missing env Variable DB_AUTH_USER");
+}
+
+if (!DB_AUTH_PASSWORD) {
+  throw new Error("Missing env Variable DB_AUTH_PASSWORD");
+}
 
 export const connectToApi = (accessToken: string, refreshToken: string) => {
   const remoteBootstrap = v3.api.createRemote(HUE_CLIENT_ID, HUE_CLIENT_SECRET);
@@ -58,7 +69,9 @@ export const editDBToken = (token: string, editToken: string) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: DB_SERVICE_HEADER,
+      Authorization: `Basic ${Buffer.from(
+        `${DB_AUTH_USER}:${DB_AUTH_PASSWORD}`
+      ).toString("base64")}`,
     },
   });
 };

@@ -1,11 +1,12 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler } from "aws-lambda";
 import { unauthorizedResponse } from "../response";
-import { AUTH_PASSWORD, AUTH_USER } from "../utils";
+import { DB_AUTH_PASSWORD, DB_AUTH_USER } from "../utils";
 import { ValidationResult } from "./typings";
 
 export const authorizedHandler = (handler: APIGatewayProxyHandler) => {
   const authHandler: APIGatewayProxyHandler = (event, context) => {
     if (authorized(event)) {
+      console.log("HANDLING: ", event);
       return handler(event, context, undefined);
     }
 
@@ -16,7 +17,10 @@ export const authorizedHandler = (handler: APIGatewayProxyHandler) => {
 };
 
 export const authorized = (event: APIGatewayProxyEvent) => {
-  const token = Buffer.from(`${AUTH_USER}:${AUTH_PASSWORD}`).toString("base64");
+  const token = Buffer.from(`${DB_AUTH_USER}:${DB_AUTH_PASSWORD}`).toString(
+    "base64"
+  );
+
   const header = `Basic ${token}`;
 
   const authHeader = event.headers["Authorization"];

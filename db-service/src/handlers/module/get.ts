@@ -5,8 +5,8 @@ import { authorizedHandler, validateNumber } from "../../validation/access";
 
 export const getModule: APIGatewayProxyHandler = authorizedHandler(
   async (event) => {
-    const { userid } = event.pathParameters;
-    const { input, error } = validateNumber(userid);
+    const { moduleid } = event.pathParameters;
+    const { input, error } = validateNumber(moduleid);
     if (error) return errorResponse(error);
 
     return getItem(MODULE_TABLE, { id: input })

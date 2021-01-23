@@ -1,5 +1,4 @@
 import convert from "color-convert";
-import * as dotenv from "dotenv";
 import translate from "translate";
 import { LambdaBody } from "./handler";
 import {
@@ -18,8 +17,6 @@ import {
   LampsResponse,
   Maybe,
 } from "./typings";
-
-dotenv.config();
 
 const { LightState } = require("node-hue-api").v3.lightStates;
 

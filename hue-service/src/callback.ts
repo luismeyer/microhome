@@ -1,6 +1,4 @@
-import * as dotenv from "dotenv";
 import { codeToToken, editDBToken } from "./hue";
-dotenv.config();
 
 type Event = {
   body?: string;

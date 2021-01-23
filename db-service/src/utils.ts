@@ -1,9 +1,9 @@
-export const { IS_OFFLINE, AUTH_USER, AUTH_PASSWORD } = process.env;
+export const { IS_OFFLINE, DB_AUTH_USER, DB_AUTH_PASSWORD } = process.env;
 
-if (!AUTH_USER) {
-  throw new Error("Missing Env Variable: 'AUTH_USER'");
+if (!DB_AUTH_USER) {
+  throw new Error("Missing Env Variable: 'DB_AUTH_USER'");
 }
 
-if (!AUTH_PASSWORD) {
-  throw new Error("Missing Env Variable: 'AUTH_PASSWORD'");
+if (!DB_AUTH_PASSWORD) {
+  throw new Error("Missing Env Variable: 'DB_AUTH_PASSWORD'");
 }

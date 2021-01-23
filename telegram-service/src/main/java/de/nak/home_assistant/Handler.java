@@ -33,6 +33,7 @@ public class Handler implements RequestHandler<APIGatewayProxyRequestEvent, APIG
             e.printStackTrace();
         }
 
+        System.out.print(input.getBody());
         Update update = new Gson().fromJson(input.getBody(), Update.class);
         Bot bot = new Bot();
         bot.handleUpdate(update);
