@@ -3,25 +3,31 @@ service: telegram-service
 frameworkVersion: '2'
 
 plugins:
+  - serverless-offline
+  - serverless-webpack
   - serverless-dotenv-plugin
+
+custom:
+  serverless-offline:
+    httpPort: 3000
+
+  webpack:
+    includeModules:
+      forceExclude:
+        - aws-sdk
+  dotenv:
+    basePath: ../
 
 provider:
   name: aws
-  runtime: java8
+  runtime: nodejs12.x
   region: eu-central-1
-
-custom:
-  dotenv:
-    basePath: ../
-    
-package:
-  artifact: target/telegram-service.jar
 
 functions:
   api:
-    handler: de.nak.home_assistant.Handler
+    handler: src/handler.handleApiGatewayRequest
     events:
       - http:
-          path: api
+          path: /
           method: any
           cors: true

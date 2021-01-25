@@ -8,6 +8,9 @@ plugins:
   - serverless-dotenv-plugin
 
 custom:
+  serverless-offline:
+    httpPort: 8080
+    
   webpack:
     includeModules:
       forceExclude:
