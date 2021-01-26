@@ -10,11 +10,6 @@ export const callbackDataId = (moduleId: number, deviceId: string) =>
 export const getCallbackDataId = (callbackData: CallbackData) => {
   const [moduleId, deviceId] = callbackData.id.split("::");
 
-  console.log({
-    moduleId: parseInt(moduleId),
-    deviceId,
-  });
-
   return {
     moduleId: parseInt(moduleId),
     deviceId,

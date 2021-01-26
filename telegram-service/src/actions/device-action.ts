@@ -7,14 +7,16 @@ import { SimpleResponse } from "../services/typings";
 import { CallbackData, getCallbackDataId } from "../telegram/callback-data";
 
 export const sendDeviceAction = async (
-  { chat, message_id, from }: Message,
+  userId: number,
+  chatId: number,
   cbData: CallbackData,
+  { message_id }: Message,
   data?: string
 ) => {
   // Start input dialog
   if (cbData.function.endsWith("*") && !data) {
     await bot.sendMessage(
-      chat.id,
+      chatId,
       "Antworte auf diese Nachricht mit den Eingabe Daten",
       {
         reply_markup: {
@@ -23,35 +25,37 @@ export const sendDeviceAction = async (
       }
     );
 
-    return bot.pinChatMessage(chat.id, message_id.toString());
+    return bot.pinChatMessage(chatId, message_id.toString());
   }
 
   const { deviceId, moduleId } = getCallbackDataId(cbData);
-  getDeviceFunction(from.id, moduleId, deviceId, cbData.function).then(
-    async (serviceRequest) => {
-      if (!serviceRequest) {
-        bot.sendMessage(chat.id, "Fehle beim Abfragen der Datenbank");
-      }
 
-      const { body } = serviceRequest;
-      if (data) {
-        body.action = body.action.replace("*", "");
-        body.data = data;
-      }
+  const serviceRequest = await getDeviceFunction(
+    userId,
+    moduleId,
+    deviceId,
+    cbData.function
+  );
 
-      return makeServiceRequest<SimpleResponse>(serviceRequest).then(
-        async (res) => {
-          const message = res.success
-            ? "Wir hatten erfolg!!"
-            : "Hat irgendwie nicht geklappt!! " + res.error;
+  if (!serviceRequest) {
+    return bot.sendMessage(chatId, "Fehler beim Abfragen der Datenbank");
+  }
 
-          return bot.sendMessage(
-            chat.id,
-            message,
-            await generateSendMessageOptions(from.id)
-          );
-        }
-      );
-    }
+  const { body } = serviceRequest;
+  if (data) {
+    body.action = body.action.replace("*", "");
+    body.data = data;
+  }
+
+  const res = await makeServiceRequest<SimpleResponse>(serviceRequest);
+
+  const message = res.success
+    ? "Wir hatten erfolg!!"
+    : "Hat irgendwie nicht geklappt!! " + res.error;
+
+  return bot.sendMessage(
+    chatId,
+    message,
+    await generateSendMessageOptions(userId)
   );
 };

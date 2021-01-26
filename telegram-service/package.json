@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "NTBA_FIX_319=true sls offline --lambdaPort 4000"
+    "start": "sls offline --lambdaPort 4000"
   },
   "dependencies": {
     "node-fetch": "^2.6.1",

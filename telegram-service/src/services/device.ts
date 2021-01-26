@@ -22,7 +22,7 @@ export const getDeviceFunction = async (
   deviceId: string,
   func: string
 ): Promise<ServiceRequest> => {
-  const url = `${DB_SERVICE_URL}user/${userId}/module/${moduleId}/devices/${deviceId}/functions${func}`;
+  const url = `${DB_SERVICE_URL}user/${userId}/module/${moduleId}/devices/${deviceId}/functions/${func}`;
   const res = await sendGet(url);
 
   if (res && res.ok) {

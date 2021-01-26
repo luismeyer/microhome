@@ -22,6 +22,8 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: eu-central-1
+  environment:
+    NTBA_FIX_319: true
 
 functions:
   api:

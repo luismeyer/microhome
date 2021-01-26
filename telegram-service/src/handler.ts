@@ -2,24 +2,30 @@ import { APIGatewayProxyHandler } from "aws-lambda";
 import { Update } from "node-telegram-bot-api";
 import bot, { setDefaultCommands } from "./bot";
 
-export const handleApiGatewayRequest: APIGatewayProxyHandler = async (
+export let callback: () => void;
+
+export const handleApiGatewayRequest: APIGatewayProxyHandler = (
   event,
-  context
+  _,
+  cb
 ) => {
   if (!event || !event.body) {
-    return {
+    cb(null, {
       statusCode: 400,
       body: `{ "message": "Missing event body" }`,
-    };
+    });
+    return;
   }
 
   const update: Update = JSON.parse(event.body);
-  console.log(update);
+  console.log(event.body);
   setDefaultCommands();
-  bot.processUpdate(update);
 
-  return {
-    statusCode: 200,
-    body: `{ "message": "success" }`,
-  };
+  callback = () =>
+    cb(null, {
+      statusCode: 200,
+      body: `{ "message": "success" }`,
+    });
+
+  bot.processUpdate(update);
 };

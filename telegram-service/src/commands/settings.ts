@@ -16,6 +16,7 @@ export const Settings: Command = {
 };
 
 export const replyToSettings = async ({ chat, from }: Message) => {
+  console.log("Reply to settings");
   const { id } = from;
 
   return getModules()

@@ -3,9 +3,15 @@ import { sendDeviceAction } from "../actions/device-action";
 import bot from "../bot";
 import { CallbackData } from "../telegram/callback-data";
 
-export const replyToReply = async ({ reply_to_message, chat }: Message) => {
+export const replyToReply = async ({
+  reply_to_message,
+  chat,
+  from,
+  text,
+}: Message) => {
   if (!reply_to_message) {
-    return bot.sendMessage(chat.id, "Fehlende Antwort");
+    console.log("No reply");
+    return;
   }
 
   await bot.deleteMessage(chat.id, reply_to_message.message_id.toString());
@@ -24,10 +30,13 @@ export const replyToReply = async ({ reply_to_message, chat }: Message) => {
     markup.inline_keyboard[0].length == 0 ||
     !markup.inline_keyboard[0][0]
   ) {
-    bot.sendMessage(chat.id, "Interner Fehler. Falsches Antworten Format");
+    return bot.sendMessage(
+      chat.id,
+      "Interner Fehler. Falsches Antworten Format"
+    );
   }
 
   const button = markup.inline_keyboard[0][0];
   const cbData: CallbackData = JSON.parse(button.callback_data);
-  return sendDeviceAction(pinned_message, cbData, reply_to_message.text);
+  return sendDeviceAction(from.id, chat.id, cbData, pinned_message, text);
 };
