@@ -1,20 +1,20 @@
 {
-  "name": "db-service",
+  "name": "telegram-service",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "dependencies": {
-    "runtypes": "^5.0.1",
-    "uuid": "^8.3.2"
-  },
   "scripts": {
-    "start": "serverless offline --lambdaPort 5000"
+    "start": "sls offline --lambdaPort 4000"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "node-telegram-bot-api": "^0.51.0"
   },
   "devDependencies": {
-    "@aws-sdk/types": "^3.1.0",
     "@types/aws-lambda": "^8.10.71",
     "@types/node": "^14.14.22",
-    "@types/uuid": "^8.3.0",
+    "@types/node-fetch": "^2.5.8",
+    "@types/node-telegram-bot-api": "^0.51.0",
     "serverless-dotenv-plugin": "^3.1.0",
     "serverless-offline": "^6.8.0",
     "serverless-webpack": "^5.3.5",
