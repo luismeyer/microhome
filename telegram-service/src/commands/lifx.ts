@@ -5,16 +5,16 @@ import { findModuleByName } from "../services/module";
 import { setToken } from "../services/user";
 import { Command } from "../telegram/command";
 
-export const Settings: Command = {
+export const Lifx: Command = {
   name: "lifx",
-  description: "Öffnet das Lifx  Gerätemenü",
+  description: "Öffnet das Lifx Gerätemenü",
 };
 
 export const replyToLifx = async (
   { chat, from }: Message,
   match: RegExpExecArray
 ) =>
-  findModuleByName(Settings.name)
+  findModuleByName(Lifx.name)
     .then(async (module) => {
       const hasArgs = Boolean(match[1]);
       let tokenSuccess = false;
@@ -28,7 +28,7 @@ export const replyToLifx = async (
           .catch(() => bot.sendMessage(chat.id, "Fehler beim Tokenupdate"));
       }
 
-      if (tokenSuccess || hasArgs) {
+      if (tokenSuccess || !hasArgs) {
         return sendDeviceList(from.id, chat.id, module.id);
       }
     })

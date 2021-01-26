@@ -8,32 +8,37 @@ export const sendDeviceList = (
   userId: number,
   chatId: number,
   moduleId: number
-) => {
-  let moduleName = "";
+) =>
+  getUserModule(userId, moduleId).then((module) => {
+    if (module) {
+      return makeServiceRequest<DeviceListResponse>(module.serviceRequest)
+        .then(({ success, result, error }) => {
+          if (success) {
+            const partitionSize = 3;
 
-  getUserModule(userId, moduleId)
-    .then((m) => {
-      moduleName = m.name;
-      return makeServiceRequest<DeviceListResponse>(m.serviceRequest);
-    })
-    .then(({ success, result, error }) => {
-      if (success) {
-        const partitionSize = 3;
+            // Partition the DeviceList so each row has 3 Buttons max
+            const devices = new Array(Math.ceil(result.length / partitionSize))
+              .fill([])
+              .map(() => result.splice(0, partitionSize));
 
-        // Partition the DeviceList so each row has 3 Buttons max
-        const devices = new Array(Math.ceil(result.length / partitionSize))
-          .fill([])
-          .map(() => result.splice(0, partitionSize));
+            return bot.sendMessage(
+              chatId,
+              "Deine " + module.name + " Geräte:",
+              {
+                reply_markup: generateDeviceButtons(devices, moduleId),
+              }
+            );
+          }
 
-        return bot.sendMessage(chatId, "Deine " + moduleName + " Geräte:", {
-          reply_markup: generateDeviceButtons(devices, moduleId),
-        });
-      } else {
-        return bot.sendMessage(
-          chatId,
-          "Etwas hat nicht funktioniert: " + error
+          return bot.sendMessage(
+            chatId,
+            "Etwas hat nicht funktioniert: " + error
+          );
+        })
+        .catch((e) =>
+          bot.sendMessage(chatId, "Couldn't generate Devicelist " + e)
         );
-      }
-    })
-    .catch((e) => bot.sendMessage(chatId, "Couldn't generate Devicelist " + e));
-};
+    }
+
+    return bot.sendMessage(chatId, "Du hast dieses Modul nicht abonniert");
+  });

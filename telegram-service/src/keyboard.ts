@@ -55,7 +55,7 @@ export const generateFunctionButtons = (
   };
 };
 
-export const generateMessageWithKeyboard = async (
+export const generateSendMessageOptions = async (
   userId: number
 ): Promise<SendMessageOptions> =>
   getUserModules(userId).then((modules) => ({

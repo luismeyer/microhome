@@ -7,6 +7,20 @@ export type CallbackData = {
 export const callbackDataId = (moduleId: number, deviceId: string) =>
   `${moduleId}::${deviceId}`;
 
+export const getCallbackDataId = (callbackData: CallbackData) => {
+  const [moduleId, deviceId] = callbackData.id.split("::");
+
+  console.log({
+    moduleId: parseInt(moduleId),
+    deviceId,
+  });
+
+  return {
+    moduleId: parseInt(moduleId),
+    deviceId,
+  };
+};
+
 export const createCallbackData = (
   moduleId: number,
   deviceId: string,
