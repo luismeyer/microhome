@@ -1,4 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
+import { replyToLifx } from "./commands/lifx";
 import { replyToSettings, Settings } from "./commands/settings";
 import { replyToStart, Start } from "./commands/start";
 
@@ -23,5 +24,7 @@ export const setDefaultCommands = () => {
 bot.onText(/\/?start/, replyToStart);
 
 bot.onText(/\/?einstellungen/, replyToSettings);
+
+bot.onText(/\/?lifx ?(.+)?/, replyToLifx);
 
 export default bot;

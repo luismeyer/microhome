@@ -62,8 +62,8 @@ export const activateModule = async (
 };
 
 export const setToken = (
-  userId: string,
-  moduleId: string,
+  userId: number,
+  moduleId: number,
   token: string
 ): Promise<boolean> => {
   const url = `${DB_SERVICE_URL}${basePath}${userId}/module/${moduleId}/token?token=${token}`;

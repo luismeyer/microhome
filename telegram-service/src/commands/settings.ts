@@ -19,22 +19,24 @@ export const replyToSettings = async ({ chat, from }: Message) => {
   const { id } = from;
 
   return getModules()
-    .then((modules) => {
-      modules.forEach(async (module) => {
-        const userHasModule = await hasModule(id, module.id);
+    .then((modules) =>
+      Promise.all(
+        modules.map(async (module) => {
+          const userHasModule = await hasModule(id, module.id);
 
-        const action = userHasModule ? DEACTIVATE_MODULE : ACTIVATE_MODULE;
-        const cb = createCallbackData(module.id, "", action);
+          const action = userHasModule ? DEACTIVATE_MODULE : ACTIVATE_MODULE;
+          const cb = createCallbackData(module.id, "", action);
 
-        const markup: InlineKeyboardMarkup = {
-          inline_keyboard: [[generateSwitch(userHasModule, cb)]],
-        };
+          const markup: InlineKeyboardMarkup = {
+            inline_keyboard: [[generateSwitch(userHasModule, cb)]],
+          };
 
-        bot.sendMessage(chat.id, "Modul: " + module.name, {
-          reply_markup: markup,
-        });
-      });
-    })
+          return bot.sendMessage(chat.id, "Modul: " + module.name, {
+            reply_markup: markup,
+          });
+        })
+      )
+    )
     .catch((e) =>
       bot.sendMessage(chat.id, "Fehler beim laden der Module " + e)
     );

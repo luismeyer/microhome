@@ -9,7 +9,5 @@ export const makeServiceRequest = async <T>(
     JSON.stringify(serviceRequest.body)
   );
 
-  if (res && res.ok) {
-    return res.json();
-  }
+  return res.json();
 };
