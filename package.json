@@ -7,8 +7,7 @@
   "license": "MIT",
   "scripts": {
     "encrypt": "gpg --symmetric --cipher-algo AES256 .env.production",
-    "decrypt": "gpg --decrypt --output secrets/.env .env.production.gpg",
-    "start": "serverless-offline-multi --directory db-service --port 8080 --directory telegram-service-ts --port 3000"
+    "decrypt": "gpg --decrypt --output secrets/.env .env.production.gpg"
   },
   "dependencies": {}
 }
