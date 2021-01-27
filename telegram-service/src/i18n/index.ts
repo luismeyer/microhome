@@ -68,14 +68,14 @@ export type TranslationsFunc = () => {
 
 export const translations = [en, de];
 
-let language: string;
-
 export const i18n = async (userId?: number) => {
-  if (userId && !language) {
-    language = await getUser(userId)
-      .then((user) => user.language)
-      .catch(() => "en");
+  if (!userId) {
+    return de();
   }
+
+  const language = await getUser(userId)
+    .then((user) => user.language)
+    .catch(() => "en");
 
   const strings =
     translations.find((trans) => trans().languageName === language) || en;
