@@ -1,5 +1,6 @@
 import bot from "../bot";
 import { deviceToString } from "../devices";
+import { i18n } from "../i18n";
 import { generateFunctionButtons } from "../keyboard";
 import { getDeviceFunctions } from "../services/device";
 import { makeServiceRequest } from "../services/service";
@@ -11,6 +12,8 @@ export const sendDeviceSelect = async (
   chatId: number,
   cbData: CallbackData
 ) => {
+  const translations = await i18n(userId);
+
   const { deviceId, moduleId } = getCallbackDataId(cbData);
   const { serviceRequest, functions } = await getDeviceFunctions(
     userId,
@@ -24,11 +27,11 @@ export const sendDeviceSelect = async (
 
   const keyboardMarkup = generateFunctionButtons(functions, deviceId, moduleId);
 
-  let messageText;
+  let messageText: string;
   if (deviceResponse.success) {
-    messageText = deviceToString(deviceResponse.result);
+    messageText = await deviceToString(deviceResponse.result).catch(() => "");
   } else {
-    messageText = "Etwas ist schiefgegangen: " + deviceResponse.error;
+    messageText = `${translations.internalError}: ${deviceResponse.error}`;
   }
 
   return bot.sendMessage(chatId, messageText, { reply_markup: keyboardMarkup });

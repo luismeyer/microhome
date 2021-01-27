@@ -75,6 +75,22 @@ functions:
     events:
       - http:
           path: user/{userid}
+          method: put
+          cors: true
+
+  getUser:
+    handler: src/handlers/user/get.getUser
+    events:
+      - http:
+          path: user/{userid}
+          method: get
+          cors: true
+
+  updateUser:
+    handler: src/handlers/user/update.updateUser
+    events:
+      - http:
+          path: user/{userid}
           method: post
           cors: true
 

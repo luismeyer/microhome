@@ -21,7 +21,7 @@
     "webpack-node-externals": "^2.5.2"
   },
   "scripts": {
-    "start": "sls offline"
+    "start": "sls offline --lambdaPort 3003"
   },
   "author": "",
   "license": "ISC"

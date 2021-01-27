@@ -1,3 +1,4 @@
+import { Record, String } from "runtypes";
 import { scanItems, USER_TABLE } from "../dynamodb";
 import { Module } from "./module";
 
@@ -5,7 +6,16 @@ export type User = {
   id: string;
   telegramId: number;
   modules: Module[];
+  language: string;
 };
+
+export type UserInput = {
+  language: string;
+};
+
+export const UserInputObject = Record({
+  language: String,
+});
 
 export const findUserByTelegramId = (
   telegramId: number

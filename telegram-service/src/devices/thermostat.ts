@@ -1,19 +1,26 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
 import { Device } from ".";
+import { i18n } from "../i18n";
 import { SELECT_DEVICE } from "../telegram/callback-actions";
 import { CallbackData, callbackDataId } from "../telegram/callback-data";
 
-export const thermostatToString = ({
+export const thermostatToString = async ({
   name,
   on,
   temperatur,
   istTemperatur,
   sollTemperatur,
-}: Device): string => {
-  const nameString = `🔥 Heizung: ${name}\n`;
-  const statusString = (on ? "⚪️" : "⚫️") + ` Status: ${on ? "on" : "off"}\n`;
-  const tempString = `🌡 Temperatur: ${temperatur}°C\n`;
-  const temp2String = `📊 Ist: ${istTemperatur}°C, Soll: ${sollTemperatur}°C`;
+}: Device): Promise<string> => {
+  const translations = await i18n();
+
+  const nameString = `🔥 ${translations.devices.thermostat}: ${name}\n`;
+  const statusString =
+    (on ? "⚪️" : "⚫️") +
+    ` ${translations.devices.status}: ${
+      on ? translations.devices.on : translations.devices.off
+    }\n`;
+  const tempString = `🌡 ${translations.devices.temperature}: ${temperatur}°C\n`;
+  const temp2String = `📊 ${translations.devices.is}: ${istTemperatur}°C, ${translations.devices.should}: ${sollTemperatur}°C`;
 
   return nameString + statusString + tempString + temp2String;
 };

@@ -2,12 +2,15 @@ import { CallbackQuery } from "node-telegram-bot-api";
 import { sendDeviceAction } from "../actions/device-action";
 import { sendDeviceSelect } from "../actions/device-select";
 import { sendModuleToggle } from "../actions/module-toggle";
+import { sendSetLanguage } from "../actions/set-language";
 import bot from "../bot";
+import { i18n } from "../i18n";
 import {
   ACTION_DEVICE,
   ACTIVATE_MODULE,
   DEACTIVATE_MODULE,
   SELECT_DEVICE,
+  SET_LANGUAGE,
 } from "../telegram/callback-actions";
 import { CallbackData } from "../telegram/callback-data";
 
@@ -20,6 +23,7 @@ export const replyToButtons = async ({
   const { id: userId } = from;
   const { chat } = message;
 
+  const translations = await i18n(from.id);
   const callbackData: CallbackData = JSON.parse(data);
 
   switch (callbackData.action) {
@@ -35,8 +39,11 @@ export const replyToButtons = async ({
     case DEACTIVATE_MODULE:
       await sendModuleToggle(userId, chat.id, callbackData, false);
       break;
+    case SET_LANGUAGE:
+      await sendSetLanguage(userId, chat.id, callbackData);
+      break;
     default:
-      await bot.sendMessage(chat.id, "Falsche Action");
+      await bot.sendMessage(chat.id, translations.callback.error);
   }
 
   return bot.answerCallbackQuery(id);
