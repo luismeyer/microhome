@@ -101,7 +101,6 @@ export const setI18n = async (userId?: number) => {
     .then((user) => user.language)
     .catch(() => "en");
 
-  console.log("set", language);
   setState({
     language,
   });

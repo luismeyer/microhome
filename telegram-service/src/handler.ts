@@ -32,7 +32,6 @@ export const handleApiGatewayRequest: APIGatewayProxyHandler = (
   const update: Update = JSON.parse(event.body);
 
   callback = () => {
-    console.log("clear");
     clearState();
     cb(null, {
       statusCode: 200,
@@ -40,5 +39,7 @@ export const handleApiGatewayRequest: APIGatewayProxyHandler = (
     });
   };
 
-  setUserLanguage(update).then(() => generateBot().processUpdate(update));
+  setUserLanguage(update).then(() => {
+    generateBot().processUpdate(update);
+  });
 };

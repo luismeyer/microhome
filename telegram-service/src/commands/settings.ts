@@ -1,8 +1,8 @@
 import {
   InlineKeyboardButton,
-  InlineKeyboardMarkup,
   Message,
   ReplyKeyboardMarkup,
+  SendMessageOptions,
 } from "node-telegram-bot-api";
 import { bot } from "../bot";
 import { i18n, translations } from "../i18n";
@@ -76,16 +76,16 @@ export const replyToModuleSettins = async ({ from, chat }: Message) => {
         const action = userHasModule ? DEACTIVATE_MODULE : ACTIVATE_MODULE;
         const cb = createCallbackData(module.id, "", action);
 
-        const markup: InlineKeyboardMarkup = {
-          inline_keyboard: [[generateSwitch(userHasModule, cb)]],
+        const options: SendMessageOptions = {
+          reply_markup: {
+            inline_keyboard: [[generateSwitch(userHasModule, cb)]],
+          },
         };
 
         return bot.sendMessage(
           chat.id,
-          translations.settings.module + ": " + module.name,
-          {
-            reply_markup: markup,
-          }
+          translations.settings.module.name + ": " + module.name,
+          options
         );
       })
     );

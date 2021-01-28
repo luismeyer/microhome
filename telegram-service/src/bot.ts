@@ -25,6 +25,11 @@ export const bot = new TelegramBot(BOT_TOKEN, {
 });
 
 export const generateBot = () => {
+  bot.clearTextListeners();
+
+  bot.removeAllListeners("callback_query");
+  bot.removeAllListeners("pinned_message");
+
   bot.onText(new RegExp(`/?${Start().command}`), async (msg) => {
     await replyToStart(msg).catch((e) =>
       bot.sendMessage(msg.chat.id, `start: ${e}`)
@@ -79,18 +84,18 @@ export const generateBot = () => {
     callback();
   });
 
-  bot.on("callback_query", async (cbQuery) => {
-    await replyToButtons(cbQuery).catch((e) =>
-      bot.sendMessage(cbQuery.message.chat.id, `callback_query: ${e}`)
-    );
-    callback();
-  });
-
   bot.onText(new RegExp(""), async (msg) => {
     if (!msg.reply_to_message) return;
 
     await replyToReply(msg).catch((e) =>
       bot.sendMessage(msg.chat.id, `text: ${e}`)
+    );
+    callback();
+  });
+
+  bot.on("callback_query", async (cbQuery) => {
+    await replyToButtons(cbQuery).catch((e) =>
+      bot.sendMessage(cbQuery.message.chat.id, `callback_query: ${e}`)
     );
     callback();
   });

@@ -4,7 +4,6 @@ import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";
 import { createUser } from "../services/user";
 import { Command } from "../telegram/command";
-import { state } from "../utils/state";
 
 export const Start: Command = () => {
   const translations = i18n();
@@ -39,7 +38,6 @@ export const replyToBack = async ({ chat, from }: Message) => {
   const success = await createUser(from.id);
   const translations = i18n();
 
-  console.log(translations, state.language);
   const text = success ? translations.back.success : translations.back.error;
 
   return generateSendMessageOptions(from.id)
