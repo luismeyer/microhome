@@ -84,7 +84,7 @@ export const replyToModuleSettins = async ({ from, chat }: Message) => {
 
         return bot.sendMessage(
           chat.id,
-          translations.settings.module.name + ": " + module.name,
+          translations.settings.module.module + ": " + module.name,
           options
         );
       })
