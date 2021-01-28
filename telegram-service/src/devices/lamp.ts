@@ -1,4 +1,5 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
+import { i18n } from "../i18n";
 import { SELECT_DEVICE } from "../telegram/callback-actions";
 import { CallbackData, callbackDataId } from "../telegram/callback-data";
 import { Device } from "./index";
@@ -33,10 +34,12 @@ const colorToEmoji = (color: string): string => {
 };
 
 export const lampToString = ({ on, color, name }: Device): string => {
-  const state = on ? "on" : "off";
+  const translations = i18n();
+
+  const state = on ? translations.devices.on : translations.devices.off;
   const stateEmoji = on ? colorToEmoji(color) : "⚫️";
 
-  return `💡 Lampe: ${name}\n${stateEmoji} Status: ${state}\n🖌 Farbe: ${color}`;
+  return `💡 ${translations.devices.lamp}: ${name}\n${stateEmoji} ${translations.devices.status}: ${state}\n🖌 ${translations.devices.color}: ${color}`;
 };
 
 export const lampToInlineButton = (

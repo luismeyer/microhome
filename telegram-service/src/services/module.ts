@@ -1,6 +1,6 @@
-import { DB_SERVICE_URL } from "../const";
-import { ModuleResponse } from "../database";
-import { sendGet } from "../http";
+import { DB_SERVICE_URL } from "../utils/const";
+import { sendGet } from "../utils/http";
+import { ModuleResponse } from "./typings";
 
 export const getModules = async (): Promise<ModuleResponse[]> => {
   const url = `${DB_SERVICE_URL}module`;

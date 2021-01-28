@@ -1,7 +1,6 @@
-import { DB_SERVICE_URL } from "../const";
-import { FunctionsResponse } from "../database";
-import { sendGet } from "../http";
-import { ServiceRequest } from "./typings";
+import { DB_SERVICE_URL } from "../utils/const";
+import { sendGet } from "../utils/http";
+import { FunctionsResponse, ServiceRequest } from "./typings";
 
 export const getDeviceFunctions = async (
   userId: number,

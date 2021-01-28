@@ -1,4 +1,5 @@
-import bot from "../bot";
+import { bot } from "../bot";
+import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";
 import { makeServiceRequest } from "../services/service";
 import { AuthResponse } from "../services/typings";
@@ -11,6 +12,8 @@ export const sendModuleToggle = async (
   cbData: CallbackData,
   activate: boolean
 ) => {
+  const translations = i18n();
+
   const { moduleId } = getCallbackDataId(cbData);
   let text;
 
@@ -20,10 +23,12 @@ export const sendModuleToggle = async (
       serviceRequest
     );
 
-    text = success ? result : "Etwas ist schiefgegangen " + error;
+    text = success ? result : `${translations.moduleToggle.error} ${error}`;
   } else {
     const success = await deactivateModule(userId, moduleId);
-    text = success ? "Modul deaktiviert" : "Etwas ist schiefgegangen";
+    text = success
+      ? translations.moduleToggle.success
+      : translations.moduleToggle.error;
   }
 
   return bot.sendMessage(

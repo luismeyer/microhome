@@ -1,5 +1,6 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
 import { Device } from ".";
+import { i18n } from "../i18n";
 import { SELECT_DEVICE } from "../telegram/callback-actions";
 import { CallbackData, callbackDataId } from "../telegram/callback-data";
 
@@ -10,10 +11,16 @@ export const thermostatToString = ({
   istTemperatur,
   sollTemperatur,
 }: Device): string => {
-  const nameString = `🔥 Heizung: ${name}\n`;
-  const statusString = (on ? "⚪️" : "⚫️") + ` Status: ${on ? "on" : "off"}\n`;
-  const tempString = `🌡 Temperatur: ${temperatur}°C\n`;
-  const temp2String = `📊 Ist: ${istTemperatur}°C, Soll: ${sollTemperatur}°C`;
+  const translations = i18n();
+
+  const nameString = `🔥 ${translations.devices.thermostat}: ${name}\n`;
+  const statusString =
+    (on ? "⚪️" : "⚫️") +
+    ` ${translations.devices.status}: ${
+      on ? translations.devices.on : translations.devices.off
+    }\n`;
+  const tempString = `🌡 ${translations.devices.temperature}: ${temperatur}°C\n`;
+  const temp2String = `📊 ${translations.devices.is}: ${istTemperatur}°C, ${translations.devices.should}: ${sollTemperatur}°C`;
 
   return nameString + statusString + tempString + temp2String;
 };

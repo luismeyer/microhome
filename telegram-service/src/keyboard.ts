@@ -6,8 +6,8 @@ import {
   SendMessageOptions,
 } from "node-telegram-bot-api";
 import { FIXED_COMMANDS } from "./bot";
-import { ModuleResponse } from "./database";
 import { Device, deviceToInlineButton } from "./devices";
+import { ModuleResponse } from "./services/typings";
 import { getUserModules } from "./services/user";
 import { ACTION_DEVICE } from "./telegram/callback-actions";
 import { CallbackData, createCallbackData } from "./telegram/callback-data";
@@ -20,8 +20,8 @@ export const generateMarkup = (
       ? moduleResponses.map((module) => ({ text: module.name }))
       : [];
 
-  const row2: KeyboardButton[] = FIXED_COMMANDS.map(({ name }) => ({
-    text: name,
+  const row2: KeyboardButton[] = FIXED_COMMANDS.map((command) => ({
+    text: command().command,
   }));
 
   return {

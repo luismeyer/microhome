@@ -1,5 +1,6 @@
 import { Message } from "node-telegram-bot-api";
-import bot from "../bot";
+import { bot } from "../bot";
+import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";
 import { getDeviceFunction } from "../services/device";
 import { makeServiceRequest } from "../services/service";
@@ -13,17 +14,15 @@ export const sendDeviceAction = async (
   { message_id }: Message,
   data?: string
 ) => {
+  const translations = i18n();
+
   // Start input dialog
-  if (cbData.function.endsWith("*") && !data) {
-    await bot.sendMessage(
-      chatId,
-      "Antworte auf diese Nachricht mit den Eingabe Daten",
-      {
-        reply_markup: {
-          force_reply: true,
-        },
-      }
-    );
+  if (cbData.data.endsWith("*") && !data) {
+    await bot.sendMessage(chatId, translations.deviceAction.inputPrompt, {
+      reply_markup: {
+        force_reply: true,
+      },
+    });
 
     return bot.pinChatMessage(chatId, message_id.toString());
   }
@@ -34,11 +33,11 @@ export const sendDeviceAction = async (
     userId,
     moduleId,
     deviceId,
-    cbData.function
+    cbData.data
   );
 
   if (!serviceRequest) {
-    return bot.sendMessage(chatId, "Fehler beim Abfragen der Datenbank");
+    return bot.sendMessage(chatId, translations.deviceAction.databaseError);
   }
 
   const { body } = serviceRequest;
@@ -50,8 +49,8 @@ export const sendDeviceAction = async (
   const res = await makeServiceRequest<SimpleResponse>(serviceRequest);
 
   const message = res.success
-    ? "Wir hatten erfolg!!"
-    : "Hat irgendwie nicht geklappt!! " + res.error;
+    ? translations.deviceAction.success
+    : `${translations.deviceAction.error} ${res.error}`;
 
   return bot.sendMessage(
     chatId,

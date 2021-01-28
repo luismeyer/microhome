@@ -1,44 +1,44 @@
-import bot from "../bot";
+import { bot } from "../bot";
+import { i18n } from "../i18n";
 import { generateDeviceButtons } from "../keyboard";
 import { makeServiceRequest } from "../services/service";
 import { DeviceListResponse } from "../services/typings";
 import { getUserModule } from "../services/user";
 
-export const sendDeviceList = (
+export const sendDeviceList = async (
   userId: number,
   chatId: number,
   moduleId: number
-) =>
-  getUserModule(userId, moduleId).then((module) => {
-    if (module) {
-      return makeServiceRequest<DeviceListResponse>(module.serviceRequest)
-        .then(({ success, result, error }) => {
-          if (success) {
-            const partitionSize = 3;
+) => {
+  const module = await getUserModule(userId, moduleId);
+  const translations = i18n();
 
-            // Partition the DeviceList so each row has 3 Buttons max
-            const devices = new Array(Math.ceil(result.length / partitionSize))
-              .fill([])
-              .map(() => result.splice(0, partitionSize));
+  if (module) {
+    const {
+      success,
+      result,
+      error,
+    } = await makeServiceRequest<DeviceListResponse>(module.serviceRequest);
 
-            return bot.sendMessage(
-              chatId,
-              "Deine " + module.name + " Geräte:",
-              {
-                reply_markup: generateDeviceButtons(devices, moduleId),
-              }
-            );
-          }
+    if (success) {
+      const partitionSize = 3;
 
-          return bot.sendMessage(
-            chatId,
-            "Etwas hat nicht funktioniert: " + error
-          );
-        })
-        .catch((e) =>
-          bot.sendMessage(chatId, "Couldn't generate Devicelist " + e)
-        );
+      // Partition the DeviceList so each row has 3 Buttons max
+      const devices = new Array(Math.ceil(result.length / partitionSize))
+        .fill([])
+        .map(() => result.splice(0, partitionSize));
+
+      return bot.sendMessage(
+        chatId,
+        translations.deviceList.title(module.name),
+        {
+          reply_markup: generateDeviceButtons(devices, moduleId),
+        }
+      );
     }
 
-    return bot.sendMessage(chatId, "Du hast dieses Modul nicht abonniert");
-  });
+    return bot.sendMessage(chatId, `${translations.internalError}: ${error}`);
+  }
+
+  return bot.sendMessage(chatId, translations.deviceList.error);
+};

@@ -1,7 +1,7 @@
 export type CallbackData = {
   action: number;
-  id: string;
-  function?: string;
+  id?: string;
+  data?: string;
 };
 
 export const callbackDataId = (moduleId: number, deviceId: string) =>
@@ -20,9 +20,9 @@ export const createCallbackData = (
   moduleId: number,
   deviceId: string,
   action: number,
-  func?: string
+  data?: string
 ): CallbackData => ({
   action,
   id: callbackDataId(moduleId, deviceId),
-  function: func,
+  data,
 });

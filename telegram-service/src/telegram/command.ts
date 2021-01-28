@@ -1,4 +1,4 @@
-export type Command = {
-  name: string;
+export type Command = () => {
+  command: string;
   description: string;
 };

@@ -8,7 +8,7 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "start": "serverless offline --lambdaPort 5000"
+    "start": "serverless offline --lambdaPort 3006"
   },
   "devDependencies": {
     "@aws-sdk/types": "^3.1.0",

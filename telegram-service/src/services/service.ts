@@ -1,4 +1,4 @@
-import { sendPost } from "../http";
+import { sendPost } from "../utils/http";
 import { ServiceRequest } from "./typings";
 
 export const makeServiceRequest = async <T>(

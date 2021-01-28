@@ -17,6 +17,7 @@ export const createUser: APIGatewayProxyHandler = authorizedHandler(
       id: v1(),
       telegramId: input,
       modules: [],
+      language: "en",
     };
 
     return putItem(USER_TABLE, user)
