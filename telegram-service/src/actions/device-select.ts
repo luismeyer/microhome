@@ -1,4 +1,4 @@
-import bot from "../bot";
+import { bot } from "../bot";
 import { deviceToString } from "../devices";
 import { i18n } from "../i18n";
 import { generateFunctionButtons } from "../keyboard";
@@ -12,7 +12,7 @@ export const sendDeviceSelect = async (
   chatId: number,
   cbData: CallbackData
 ) => {
-  const translations = await i18n(userId);
+  const translations = i18n();
 
   const { deviceId, moduleId } = getCallbackDataId(cbData);
   const { serviceRequest, functions } = await getDeviceFunctions(
@@ -29,7 +29,7 @@ export const sendDeviceSelect = async (
 
   let messageText: string;
   if (deviceResponse.success) {
-    messageText = await deviceToString(deviceResponse.result).catch(() => "");
+    messageText = deviceToString(deviceResponse.result);
   } else {
     messageText = `${translations.internalError}: ${deviceResponse.error}`;
   }

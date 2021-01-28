@@ -1,4 +1,5 @@
 import { getUser } from "../services/user";
+import { setState, state } from "../utils/state";
 import { de } from "./de";
 import { en } from "./en";
 
@@ -10,27 +11,49 @@ export type TranslationsFunc = () => {
   activate: string;
   deactivate: string;
   start: {
+    name: string;
+    description: string;
     message: string;
     error: string;
   };
   back: {
+    name: string;
+    description: string;
     success: string;
     error: string;
   };
   settings: {
+    name: string;
+    description: string;
     pickPrompt: string;
-    languagePrompt: string;
-    module: string;
-    moduleError: string;
+    module: {
+      name: string;
+      description: string;
+      module: string;
+      error: string;
+    };
+    user: {
+      name: string;
+      description: string;
+      languagePrompt: string;
+    };
   };
   lifx: {
+    name: string;
+    description: string;
     tokenUpdate: string;
     tokenError: string;
   };
   fritz: {
+    name: string;
+    description: string;
     tokenUpdate: string;
     tokenError: string;
     moduleError: string;
+  };
+  hue: {
+    name: string;
+    description: string;
   };
   input: {
     pinnedMessageError: string;
@@ -64,21 +87,33 @@ export type TranslationsFunc = () => {
     on: string;
     off: string;
   };
+  setLanguage: {
+    missingData: string;
+    success: string;
+    error: string;
+  };
 };
 
 export const translations = [en, de];
 
-export const i18n = async (userId?: number) => {
-  if (!userId) {
-    return de();
-  }
-
+export const setI18n = async (userId?: number) => {
   const language = await getUser(userId)
     .then((user) => user.language)
     .catch(() => "en");
 
+  console.log("set", language);
+  setState({
+    language,
+  });
+};
+
+export const i18n = () => {
+  if (!state.language) {
+    return de();
+  }
+
   const strings =
-    translations.find((trans) => trans().languageName === language) || en;
+    translations.find((trans) => trans().languageName === state.language) || en;
 
   return strings();
 };

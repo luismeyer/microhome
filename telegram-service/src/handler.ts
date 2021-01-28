@@ -1,8 +1,20 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { Update } from "node-telegram-bot-api";
-import bot, { setDefaultCommands } from "./bot";
+import { generateBot } from "./bot";
+import { setI18n } from "./i18n";
+import { clearState } from "./utils/state";
 
 export let callback: () => void;
+
+const setUserLanguage = async (update: Update) => {
+  if (update.message && update.message.from) {
+    await setI18n(update.message.from.id);
+  }
+
+  if (update.callback_query && update.callback_query.from) {
+    await setI18n(update.callback_query.from.id);
+  }
+};
 
 export const handleApiGatewayRequest: APIGatewayProxyHandler = (
   event,
@@ -18,14 +30,15 @@ export const handleApiGatewayRequest: APIGatewayProxyHandler = (
   }
 
   const update: Update = JSON.parse(event.body);
-  console.log(event.body);
-  setDefaultCommands();
 
-  callback = () =>
+  callback = () => {
+    console.log("clear");
+    clearState();
     cb(null, {
       statusCode: 200,
       body: `{ "message": "success" }`,
     });
+  };
 
-  bot.processUpdate(update);
+  setUserLanguage(update).then(() => generateBot().processUpdate(update));
 };

@@ -1,21 +1,25 @@
 import { Message } from "node-telegram-bot-api";
 import { sendDeviceList } from "../actions/device-list";
-import bot from "../bot";
+import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { findModuleByName } from "../services/module";
 import { setToken } from "../services/user";
 import { Command } from "../telegram/command";
 
-export const Fritz: Command = {
-  name: "fritz",
-  description: "Öffnet das Fritz Gerätemenü",
+export const Fritz: Command = () => {
+  const translations = i18n();
+
+  return {
+    command: translations.fritz.name,
+    description: translations.fritz.description,
+  };
 };
 
 export const replyToFritz = async (
   { from, chat }: Message,
   match: RegExpExecArray
 ) => {
-  const translations = await i18n(from.id);
+  const translations = i18n();
 
   const module = await findModuleByName(Fritz.name);
 

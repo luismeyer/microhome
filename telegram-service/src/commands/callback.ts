@@ -3,7 +3,7 @@ import { sendDeviceAction } from "../actions/device-action";
 import { sendDeviceSelect } from "../actions/device-select";
 import { sendModuleToggle } from "../actions/module-toggle";
 import { sendSetLanguage } from "../actions/set-language";
-import bot from "../bot";
+import { bot } from "../bot";
 import { i18n } from "../i18n";
 import {
   ACTION_DEVICE,
@@ -23,7 +23,7 @@ export const replyToButtons = async ({
   const { id: userId } = from;
   const { chat } = message;
 
-  const translations = await i18n(from.id);
+  const translations = i18n();
   const callbackData: CallbackData = JSON.parse(data);
 
   switch (callbackData.action) {

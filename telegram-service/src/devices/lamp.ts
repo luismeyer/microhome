@@ -33,12 +33,8 @@ const colorToEmoji = (color: string): string => {
   }
 };
 
-export const lampToString = async ({
-  on,
-  color,
-  name,
-}: Device): Promise<string> => {
-  const translations = await i18n();
+export const lampToString = ({ on, color, name }: Device): string => {
+  const translations = i18n();
 
   const state = on ? translations.devices.on : translations.devices.off;
   const stateEmoji = on ? colorToEmoji(color) : "⚫️";

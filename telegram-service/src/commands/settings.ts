@@ -4,7 +4,7 @@ import {
   Message,
   ReplyKeyboardMarkup,
 } from "node-telegram-bot-api";
-import bot from "../bot";
+import { bot } from "../bot";
 import { i18n, translations } from "../i18n";
 import { generateSwitch } from "../keyboard";
 import { getModules } from "../services/module";
@@ -18,28 +18,40 @@ import { CallbackData, createCallbackData } from "../telegram/callback-data";
 import { Command } from "../telegram/command";
 import { Back } from "./start";
 
-export const Settings: Command = {
-  name: "einstellungen",
-  description: "Öffnet das Konfigurationsmenü",
+export const Settings: Command = () => {
+  const translations = i18n();
+
+  return {
+    command: translations.settings.name,
+    description: translations.settings.description,
+  };
 };
 
-export const UserSettings: Command = {
-  name: "benutzer",
-  description: "Öffnet das Nutzermenü",
+export const UserSettings: Command = () => {
+  const translations = i18n();
+
+  return {
+    command: translations.settings.user.name,
+    description: translations.settings.user.description,
+  };
 };
 
-export const ModuleSettings: Command = {
-  name: "module",
-  description: "Öffnet das Modulemenü",
+export const ModuleSettings: Command = () => {
+  const translations = i18n();
+
+  return {
+    command: translations.settings.module.name,
+    description: translations.settings.module.description,
+  };
 };
 
-export const replyToSettings = async ({ chat, from }: Message) => {
-  const translations = await i18n(from.id);
+export const replyToSettings = async ({ chat }: Message) => {
+  const translations = i18n();
 
   const keyboard: ReplyKeyboardMarkup = {
     keyboard: [
-      [{ text: UserSettings.name }, { text: ModuleSettings.name }],
-      [{ text: Back.name }],
+      [{ text: UserSettings().command }, { text: ModuleSettings().command }],
+      [{ text: Back().command }],
     ],
   };
 
@@ -49,11 +61,11 @@ export const replyToSettings = async ({ chat, from }: Message) => {
 };
 
 export const replyToModuleSettins = async ({ from, chat }: Message) => {
-  const translations = await i18n(from.id);
+  const translations = i18n();
   const { id } = from;
 
   const modules = await getModules().catch((e) => {
-    bot.sendMessage(chat.id, `${translations.settings.moduleError}: ${e}`);
+    bot.sendMessage(chat.id, `${translations.settings.module.error}: ${e}`);
   });
 
   if (modules) {
@@ -81,8 +93,6 @@ export const replyToModuleSettins = async ({ from, chat }: Message) => {
 };
 
 export const replyToUserSettings = async ({ chat, from }: Message) => {
-  const t = await i18n(from.id);
-
   const buttons: InlineKeyboardButton[] = translations.map((t) => {
     const cbData: CallbackData = {
       action: SET_LANGUAGE,
@@ -95,7 +105,7 @@ export const replyToUserSettings = async ({ chat, from }: Message) => {
     };
   });
 
-  return bot.sendMessage(chat.id, t.settings.languagePrompt, {
+  return bot.sendMessage(chat.id, i18n().settings.user.languagePrompt, {
     reply_markup: { inline_keyboard: [buttons] },
   });
 };

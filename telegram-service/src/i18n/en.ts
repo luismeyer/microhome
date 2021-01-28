@@ -8,27 +8,49 @@ export const en: TranslationsFunc = () => ({
   activate: "activate",
   deactivate: "deactivate",
   start: {
+    name: "start",
+    description: "Starts the Bot",
     message: `🚀 Welcome to the Home Assistant Bot\n\n⚙️ You can manage your modules with the '${Settings.name}' command.\n🏁 If you already added modules to you account you can start directly by using the custom keyboard`,
     error: "Error during login. Try again later. :)",
   },
   back: {
+    name: "back",
+    description: "Resets the keyboard",
     success: "Alright, you are now back in the start menu",
     error: "Error during login. Try again later. :)",
   },
   settings: {
+    name: "settings",
+    description: "Opens the settings",
+    module: {
+      name: "modules",
+      description: "Opens the module menu",
+      module: "Module",
+      error: "Error loading the modules",
+    },
+    user: {
+      name: "user",
+      description: "Open the user settings",
+      languagePrompt: "Please pick a language:",
+    },
     pickPrompt: "Please pick an option from the menu",
-    languagePrompt: "Please pick a language:",
-    module: "Module",
-    moduleError: "Error loading the modules",
   },
   lifx: {
+    name: "lifx",
+    description: "Opens the Lifx device menu",
     tokenUpdate: "Lifx-Token has been updated 🥳",
     tokenError: "Error during token update",
   },
   fritz: {
+    name: "fritz",
+    description: "Opens the Fritz device menu",
     tokenUpdate: "Fritz-Token has been updated 🥳",
     tokenError: "Error during token update",
     moduleError: "Wrong module id",
+  },
+  hue: {
+    name: "hue",
+    description: "Opens the hue device menu",
   },
   input: {
     markupError: "Internal Error. Wrong answer format",
@@ -61,5 +83,10 @@ export const en: TranslationsFunc = () => ({
     should: "Should",
     on: "on",
     off: "off",
+  },
+  setLanguage: {
+    missingData: "Missing language data",
+    success: "Successfull updated language",
+    error: "Language couldn't be updated",
   },
 });

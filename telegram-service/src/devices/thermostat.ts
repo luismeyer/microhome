@@ -4,14 +4,14 @@ import { i18n } from "../i18n";
 import { SELECT_DEVICE } from "../telegram/callback-actions";
 import { CallbackData, callbackDataId } from "../telegram/callback-data";
 
-export const thermostatToString = async ({
+export const thermostatToString = ({
   name,
   on,
   temperatur,
   istTemperatur,
   sollTemperatur,
-}: Device): Promise<string> => {
-  const translations = await i18n();
+}: Device): string => {
+  const translations = i18n();
 
   const nameString = `🔥 ${translations.devices.thermostat}: ${name}\n`;
   const statusString =

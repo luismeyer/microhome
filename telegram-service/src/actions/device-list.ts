@@ -1,4 +1,4 @@
-import bot from "../bot";
+import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { generateDeviceButtons } from "../keyboard";
 import { makeServiceRequest } from "../services/service";
@@ -11,7 +11,7 @@ export const sendDeviceList = async (
   moduleId: number
 ) => {
   const module = await getUserModule(userId, moduleId);
-  const translations = await i18n(userId);
+  const translations = i18n();
 
   if (module) {
     const {

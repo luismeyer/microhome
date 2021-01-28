@@ -1,21 +1,25 @@
 import { Message } from "node-telegram-bot-api";
 import { sendDeviceList } from "../actions/device-list";
-import bot from "../bot";
+import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { findModuleByName } from "../services/module";
 import { setToken } from "../services/user";
 import { Command } from "../telegram/command";
 
-export const Lifx: Command = {
-  name: "lifx",
-  description: "Öffnet das Lifx Gerätemenü",
+export const Lifx: Command = () => {
+  const translations = i18n();
+
+  return {
+    command: translations.lifx.name,
+    description: translations.lifx.description,
+  };
 };
 
 export const replyToLifx = async (
   { chat, from }: Message,
   match: RegExpExecArray
 ) => {
-  const translations = await i18n(from.id);
+  const translations = i18n();
 
   const module = await findModuleByName(Lifx.name);
 

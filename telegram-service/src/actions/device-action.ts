@@ -1,5 +1,5 @@
 import { Message } from "node-telegram-bot-api";
-import bot from "../bot";
+import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";
 import { getDeviceFunction } from "../services/device";
@@ -14,7 +14,7 @@ export const sendDeviceAction = async (
   { message_id }: Message,
   data?: string
 ) => {
-  const translations = await i18n(userId);
+  const translations = i18n();
 
   // Start input dialog
   if (cbData.data.endsWith("*") && !data) {

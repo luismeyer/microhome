@@ -20,8 +20,8 @@ export const generateMarkup = (
       ? moduleResponses.map((module) => ({ text: module.name }))
       : [];
 
-  const row2: KeyboardButton[] = FIXED_COMMANDS.map(({ name }) => ({
-    text: name,
+  const row2: KeyboardButton[] = FIXED_COMMANDS.map((command) => ({
+    text: command().command,
   }));
 
   return {

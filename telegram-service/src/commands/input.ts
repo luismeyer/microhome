@@ -1,6 +1,6 @@
 import { Message } from "node-telegram-bot-api";
 import { sendDeviceAction } from "../actions/device-action";
-import bot from "../bot";
+import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { CallbackData } from "../telegram/callback-data";
 
@@ -13,7 +13,7 @@ export const replyToReply = async ({
   if (!reply_to_message) {
     return;
   }
-  const translations = await i18n(from.id);
+  const translations = i18n();
 
   await bot.deleteMessage(chat.id, reply_to_message.message_id.toString());
 

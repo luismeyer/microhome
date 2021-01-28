@@ -17,7 +17,7 @@ export type Device = {
   sollTemperatur: number;
 };
 
-export const deviceToString = (device: Device): Promise<string> => {
+export const deviceToString = (device: Device): string => {
   if (device.type === "THERMOSTAT") {
     return thermostatToString(device);
   }
@@ -26,7 +26,7 @@ export const deviceToString = (device: Device): Promise<string> => {
     return lampToString(device);
   }
 
-  return Promise.resolve("WRONG DEVICE ID");
+  return "WRONG DEVICE ID";
 };
 
 export const deviceToInlineButton = (
