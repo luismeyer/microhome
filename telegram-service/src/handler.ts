@@ -29,6 +29,7 @@ export const handleApiGatewayRequest: APIGatewayProxyHandler = (
     return;
   }
 
+  console.log("BODY: ", event.body);
   const update: Update = JSON.parse(event.body);
 
   callback = () => {

@@ -1,4 +1,5 @@
 import { CallbackQuery } from "node-telegram-bot-api";
+import { CallbackData } from "telegram-home-assistant-types";
 import { sendDeviceAction } from "../actions/device-action";
 import { sendDeviceSelect } from "../actions/device-select";
 import { sendModuleToggle } from "../actions/module-toggle";
@@ -12,7 +13,6 @@ import {
   SELECT_DEVICE,
   SET_LANGUAGE,
 } from "../telegram/callback-actions";
-import { CallbackData } from "../telegram/callback-data";
 
 export const replyToButtons = async ({
   from,

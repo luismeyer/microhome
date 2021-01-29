@@ -1,10 +1,10 @@
+import { AuthResponse, CallbackData } from "telegram-home-assistant-types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";
 import { makeServiceRequest } from "../services/service";
-import { AuthResponse } from "../services/typings";
 import { activateModule, deactivateModule } from "../services/user";
-import { CallbackData, getCallbackDataId } from "../telegram/callback-data";
+import { getCallbackDataId } from "../telegram/callback-data";
 
 export const sendModuleToggle = async (
   userId: number,

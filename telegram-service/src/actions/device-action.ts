@@ -1,11 +1,11 @@
 import { Message } from "node-telegram-bot-api";
+import { CallbackData, SimpleResponse } from "telegram-home-assistant-types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";
 import { getDeviceFunction } from "../services/device";
 import { makeServiceRequest } from "../services/service";
-import { SimpleResponse } from "../services/typings";
-import { CallbackData, getCallbackDataId } from "../telegram/callback-data";
+import { getCallbackDataId } from "../telegram/callback-data";
 
 export const sendDeviceAction = async (
   userId: number,

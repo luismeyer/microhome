@@ -1,8 +1,4 @@
-export type CallbackData = {
-  action: number;
-  id?: string;
-  data?: string;
-};
+import { CallbackData } from "telegram-home-assistant-types";
 
 export const callbackDataId = (moduleId: number, deviceId: string) =>
   `${moduleId}::${deviceId}`;

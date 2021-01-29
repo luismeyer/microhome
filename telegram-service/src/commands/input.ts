@@ -1,8 +1,8 @@
 import { Message } from "node-telegram-bot-api";
+import { CallbackData } from "telegram-home-assistant-types";
 import { sendDeviceAction } from "../actions/device-action";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
-import { CallbackData } from "../telegram/callback-data";
 
 export const replyToReply = async ({
   reply_to_message,

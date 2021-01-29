@@ -1,6 +1,6 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
+import { Module } from "telegram-home-assistant-types";
 import { getItem, MODULE_TABLE, putItem, USER_TABLE } from "../../dynamodb";
-import { Module } from "../../models/module";
 import { findUserByTelegramId } from "../../models/user";
 import { errorResponse, successResponse } from "../../response";
 import { authorizedHandler, validateNumber } from "../../validation/access";

@@ -1,11 +1,11 @@
+import { CallbackData, DeviceResponse } from "telegram-home-assistant-types";
 import { bot } from "../bot";
 import { deviceToString } from "../devices";
 import { i18n } from "../i18n";
 import { generateFunctionButtons } from "../keyboard";
 import { getDeviceFunctions } from "../services/device";
 import { makeServiceRequest } from "../services/service";
-import { DeviceResponse } from "../services/typings";
-import { CallbackData, getCallbackDataId } from "../telegram/callback-data";
+import { getCallbackDataId } from "../telegram/callback-data";
 
 export const sendDeviceSelect = async (
   userId: number,

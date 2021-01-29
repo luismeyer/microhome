@@ -1,8 +1,8 @@
+import { CallbackData } from "telegram-home-assistant-types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";
 import { updateUser } from "../services/user";
-import { CallbackData } from "../telegram/callback-data";
 import { setState, state } from "../utils/state";
 
 export const sendSetLanguage = async (

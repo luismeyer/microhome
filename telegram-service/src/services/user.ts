@@ -1,24 +1,12 @@
+import {
+  ModuleResponse,
+  ServiceRequest,
+  User,
+} from "telegram-home-assistant-types";
 import { DB_SERVICE_URL } from "../utils/const";
 import { sendDelete, sendGet, sendPost, sendPut } from "../utils/http";
-import { ModuleResponse, ServiceRequest } from "./typings";
 
 const basePath = "user/";
-
-export type Module = {
-  id: number;
-  name: string;
-  baseAction: string;
-  serviceUrl: string;
-  functions: string[];
-  token?: string;
-};
-
-export type User = {
-  id: string;
-  telegramId: number;
-  modules: Module[];
-  language: string;
-};
 
 export const createUser = async (userId: number): Promise<boolean> => {
   const url = `${DB_SERVICE_URL}${basePath}${userId}`;

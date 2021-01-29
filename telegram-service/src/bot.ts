@@ -24,75 +24,88 @@ export const bot = new TelegramBot(BOT_TOKEN, {
   polling: false,
 });
 
+const generateCommandRegex = () => ({
+  start: new RegExp(`/?${Start().command}`),
+  back: new RegExp(`/?${Back().command}`),
+  settings: new RegExp(`/?${Settings().command}`),
+  moduleSettings: new RegExp(`/?${ModuleSettings().command}`),
+  userSettings: new RegExp(`/?${UserSettings().command}`),
+  lifx: new RegExp(`/?${Lifx().command} ?(.+)?`),
+  hue: new RegExp(`/?${Hue().command}`),
+  fritz: new RegExp(`/?${Fritz().command} ?(.+)?`),
+});
+
+const errorResponse = (chatId: number) => (error: any) =>
+  bot.sendMessage(chatId, `Error: ${error}`);
+
 export const generateBot = () => {
+  const commmands = generateCommandRegex();
+
   bot.clearTextListeners();
 
-  bot.removeAllListeners("callback_query");
-  bot.removeAllListeners("pinned_message");
-
-  bot.onText(new RegExp(`/?${Start().command}`), async (msg) => {
-    await replyToStart(msg).catch((e) =>
-      bot.sendMessage(msg.chat.id, `start: ${e}`)
-    );
+  bot.onText(commmands.start, async (msg) => {
+    await replyToStart(msg).catch(errorResponse(msg.chat.id));
     callback();
   });
 
-  bot.onText(new RegExp(`/?${Back().command}`), async (msg) => {
-    await replyToBack(msg).catch((e) => bot.sendMessage(msg.chat.id, e));
+  bot.onText(commmands.back, async (msg) => {
+    await replyToBack(msg).catch(errorResponse(msg.chat.id));
     callback();
   });
 
-  bot.onText(new RegExp(`/?${Settings().command}`), async (msg) => {
-    await replyToSettings(msg).catch((e) =>
-      bot.sendMessage(msg.chat.id, `einstellungen: ${e}`)
-    );
+  bot.onText(commmands.settings, async (msg) => {
+    await replyToSettings(msg).catch(errorResponse(msg.chat.id));
     callback();
   });
 
-  bot.onText(new RegExp(`/?${ModuleSettings().command}`), async (msg) => {
-    await replyToModuleSettins(msg).catch((e) =>
-      bot.sendMessage(msg.chat.id, `module: ${e}`)
-    );
+  bot.onText(commmands.moduleSettings, async (msg) => {
+    await replyToModuleSettins(msg).catch(errorResponse(msg.chat.id));
     callback();
   });
 
-  bot.onText(new RegExp(`/?${UserSettings().command}`), async (msg) => {
-    await replyToUserSettings(msg).catch((e) =>
-      bot.sendMessage(msg.chat.id, `benutzer: ${e}`)
-    );
+  bot.onText(commmands.userSettings, async (msg) => {
+    await replyToUserSettings(msg).catch(errorResponse(msg.chat.id));
     callback();
   });
 
-  bot.onText(new RegExp(`/?${Lifx().command} ?(.+)?`), async (msg, match) => {
-    await replyToLifx(msg, match).catch((e) =>
-      bot.sendMessage(msg.chat.id, `lifx: ${e}`)
-    );
+  bot.onText(commmands.lifx, async (msg, match) => {
+    await replyToLifx(msg, match).catch(errorResponse(msg.chat.id));
     callback();
   });
 
-  bot.onText(new RegExp(`/?${Hue().command}`), async (msg) => {
-    await replyToHue(msg).catch((e) =>
-      bot.sendMessage(msg.chat.id, `hue: ${e}`)
-    );
+  bot.onText(commmands.hue, async (msg) => {
+    await replyToHue(msg).catch(errorResponse(msg.chat.id));
     callback();
   });
 
-  bot.onText(new RegExp(`/?${Fritz().command} ?(.+)?`), async (msg, match) => {
-    await replyToFritz(msg, match).catch((e) =>
-      bot.sendMessage(msg.chat.id, `fritz: ${e}`)
-    );
+  bot.onText(commmands.fritz, async (msg, match) => {
+    await replyToFritz(msg, match).catch(errorResponse(msg.chat.id));
     callback();
   });
 
   bot.onText(new RegExp(""), async (msg) => {
-    if (!msg.reply_to_message) return;
+    // return if other command matches the input text
+    if (Object.values(commmands).some((regex) => msg.text.match(regex))) {
+      return;
+    }
 
-    await replyToReply(msg).catch((e) =>
-      bot.sendMessage(msg.chat.id, `text: ${e}`)
-    );
+    if (!msg.reply_to_message) {
+      await bot.sendMessage(msg.chat.id, "👻");
+      callback();
+      return;
+    }
+
+    await replyToReply(msg).catch(errorResponse(msg.chat.id));
     callback();
   });
 
+  bot.removeAllListeners("sticker");
+  bot.on("sticker", async ({ chat }) => {
+    await bot.sendMessage(chat.id, "😎");
+    callback();
+  });
+
+  bot.removeAllListeners("callback_query");
   bot.on("callback_query", async (cbQuery) => {
     await replyToButtons(cbQuery).catch((e) =>
       bot.sendMessage(cbQuery.message.chat.id, `callback_query: ${e}`)
@@ -100,6 +113,7 @@ export const generateBot = () => {
     callback();
   });
 
+  bot.removeAllListeners("pinned_message");
   bot.on("pinned_message", () => callback());
 
   return bot;

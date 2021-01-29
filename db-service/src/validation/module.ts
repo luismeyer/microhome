@@ -1,5 +1,6 @@
 import { ValidationError } from "runtypes";
-import { Module, ModuleObject } from "../models/module";
+import { Module } from "telegram-home-assistant-types";
+import { ModuleObject } from "../models/module";
 import { ValidationResult } from "./typings";
 
 export const validateModuleInput = (

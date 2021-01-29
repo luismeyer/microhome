@@ -1,21 +1,7 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
+import { Device } from "telegram-home-assistant-types";
 import { lampToInlineButton, lampToString } from "./lamp";
 import { thermostatToInlineButton, thermostatToString } from "./thermostat";
-
-export type Device = {
-  id: string;
-  on: boolean;
-  name: string;
-  type: "LAMP" | "THERMOSTAT";
-
-  // Lamp Attributes
-  color: string;
-
-  // Thermostat Attributes
-  temperatur: number;
-  istTemperatur: number;
-  sollTemperatur: number;
-};
 
 export const deviceToString = (device: Device): string => {
   if (device.type === "THERMOSTAT") {

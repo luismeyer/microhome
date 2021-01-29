@@ -5,12 +5,16 @@ import {
   ReplyKeyboardMarkup,
   SendMessageOptions,
 } from "node-telegram-bot-api";
+import {
+  CallbackData,
+  Device,
+  ModuleResponse,
+} from "telegram-home-assistant-types";
 import { FIXED_COMMANDS } from "./bot";
-import { Device, deviceToInlineButton } from "./devices";
-import { ModuleResponse } from "./services/typings";
+import { deviceToInlineButton } from "./devices";
 import { getUserModules } from "./services/user";
 import { ACTION_DEVICE } from "./telegram/callback-actions";
-import { CallbackData, createCallbackData } from "./telegram/callback-data";
+import { createCallbackData } from "./telegram/callback-data";
 
 export const generateMarkup = (
   moduleResponses: ModuleResponse[]

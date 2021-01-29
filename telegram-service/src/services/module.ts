@@ -1,6 +1,6 @@
+import { ModuleResponse } from "telegram-home-assistant-types";
 import { DB_SERVICE_URL } from "../utils/const";
 import { sendGet } from "../utils/http";
-import { ModuleResponse } from "./typings";
 
 export const getModules = async (): Promise<ModuleResponse[]> => {
   const url = `${DB_SERVICE_URL}module`;

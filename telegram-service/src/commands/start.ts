@@ -1,13 +1,14 @@
 import { Message } from "node-telegram-bot-api";
+import { Command } from "telegram-home-assistant-types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";
 import { createUser } from "../services/user";
-import { Command } from "../telegram/command";
 
 export const Start: Command = () => {
   const translations = i18n();
 
+  console.log(translations);
   return {
     command: translations.start.name,
     description: translations.start.description,

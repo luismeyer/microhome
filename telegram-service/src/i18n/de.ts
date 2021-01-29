@@ -1,5 +1,4 @@
 import { TranslationsFunc } from ".";
-import { Settings } from "../commands/settings";
 
 export const de: TranslationsFunc = () => ({
   languageName: "de",
@@ -10,7 +9,7 @@ export const de: TranslationsFunc = () => ({
   start: {
     name: "start",
     description: "Startet den Bot",
-    message: `🚀 Willkommen beim Home Assistant Bot\n\n⚙️ Als nächstes kannst du mit dem '${Settings.name}' Kommando deine Module verwalten.\n🏁 Wenn du schon Module hinzugfügt hast kannst du auch direkt loslegen in dem du diese im Menü auswählst`,
+    message: `🚀 Willkommen beim Home Assistant Bot\n\n⚙️ Als nächstes kannst du mit dem '/einstellungen' Kommando deine Module verwalten.\n🏁 Wenn du schon Module hinzugfügt hast kannst du auch direkt loslegen in dem du diese im Menü auswählst`,
     error: "Fehler beim Anmelden. Versuch es später erneut. :)",
   },
   back: {

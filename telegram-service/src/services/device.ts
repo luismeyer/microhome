@@ -1,6 +1,9 @@
+import {
+  FunctionsResponse,
+  ServiceRequest,
+} from "telegram-home-assistant-types";
 import { DB_SERVICE_URL } from "../utils/const";
 import { sendGet } from "../utils/http";
-import { FunctionsResponse, ServiceRequest } from "./typings";
 
 export const getDeviceFunctions = async (
   userId: number,

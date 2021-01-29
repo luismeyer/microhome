@@ -1,13 +1,6 @@
 import { Record, String } from "runtypes";
+import { User } from "telegram-home-assistant-types";
 import { scanItems, USER_TABLE } from "../dynamodb";
-import { Module } from "./module";
-
-export type User = {
-  id: string;
-  telegramId: number;
-  modules: Module[];
-  language: string;
-};
 
 export type UserInput = {
   language: string;

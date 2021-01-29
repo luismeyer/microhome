@@ -1,8 +1,8 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
-import { Device } from ".";
+import { CallbackData, Device } from "telegram-home-assistant-types";
 import { i18n } from "../i18n";
 import { SELECT_DEVICE } from "../telegram/callback-actions";
-import { CallbackData, callbackDataId } from "../telegram/callback-data";
+import { callbackDataId } from "../telegram/callback-data";
 
 export const thermostatToString = ({
   name,

@@ -4,6 +4,7 @@ import {
   ReplyKeyboardMarkup,
   SendMessageOptions,
 } from "node-telegram-bot-api";
+import { CallbackData, Command } from "telegram-home-assistant-types";
 import { bot } from "../bot";
 import { i18n, translations } from "../i18n";
 import { generateSwitch } from "../keyboard";
@@ -14,8 +15,7 @@ import {
   DEACTIVATE_MODULE,
   SET_LANGUAGE,
 } from "../telegram/callback-actions";
-import { CallbackData, createCallbackData } from "../telegram/callback-data";
-import { Command } from "../telegram/command";
+import { createCallbackData } from "../telegram/callback-data";
 import { Back } from "./start";
 
 export const Settings: Command = () => {
