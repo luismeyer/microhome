@@ -1,5 +1,9 @@
+import { resolve } from "path";
 import dotenv from "dotenv";
-dotenv.config();
+
+dotenv.config({
+  path: resolve(__dirname, "../../../.env"),
+});
 
 export const { DEVICE_ID } = process.env;
 if (!DEVICE_ID) throw new Error("Missing Env Variable: 'DEVICE_ID'");

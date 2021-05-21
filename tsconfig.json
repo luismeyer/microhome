@@ -1,4 +1,7 @@
 {
   "files": [],
-  "references": [{ "path": "./packages/lifx-service" }]
+  "references": [
+    { "path": "./packages/lifx-service" },
+    { "path": "./packages/service-tests" }
+  ]
 }
