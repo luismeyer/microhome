@@ -4,12 +4,13 @@
     "module": "commonjs",
     "noImplicitAny": true,
     "removeComments": true,
-    "rootDir": ".",
+    "rootDir": "src",
     "sourceMap": true,
     "listFiles": true,
     "newLine": "LF",
     "noEmitOnError": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "outDir": "dist"
   }
 }

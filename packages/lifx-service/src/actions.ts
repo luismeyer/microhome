@@ -13,30 +13,51 @@ import {
   createErrorResult,
   createSuccessResult,
 } from "./lifx";
-import { ErrorResult, Maybe, Lamp, SuccessResult } from "./typings";
+import {
+  ErrorResult,
+  Lamp,
+  SuccessResult,
+  ErrorValidation,
+  SuccessValidation,
+} from "./typings";
 
-const checkBaseArgs = (body: LambdaBody): Maybe<ErrorResult> => {
+const checkBaseArgs = (
+  body: LambdaBody
+): ErrorValidation | SuccessValidation => {
   if (!body.token) {
-    return createErrorResult("Kein Token");
+    return {
+      valid: false,
+      body: createErrorResult("Kein Token"),
+    };
   }
 
   if (!body.deviceId) {
-    return createErrorResult("Keine LampenID");
+    return {
+      valid: false,
+      body: createErrorResult("Keine LampenID"),
+    };
   }
 
-  return null;
+  return {
+    valid: true,
+    body: {
+      ...body,
+      token: body.token,
+      deviceId: body.deviceId,
+    },
+  };
 };
 
 // gets you a single lamp by ID
 export const handleGetAction = async (
   body: LambdaBody
 ): Promise<ErrorResult | SuccessResult<Lamp>> => {
-  const error = checkBaseArgs(body);
-  if (error) {
-    return error;
+  const parseResult = checkBaseArgs(body);
+  if (parseResult.valid === false) {
+    return parseResult.body;
   }
 
-  const result = await getLamp(body.token, body.deviceId);
+  const result = await getLamp(parseResult.body.token, parseResult.body.token);
 
   return result.success == true
     ? createSuccessResult(transformApiLamp(result.result))
@@ -46,14 +67,14 @@ export const handleGetAction = async (
 export const handleSwitchAction = async (
   body: LambdaBody
 ): Promise<ErrorResult | SuccessResult<string>> => {
-  const error = checkBaseArgs(body);
-  if (error) {
-    return error;
+  const parseResult = checkBaseArgs(body);
+  if (parseResult.valid === false) {
+    return parseResult.body;
   }
 
   return await setLampState({
-    token: body.token,
-    lampId: body.deviceId,
+    token: parseResult.body.token,
+    lampId: parseResult.body.deviceId,
     on: body.action === "on",
   });
 };
@@ -72,11 +93,15 @@ export const handleListAction = async (
     : listResult;
 };
 
-export const handleColorAction = async (body: LambdaBody) => {
-  const error = checkBaseArgs(body);
-  if (error) {
-    return error;
+export const handleColorAction = async (
+  rawBody: LambdaBody
+): Promise<ErrorResult | SuccessResult<string>> => {
+  const parseResult = checkBaseArgs(rawBody);
+  if (parseResult.valid === false) {
+    return parseResult.body;
   }
+
+  const { body } = parseResult;
 
   if (!body.data) {
     return createErrorResult("Keine Farbe");

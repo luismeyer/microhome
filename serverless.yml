@@ -1,0 +1,27 @@
+service: telegram-home-assistant
+frameworkVersion: '2'
+useDotenv: true
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: eu-central-1
+
+package:
+  individually: true
+
+functions:
+  api:
+    handler: packages/lifx-service/dist/handler.api
+    events:
+      - http: 
+          path: services/lifx
+          method: ANY
+          cors: true
+    package:
+      patterns:
+        - packages/dist/**
+        - packages/node_modules/**

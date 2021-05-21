@@ -5,7 +5,6 @@ import {
   handleSwitchAction,
   handleGetAction,
 } from "./actions";
-import pjson from "../package.json";
 
 export const errorResponse = (error: string) => ({
   statusCode: 400,
@@ -15,7 +14,6 @@ export const errorResponse = (error: string) => ({
   body: JSON.stringify({
     success: false,
     error,
-    version: pjson.version,
   }),
 });
 
@@ -25,7 +23,7 @@ type LambdaEvent = {
 
 export type LambdaBody = {
   token?: string;
-  deviceId: string;
+  deviceId?: string;
   action?: "on" | "off" | "list" | "color" | "auth" | "get";
   data?: any;
 };
@@ -75,7 +73,6 @@ export const api = async (event: LambdaEvent) => {
     body: JSON.stringify({
       success: true,
       result: response.result,
-      version: pjson.version,
     }),
   };
 };

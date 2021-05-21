@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": true,
+    "keyofStringsOnly": true,
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "pretty": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES6",
+    "module": "CommonJS",
+    "listFiles": true,
+    "newLine": "LF",
+    "noEmitOnError": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": true
+  }
+}
