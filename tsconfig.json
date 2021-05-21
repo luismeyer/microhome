@@ -2,6 +2,7 @@
   "files": [],
   "references": [
     { "path": "./packages/lifx-service" },
-    { "path": "./packages/service-tests" }
+    { "path": "./packages/service-tests" },
+    { "path": "./packages/types" }
   ]
 }

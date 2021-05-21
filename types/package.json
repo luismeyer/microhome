@@ -1,8 +1,0 @@
-{
-  "name": "telegram-home-assistant-types",
-  "version": "1.0.0",
-  "main": "",
-  "types": "index.d.ts",
-  "license": "MIT",
-  "devDependencies": {}
-}
