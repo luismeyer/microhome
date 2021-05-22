@@ -40,8 +40,9 @@ package:
   individually: true
 
 functions:
+  
   # lifx-service
-  api:
+  lifxService:
     handler: packages/lifx-service/dist/handler.api
     events:
       - http: 
@@ -50,137 +51,214 @@ functions:
           cors: true
     package:
       patterns:
-        - packages/dist/**
-        - packages/node_modules/**
+        - packages/lifx-service/dist/**
+        - packages/lifx-service/node_modules/**
+  
+  # telegram-service
+  telegramService:
+    handler: packages/telegram-service/dist/handler.handleApiGatewayRequest
+    events:
+      - http:
+          path: services/telegram
+          method: any
+          cors: true
+    package:
+      patterns:
+        - packages/telegram-service/dist/**
+        - packages/telegram-service/node_modules/**
 
   # db-service 
   createModule:
     handler: packages/db-service/dist/handlers/module/create.createModule
     events:
       - http:
-          path: module
+          path: services/db/module
           method: post
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
 
   listModules:
     handler: packages/db-service/dist/handlers/module/list.listModule
     events:
       - http:
-          path: module
+          path: services/db/module
           method: get
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
         
   getModule:
     handler: packages/db-service/dist/handlers/module/get.getModule
     events:
       - http:
-          path: module/{moduleid}
+          path: services/db/module/{moduleid}
           method: get
-          cors: true        
+          cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
 
   createUser:
     handler: packages/db-service/dist/handlers/user/create.createUser
     events:
       - http:
-          path: user/{userid}
+          path: services/db/user/{userid}
           method: put
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
 
   getUser:
     handler: packages/db-service/dist/handlers/user/get.getUser
     events:
       - http:
-          path: user/{userid}
+          path: services/db/user/{userid}
           method: get
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
 
   updateUser:
     handler: packages/db-service/dist/handlers/user/update.updateUser
     events:
       - http:
-          path: user/{userid}
+          path: services/db/user/{userid}
           method: post
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
 
   deleteUser:
     handler: packages/db-service/dist/handlers/user/delete.deleteUser
     events:
       - http:
-          path: user/{userid}
+          path: services/db/user/{userid}
           method: delete
-          cors: true     
+          cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**     
   
   listUsers:
     handler: packages/db-service/dist/handlers/user/list.listUsers
     events:
       - http:
-          path: user/
+          path: services/db/user/
           method: get
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
           
   listUserModules:
     handler: packages/db-service/dist/handlers/user/list-modules.listUserModules
     events:
       - http:
-          path: user/{userid}/module
+          path: services/db/user/{userid}/module
           method: get
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
   
   getUserModule:
     handler: packages/db-service/dist/handlers/user/module.getUserModule
     events:
       - http:
-          path: user/{userid}/module/{moduleid}
+          path: services/db/user/{userid}/module/{moduleid}
           method: get
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
   
   addUserModule:
     handler: packages/db-service/dist/handlers/user/add-module.addUserModule
     events:
       - http:
-          path: user/{userid}/module/{moduleid}
+          path: services/db/user/{userid}/module/{moduleid}
           method: put
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
   
   removeUserModule:
     handler: packages/db-service/dist/handlers/user/remove-module.removeUserModule
     events:
       - http:
-          path: user/{userid}/module/{moduleid}
+          path: services/db/user/{userid}/module/{moduleid}
           method: delete
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
 
   getUserModuleDevice:
     handler: packages/db-service/dist/handlers/user/module-device.getUserModuleDevice
     events:
       - http:
-          path: user/{userid}/module/{moduleid}/devices/{deviceid}/functions
+          path: services/db/user/{userid}/module/{moduleid}/devices/{deviceid}/functions
           method: get
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
 
   getUserModuleDeviceFunction:
     handler: packages/db-service/dist/handlers/user/module-device-function.getUserModuleDeviceFunction
     events:
       - http:
-          path: user/{userid}/module/{moduleid}/devices/{deviceid}/functions/{function}
+          path: services/db/user/{userid}/module/{moduleid}/devices/{deviceid}/functions/{function}
           method: get
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
 
   updateUserToken:
     handler: packages/db-service/dist/handlers/user/token.updateUserToken
     events:
       - http:
-          path: user/token/{edittoken}
+          path: services/db/user/token/{edittoken}
           method: post
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
   
   updateUserModuleToken:
     handler: packages/db-service/dist/handlers/user/module-token.updateUserModuleToken
     events:
       - http:
-          path: user/{userid}/module/{moduleid}/token
+          path: services/db/user/{userid}/module/{moduleid}/token
           method: post
           cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
 
 resources:
   Resources:

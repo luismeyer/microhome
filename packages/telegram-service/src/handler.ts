@@ -4,8 +4,6 @@ import { generateBot } from "./bot";
 import { setI18n } from "./i18n";
 import { clearState } from "./utils/state";
 
-export let callback: () => void;
-
 const setUserLanguage = async (update: Update) => {
   if (update.message && update.message.from) {
     await setI18n(update.message.from.id);
@@ -32,15 +30,15 @@ export const handleApiGatewayRequest: APIGatewayProxyHandler = (
   console.log("BODY: ", event.body);
   const update: Update = JSON.parse(event.body);
 
-  callback = () => {
+  const bot = generateBot(() => {
     clearState();
     cb(null, {
       statusCode: 200,
       body: `{ "message": "success" }`,
     });
-  };
+  });
 
   setUserLanguage(update).then(() => {
-    generateBot().processUpdate(update);
+    bot.processUpdate(update);
   });
 };

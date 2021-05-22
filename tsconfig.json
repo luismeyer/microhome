@@ -4,6 +4,7 @@
     { "path": "./packages/lifx-service" },
     { "path": "./packages/service-tests" },
     { "path": "./packages/types" },
-    { "path": "./packages/db-service" }
+    { "path": "./packages/db-service" },
+    { "path": "./packages/telegram-service" }
   ]
 }

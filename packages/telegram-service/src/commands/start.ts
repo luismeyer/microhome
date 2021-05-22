@@ -8,7 +8,6 @@ import { createUser } from "../services/user";
 export const Start: Command = () => {
   const translations = i18n();
 
-  console.log(translations);
   return {
     command: translations.start.name,
     description: translations.start.description,

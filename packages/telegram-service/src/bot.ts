@@ -13,7 +13,6 @@ import {
   UserSettings,
 } from "./commands/settings";
 import { Back, replyToBack, replyToStart, Start } from "./commands/start";
-import { callback } from "./handler";
 
 const { BOT_TOKEN } = process.env;
 
@@ -38,7 +37,7 @@ const generateCommandRegex = () => ({
 const errorResponse = (chatId: number) => (error: any) =>
   bot.sendMessage(chatId, `Error: ${error}`);
 
-export const generateBot = () => {
+export const generateBot = (callback: () => void) => {
   const commmands = generateCommandRegex();
 
   bot.clearTextListeners();
@@ -85,7 +84,11 @@ export const generateBot = () => {
 
   bot.onText(new RegExp(""), async (msg) => {
     // return if other command matches the input text
-    if (Object.values(commmands).some((regex) => msg.text.match(regex))) {
+    if (
+      Object.values(commmands).some(
+        (regex) => msg.text && msg.text.match(regex)
+      )
+    ) {
       return;
     }
 
@@ -107,9 +110,13 @@ export const generateBot = () => {
 
   bot.removeAllListeners("callback_query");
   bot.on("callback_query", async (cbQuery) => {
-    await replyToButtons(cbQuery).catch((e) =>
-      bot.sendMessage(cbQuery.message.chat.id, `callback_query: ${e}`)
-    );
+    await replyToButtons(cbQuery).catch((e) => {
+      if (!cbQuery.message) {
+        return;
+      }
+
+      bot.sendMessage(cbQuery.message.chat.id, `callback_query: ${e}`);
+    });
     callback();
   });
 
