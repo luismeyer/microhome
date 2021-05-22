@@ -12,7 +12,8 @@
     "compile:watch": "yarn compile --watch",
     "encrypt": "gpg --symmetric --cipher-algo AES256 .env.production",
     "decrypt": "gpg --decrypt --output secrets/.env .env.production.gpg",
-    "start": "sls offline"
+    "start": "sls offline",
+    "bootstrap": "lerna bootstrap"
   },
   "private": true,
   "workspaces": [

@@ -8,9 +8,9 @@
     "sourceMap": true,
     "listFiles": true,
     "newLine": "LF",
-    "noEmitOnError": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true
-  }
+  },
+  "include": ["src/**/*"]
 }

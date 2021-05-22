@@ -9,7 +9,7 @@ import {
   CallbackData,
   Device,
   ModuleResponse,
-} from "telegram-home-assistant-types";
+} from "@telegram-home-assistant/types";
 import { FIXED_COMMANDS } from "./bot";
 import { deviceToInlineButton } from "./devices";
 import { getUserModules } from "./services/user";

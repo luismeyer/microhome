@@ -4,7 +4,7 @@ import {
   ReplyKeyboardMarkup,
   SendMessageOptions,
 } from "node-telegram-bot-api";
-import { CallbackData, Command } from "telegram-home-assistant-types";
+import { CallbackData, Command } from "@telegram-home-assistant/types";
 import { bot } from "../bot";
 import { i18n, translations } from "../i18n";
 import { generateSwitch } from "../keyboard";

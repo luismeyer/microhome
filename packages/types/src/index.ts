@@ -4,13 +4,16 @@ export type Module = {
   baseAction: string;
   serviceUrl: string;
   functions: string[];
+};
+
+export type ModuleInput = Module & {
   token?: string;
 };
 
 export type User = {
   id: string;
   telegramId: number;
-  modules: Module[];
+  modules: ModuleInput[];
   language: string;
 };
 
@@ -45,10 +48,10 @@ export type SimpleResponse = ServiceResponse<undefined>;
 export type DeviceResponse = ServiceResponse<Device>;
 
 export type SericeRequestBody = {
-  token: string;
-  deviceId: String;
-  action: string;
-  data: string;
+  token?: string;
+  action?: string;
+  deviceId?: string;
+  data?: string;
 };
 
 export type ServiceRequest = {

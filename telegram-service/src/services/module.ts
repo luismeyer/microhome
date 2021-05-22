@@ -1,4 +1,4 @@
-import { ModuleResponse } from "telegram-home-assistant-types";
+import { ModuleResponse } from "@telegram-home-assistant/types";
 import { DB_SERVICE_URL } from "../utils/const";
 import { sendGet } from "../utils/http";
 

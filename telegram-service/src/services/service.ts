@@ -1,4 +1,4 @@
-import { ServiceRequest } from "telegram-home-assistant-types";
+import { ServiceRequest } from "@telegram-home-assistant/types";
 import { sendPost } from "../utils/http";
 
 export const makeServiceRequest = async <T>(

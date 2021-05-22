@@ -2,7 +2,7 @@ import {
   ModuleResponse,
   ServiceRequest,
   User,
-} from "telegram-home-assistant-types";
+} from "@telegram-home-assistant/types";
 import { DB_SERVICE_URL } from "../utils/const";
 import { sendDelete, sendGet, sendPost, sendPut } from "../utils/http";
 

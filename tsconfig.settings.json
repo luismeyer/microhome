@@ -18,9 +18,7 @@
     "strict": true,
     "target": "ES6",
     "module": "CommonJS",
-    "listFiles": true,
     "newLine": "LF",
-    "noEmitOnError": true,
     "resolveJsonModule": true,
     "noImplicitAny": true,
     "outDir": "dist"

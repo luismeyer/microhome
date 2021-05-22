@@ -1,4 +1,4 @@
-import { DeviceListResponse } from "telegram-home-assistant-types";
+import { DeviceListResponse } from "@telegram-home-assistant/types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { generateDeviceButtons } from "../keyboard";
@@ -14,11 +14,8 @@ export const sendDeviceList = async (
   const translations = i18n();
 
   if (module) {
-    const {
-      success,
-      result,
-      error,
-    } = await makeServiceRequest<DeviceListResponse>(module.serviceRequest);
+    const { success, result, error } =
+      await makeServiceRequest<DeviceListResponse>(module.serviceRequest);
 
     if (success) {
       const partitionSize = 3;
