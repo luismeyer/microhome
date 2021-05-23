@@ -5,6 +5,7 @@
     { "path": "./packages/service-tests" },
     { "path": "./packages/types" },
     { "path": "./packages/db-service" },
-    { "path": "./packages/telegram-service" }
+    { "path": "./packages/telegram-service" },
+    { "path": "./packages/hue-service" }
   ]
 }

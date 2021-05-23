@@ -5,16 +5,7 @@ import {
   handleAuthAction,
   handleGetAction,
 } from "./actions";
-
-type LambdaEvent = {
-  body?: string;
-};
-export type LambdaBody = {
-  token?: string;
-  deviceId?: string;
-  action: "auth" | "list" | "get" | "on" | "off" | "color";
-  data?: any;
-};
+import { LambdaEvent, LambdaBody } from "./typings";
 
 module.exports.handler = async (event: LambdaEvent) => {
   if (!event.body) {

@@ -44,11 +44,11 @@ export const connectToApi = (accessToken: string, refreshToken: string) => {
     });
 };
 
-export const codeToToken = (code: string) => {
+export const codeToToken = async (code: string) => {
   const remoteBootstrap = v3.api.createRemote(HUE_CLIENT_ID, HUE_CLIENT_SECRET);
   return remoteBootstrap
     .connectWithCode(code)
-    .then((api) => api.remote.getRemoteAccessCredentials());
+    .then((api) => api.remote?.getRemoteAccessCredentials());
 };
 
 export const createTokensResponse = (tokens: OAuthTokens): TokensResponse => ({
@@ -100,10 +100,12 @@ export const transformLight = (light: ApiLamp): Lamp => {
 
   if (light.state.hue) {
     hue = light.state.hue / 182;
-    brightness = light.state.bri / 2.54;
-    saturation = light.state.sat / 2.54;
+    brightness = light.state.bri ?? 0 / 2.54;
+    saturation = light.state.sat ?? 0 / 2.54;
   } else {
     hue = 0;
+    saturation = 0;
+    brightness = 0;
   }
 
   const transformed = convert.hsv.keyword([hue, saturation, brightness]);

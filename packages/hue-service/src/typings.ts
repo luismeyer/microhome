@@ -1,6 +1,30 @@
 import Api from "node-hue-api/lib/api/Api";
 
-export type Maybe<T> = T | void;
+export type LambdaEvent = {
+  body?: string;
+};
+
+export type LambdaBody = {
+  token?: string;
+  deviceId?: string;
+  action: "auth" | "list" | "get" | "on" | "off" | "color";
+  data?: any;
+};
+
+export type ParseResult = SuccessParseResult | ErrorParseResult;
+
+export type SuccessParseResult = {
+  success: true;
+  result: LambdaBody & {
+    token: string;
+    deviceId: string;
+  };
+};
+
+export type ErrorParseResult = {
+  success: false;
+  result: ErrorResponse;
+};
 
 export type ApiLamp = {
   id: string;

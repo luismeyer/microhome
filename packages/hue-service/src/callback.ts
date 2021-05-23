@@ -10,7 +10,13 @@ type Event = {
 
 //TODO: Objektifizierung -> Rückgabewert der Funktion
 export const handler = async (event: Event) => {
-  if (!event.queryStringParameters || !event.queryStringParameters.code)
+  const { queryStringParameters } = event;
+
+  if (
+    !queryStringParameters ||
+    !queryStringParameters.code ||
+    !queryStringParameters.state
+  ) {
     return {
       statusCode: 400,
       body: JSON.stringify({
@@ -18,9 +24,14 @@ export const handler = async (event: Event) => {
         result: "Code fehlt",
       }),
     };
-  const { code, state } = event.queryStringParameters;
-  const result = await codeToToken(code);
-  await editDBToken(result.tokens.refresh.value, state);
+  }
+
+  const result = await codeToToken(queryStringParameters.code);
+  if (!result?.tokens.refresh) {
+    return;
+  }
+
+  await editDBToken(result.tokens.refresh.value, queryStringParameters.state);
 
   return {
     statusCode: 301,

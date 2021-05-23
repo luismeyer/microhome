@@ -16,9 +16,15 @@
     "bootstrap": "lerna bootstrap"
   },
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/*",
+      "**/*/**"
+    ]
+  },
   "dependencies": {},
   "devDependencies": {
     "@types/node": "^15.6.0",

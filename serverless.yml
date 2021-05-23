@@ -66,6 +66,23 @@ functions:
       patterns:
         - packages/telegram-service/dist/**
         - packages/telegram-service/node_modules/**
+  
+  # hue-service
+  hueCallback:
+    handler: packages/hue-service/dist/callback.handler
+    events:
+      - http:
+          path: services/hue-service/callback
+          method: any
+          cors: true
+        
+  hueService:
+    handler: packages/hue-service/dist//handler.handler
+    events:
+      - http:
+          path: services/hue-service/
+          method: any
+          cors: true
 
   # db-service 
   createModule:
