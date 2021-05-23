@@ -72,16 +72,24 @@ functions:
     handler: packages/hue-service/dist/callback.handler
     events:
       - http:
-          path: services/hue-service/callback
+          path: services/hue/callback
           method: any
           cors: true
         
   hueService:
-    handler: packages/hue-service/dist//handler.handler
+    handler: packages/hue-service/dist/handler.handler
     events:
       - http:
-          path: services/hue-service/
+          path: services/hue/
           method: any
+          cors: true
+
+  fritzService:
+    handler: packages/fritz-service/dist/handler.handler
+    events:
+      - http:
+          path: /services/fritz
+          method: ANY
           cors: true
 
   # db-service 
