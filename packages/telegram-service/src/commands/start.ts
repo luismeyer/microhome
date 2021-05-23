@@ -24,6 +24,10 @@ export const Back: Command = () => {
 };
 
 export const replyToStart = async ({ chat, from }: Message) => {
+  if (!from) {
+    return;
+  }
+
   const success = await createUser(from.id);
   const translations = i18n();
 
@@ -35,6 +39,10 @@ export const replyToStart = async ({ chat, from }: Message) => {
 };
 
 export const replyToBack = async ({ chat, from }: Message) => {
+  if (!from) {
+    return;
+  }
+
   const success = await createUser(from.id);
   const translations = i18n();
 

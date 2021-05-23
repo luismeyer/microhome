@@ -23,9 +23,5 @@ export const deviceToInlineButton = (
     return thermostatToInlineButton(device, moduleId);
   }
 
-  if (device.type === "LAMP") {
-    return lampToInlineButton(device, moduleId);
-  }
-
-  return undefined;
+  return lampToInlineButton(device, moduleId);
 };

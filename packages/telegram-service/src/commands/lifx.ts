@@ -18,10 +18,17 @@ export const Lifx: Command = () => {
 export const replyToLifx = async (
   { chat, from }: Message,
   match: RegExpExecArray
-) => {
+): Promise<void> => {
+  if (!from) {
+    return;
+  }
+
   const translations = i18n();
 
   const module = await findModuleByName(Lifx.name);
+  if (!module) {
+    return;
+  }
 
   const hasArgs = Boolean(match[1]);
   let tokenSuccess = false;
@@ -36,6 +43,6 @@ export const replyToLifx = async (
   }
 
   if (tokenSuccess || !hasArgs) {
-    return sendDeviceList(from.id, chat.id, module.id);
+    await sendDeviceList(from.id, chat.id, module.id);
   }
 };

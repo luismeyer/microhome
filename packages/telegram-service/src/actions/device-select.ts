@@ -14,12 +14,21 @@ export const sendDeviceSelect = async (
 ) => {
   const translations = i18n();
 
-  const { deviceId, moduleId } = getCallbackDataId(cbData);
-  const { serviceRequest, functions } = await getDeviceFunctions(
-    userId,
-    moduleId,
-    deviceId
-  );
+  const callbackDataId = getCallbackDataId(cbData);
+
+  if (!callbackDataId) {
+    return;
+  }
+
+  const { deviceId, moduleId } = callbackDataId;
+
+  const deviceFunctions = await getDeviceFunctions(userId, moduleId, deviceId);
+
+  if (!deviceFunctions) {
+    return;
+  }
+
+  const { serviceRequest, functions } = deviceFunctions;
 
   const deviceResponse = await makeServiceRequest<DeviceResponse>(
     serviceRequest

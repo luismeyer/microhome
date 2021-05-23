@@ -15,9 +15,13 @@ export const Hue: Command = () => {
 };
 
 export const replyToHue = async ({ from, chat }: Message) => {
+  if (!from) {
+    return;
+  }
+
   const translations = i18n();
 
   return findModuleByName(Hue.name)
-    .then((module) => sendDeviceList(from.id, chat.id, module.id))
-    .catch((e) => bot.sendMessage(chat.id, `${translations.internalError}`));
+    .then((module) => module && sendDeviceList(from.id, chat.id, module.id))
+    .catch(() => bot.sendMessage(chat.id, `${translations.internalError}`));
 };

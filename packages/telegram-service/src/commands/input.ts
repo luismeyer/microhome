@@ -35,6 +35,10 @@ export const replyToReply = async ({
   }
 
   const button = markup.inline_keyboard[0][0];
+  if (!button.callback_data || !from) {
+    return;
+  }
+
   const cbData: CallbackData = JSON.parse(button.callback_data);
   return sendDeviceAction(from.id, chat.id, cbData, pinned_message, text);
 };

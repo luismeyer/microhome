@@ -20,6 +20,10 @@ export const replyToButtons = async ({
   data,
   id,
 }: CallbackQuery) => {
+  if (!message || !data) {
+    return;
+  }
+
   const { id: userId } = from;
   const { chat } = message;
 
@@ -34,10 +38,10 @@ export const replyToButtons = async ({
       await sendDeviceAction(from.id, message.chat.id, callbackData, message);
       break;
     case ACTIVATE_MODULE:
-      await sendModuleToggle(userId, chat.id, callbackData, true);
+      await sendModuleToggle(userId, callbackData, true);
       break;
     case DEACTIVATE_MODULE:
-      await sendModuleToggle(userId, chat.id, callbackData, false);
+      await sendModuleToggle(userId, callbackData, false);
       break;
     case SET_LANGUAGE:
       await sendSetLanguage(userId, chat.id, callbackData);

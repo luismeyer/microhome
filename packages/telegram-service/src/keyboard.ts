@@ -63,7 +63,7 @@ export const generateSendMessageOptions = async (
   userId: number
 ): Promise<SendMessageOptions> =>
   getUserModules(userId).then((modules) => ({
-    reply_markup: generateMarkup(modules),
+    reply_markup: modules && generateMarkup(modules),
   }));
 
 export const generateSwitch = (

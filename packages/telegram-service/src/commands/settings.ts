@@ -60,7 +60,14 @@ export const replyToSettings = async ({ chat }: Message) => {
   });
 };
 
-export const replyToModuleSettins = async ({ from, chat }: Message) => {
+export const replyToModuleSettins = async ({
+  from,
+  chat,
+}: Message): Promise<void> => {
+  if (!from) {
+    return;
+  }
+
   const translations = i18n();
   const { id } = from;
 
@@ -69,7 +76,7 @@ export const replyToModuleSettins = async ({ from, chat }: Message) => {
   });
 
   if (modules) {
-    return Promise.all(
+    await Promise.all(
       modules.map(async (module) => {
         const userHasModule = await hasModule(id, module.id);
 
@@ -92,7 +99,7 @@ export const replyToModuleSettins = async ({ from, chat }: Message) => {
   }
 };
 
-export const replyToUserSettings = async ({ chat, from }: Message) => {
+export const replyToUserSettings = async ({ chat }: Message) => {
   const buttons: InlineKeyboardButton[] = translations.map((t) => {
     const cbData: CallbackData = {
       action: SET_LANGUAGE,

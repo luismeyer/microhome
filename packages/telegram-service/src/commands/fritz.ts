@@ -19,6 +19,10 @@ export const replyToFritz = async (
   { from, chat }: Message,
   match: RegExpExecArray
 ) => {
+  if (!from) {
+    return;
+  }
+
   const translations = i18n();
 
   const module = await findModuleByName(Fritz.name);

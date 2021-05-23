@@ -32,7 +32,7 @@ export const updateUser = async (
 
 export const getUserModules = async (
   userId: number
-): Promise<ModuleResponse[]> => {
+): Promise<ModuleResponse[] | undefined> => {
   const url = `${DB_SERVICE_URL}${basePath}${userId}/module`;
   const res = await sendGet(url);
 
@@ -40,13 +40,13 @@ export const getUserModules = async (
     return res.json();
   }
 
-  return undefined;
+  return;
 };
 
 export const getUserModule = async (
   userId: number,
   moduleId: number
-): Promise<ModuleResponse> => {
+): Promise<ModuleResponse | undefined> => {
   const url = `${DB_SERVICE_URL}${basePath}${userId}/module/${moduleId}`;
   const res = await sendGet(url);
 
@@ -54,7 +54,7 @@ export const getUserModule = async (
     return res.json();
   }
 
-  return undefined;
+  return;
 };
 
 export const hasModule = (userId: number, moduleId: number) =>
@@ -70,13 +70,15 @@ export const deactivateModule = (userId: number, moduleId: number) => {
 export const activateModule = async (
   userId: number,
   moduleId: number
-): Promise<ServiceRequest> => {
+): Promise<ServiceRequest | undefined> => {
   const url = `${DB_SERVICE_URL}${basePath}${userId}/module/${moduleId}`;
   const res = await sendPut(url);
 
   if (res && res.ok) {
     return res.json();
   }
+
+  return;
 };
 
 export const setToken = async (

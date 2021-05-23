@@ -8,17 +8,27 @@ import { getCallbackDataId } from "../telegram/callback-data";
 
 export const sendModuleToggle = async (
   userId: number,
-  chatId: number,
   cbData: CallbackData,
   activate: boolean
 ) => {
   const translations = i18n();
 
-  const { moduleId } = getCallbackDataId(cbData);
+  const callbackDataId = getCallbackDataId(cbData);
+
+  if (!callbackDataId) {
+    return;
+  }
+
+  const { moduleId } = callbackDataId;
   let text;
 
   if (activate) {
     const serviceRequest = await activateModule(userId, moduleId);
+
+    if (!serviceRequest) {
+      return;
+    }
+
     const { error, success, result } = await makeServiceRequest<AuthResponse>(
       serviceRequest
     );

@@ -97,6 +97,10 @@ export type TranslationsFunc = () => {
 export const translations = [en, de];
 
 export const setI18n = async (userId?: number) => {
+  if (!userId) {
+    return;
+  }
+
   const language = await getUser(userId)
     .then((user) => user.language)
     .catch(() => "en");

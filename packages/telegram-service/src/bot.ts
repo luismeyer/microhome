@@ -15,6 +15,9 @@ import {
 import { Back, replyToBack, replyToStart, Start } from "./commands/start";
 
 const { BOT_TOKEN } = process.env;
+if (!BOT_TOKEN) {
+  throw new Error("Missing Env Variable: 'BOT_TOKEN'");
+}
 
 export const FIXED_COMMANDS = [Start, Settings];
 
@@ -68,6 +71,10 @@ export const generateBot = (callback: () => void) => {
   });
 
   bot.onText(commmands.lifx, async (msg, match) => {
+    if (!match) {
+      return;
+    }
+
     await replyToLifx(msg, match).catch(errorResponse(msg.chat.id));
     callback();
   });
@@ -78,6 +85,10 @@ export const generateBot = (callback: () => void) => {
   });
 
   bot.onText(commmands.fritz, async (msg, match) => {
+    if (!match) {
+      return;
+    }
+
     await replyToFritz(msg, match).catch(errorResponse(msg.chat.id));
     callback();
   });

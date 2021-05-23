@@ -14,6 +14,10 @@ export const sendDeviceAction = async (
   { message_id }: Message,
   data?: string
 ) => {
+  if (!cbData.data) {
+    return;
+  }
+
   const translations = i18n();
 
   // Start input dialog
@@ -27,7 +31,13 @@ export const sendDeviceAction = async (
     return bot.pinChatMessage(chatId, message_id.toString());
   }
 
-  const { deviceId, moduleId } = getCallbackDataId(cbData);
+  const callbackDataId = getCallbackDataId(cbData);
+
+  if (!callbackDataId) {
+    return;
+  }
+
+  const { deviceId, moduleId } = callbackDataId;
 
   const serviceRequest = await getDeviceFunction(
     userId,
@@ -41,7 +51,7 @@ export const sendDeviceAction = async (
   }
 
   const { body } = serviceRequest;
-  if (data) {
+  if (data && body.action) {
     body.action = body.action.replace("*", "");
     body.data = data;
   }
