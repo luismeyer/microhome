@@ -92,6 +92,23 @@ functions:
           method: ANY
           cors: true
 
+  # admin-service
+  adminService:
+    handler: packages/admin-service/dist/handlers/index.handleRequest
+    events:
+      - http:
+          path: /services/admin
+          method: any
+          cors: true
+
+  adminServiceAssets:
+    handler: packages/admin-service/dist/handlers/assets.handleRequest
+    events:
+      - http:
+          path: /services/admin/assets/{proxy}
+          method: any
+          cors: true
+
   # db-service 
   createModule:
     handler: packages/db-service/dist/handlers/module/create.createModule
@@ -279,6 +296,18 @@ functions:
       - http:
           path: services/db/user/{userid}/module/{moduleid}/token
           method: post
+          cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+        - 
+  adminLogin:
+    handler: packages/db-service/dist/handlers/admin/login.adminLogin
+    events:
+      - http:
+          path: services/db/admin/
+          method: any
           cors: true
     package:
       patterns:

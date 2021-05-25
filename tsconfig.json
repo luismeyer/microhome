@@ -7,6 +7,7 @@
     { "path": "./packages/db-service" },
     { "path": "./packages/telegram-service" },
     { "path": "./packages/hue-service" },
-    { "path": "./packages/fritz-service" }
+    { "path": "./packages/fritz-service" },
+    { "path": "./packages/admin-service" }
   ]
 }

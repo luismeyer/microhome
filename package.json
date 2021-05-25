@@ -7,9 +7,10 @@
   "license": "MIT",
   "scripts": {
     "clean": "tsc --build --clean",
-    "compile": "tsc --build",
-    "precompile:watch": "yarn clean && yarn compile",
-    "compile:watch": "yarn compile --watch",
+    "build": "concurrently -r 'tsc --build' 'lerna run compile'",
+    "ts:watch": "tsc --watch",
+    "lerna:watch": "lerna run watch",
+    "watch": "concurrently -r 'yarn ts:watch' 'yarn lerna:watch'",
     "encrypt": "gpg --symmetric --cipher-algo AES256 .env.production",
     "decrypt": "gpg --decrypt --output secrets/.env .env.production.gpg",
     "start": "sls offline",
@@ -28,6 +29,7 @@
   "dependencies": {},
   "devDependencies": {
     "@types/node": "^15.6.0",
+    "concurrently": "^6.2.0",
     "lerna": "^4.0.0",
     "prettier": "^2.3.0",
     "serverless-dotenv-plugin": "^3.9.0",
