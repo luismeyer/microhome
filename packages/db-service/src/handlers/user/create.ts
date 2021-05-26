@@ -1,7 +1,7 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { User } from "@telegram-home-assistant/types";
 import { v1 } from "uuid";
-import { putItem, userTableName } from "../../dynamodb";
+import { putItem, userTableName } from "../../db";
 import { findUserByTelegramId } from "../../models/user";
 import { errorResponse, stringify, successResponse } from "../../response";
 import { authorizedHandler, validateNumber } from "../../validation/access";
@@ -28,7 +28,13 @@ export const createUser: APIGatewayProxyHandler = authorizedHandler(
     };
 
     return putItem(userTableName, user)
-      .then(() => successResponse(stringify(user)))
+      .then((response) => {
+        if (!response.success) {
+          return errorResponse(response.result);
+        }
+
+        return successResponse(stringify(user));
+      })
       .catch((error) =>
         errorResponse("Couldn't create the user item: " + error)
       );

@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { putItem, userTableName } from "../../dynamodb";
+import { putItem, userTableName } from "../../db";
 import { findUserByEditToken } from "../../models/user";
 import { errorResponse, stringify, successResponse } from "../../response";
 import { authorizedHandler } from "../../validation/access";
@@ -38,7 +38,13 @@ export const updateUserToken: APIGatewayProxyHandler = authorizedHandler(
     module.token = token;
 
     return putItem(userTableName, user)
-      .then(() => successResponse(stringify(user)))
+      .then((response) => {
+        if (!response.success) {
+          return errorResponse(response.result);
+        }
+
+        return successResponse(stringify(user));
+      })
       .catch((error) =>
         errorResponse("Couldn't updater the user item: " + error)
       );

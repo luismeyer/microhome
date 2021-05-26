@@ -1,12 +1,7 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { Module, ServiceRequest } from "@telegram-home-assistant/types";
 import { v1 } from "uuid";
-import {
-  getItem,
-  moduleTableName,
-  putItem,
-  userTableName,
-} from "../../dynamodb";
+import { getItem, moduleTableName, putItem, userTableName } from "../../db";
 import { findUserByTelegramId } from "../../models/user";
 import { errorResponse, stringify, successResponse } from "../../response";
 import { authorizedHandler, validateNumber } from "../../validation/access";
@@ -32,13 +27,12 @@ export const addUserModule: APIGatewayProxyHandler = authorizedHandler(
     const user = await findUserByTelegramId(userId.result);
     if (!user) return errorResponse("Wrong userId");
 
-    const module = await getItem(moduleTableName, { id: moduleId }).then(
-      (res) => res.Item as Module | undefined
-    );
-
-    if (!module) {
-      return errorResponse("Wrong moduleId");
+    const moduleResponse = await getItem(moduleTableName, { id: moduleId });
+    if (!moduleResponse.success) {
+      return errorResponse("Wrong moduleId " + moduleResponse.result);
     }
+
+    const module = moduleResponse.result as Module;
 
     const userModule = user.modules.find((m) => m.id === module.id);
     let editToken = "";

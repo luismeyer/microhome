@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { getItem, moduleTableName } from "../../dynamodb";
+import { getItem, moduleTableName } from "../../db";
 import { errorResponse, stringify, successResponse } from "../../response";
 import { authorizedHandler, validateNumber } from "../../validation/access";
 
@@ -16,7 +16,13 @@ export const getModule: APIGatewayProxyHandler = authorizedHandler(
     }
 
     return getItem(moduleTableName, { id: moduleId.result })
-      .then((result) => successResponse(stringify(result.Item)))
+      .then((response) => {
+        if (!response.success) {
+          return errorResponse(response.result);
+        }
+
+        return successResponse(stringify(response.result));
+      })
       .catch((error) =>
         errorResponse("Couldn't fetch the module item: " + error)
       );

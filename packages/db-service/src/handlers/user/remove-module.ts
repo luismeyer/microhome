@@ -1,11 +1,5 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { Module } from "@telegram-home-assistant/types";
-import {
-  getItem,
-  moduleTableName,
-  putItem,
-  userTableName,
-} from "../../dynamodb";
+import { putItem, userTableName } from "../../db";
 import { findUserByTelegramId } from "../../models/user";
 import { errorResponse, successResponse } from "../../response";
 import { authorizedHandler, validateNumber } from "../../validation/access";
@@ -30,11 +24,6 @@ export const removeUserModule: APIGatewayProxyHandler = authorizedHandler(
 
     const user = await findUserByTelegramId(userId.result);
     if (!user) return errorResponse("Wrong userId");
-
-    const module = await getItem(moduleTableName, { id: moduleId }).then(
-      ({ Item }) => Item as Module | undefined
-    );
-    if (!module) return errorResponse("Wrong moduleId");
 
     user.modules = user.modules.filter(({ id }) => id !== moduleId.result);
 

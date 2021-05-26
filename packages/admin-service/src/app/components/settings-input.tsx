@@ -40,7 +40,7 @@ export const SettingsInput: React.FC<TokenInputProps> = ({
 
   const { token, stage } = useToken();
 
-  const dbFetch = useDbFetch("services/db/admin");
+  const dbFetch = useDbFetch("admin");
 
   const handleSave = useCallback(() => {
     const newToken = btoa(`${username}:${password}`);

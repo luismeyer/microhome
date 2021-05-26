@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { deleteItem, moduleTableName } from "../../dynamodb";
+import { deleteItem, moduleTableName } from "../../db";
 import { errorResponse, successResponse } from "../../response";
 import { authorizedHandler } from "../../validation/access";
 
@@ -16,7 +16,13 @@ export const deleteUser: APIGatewayProxyHandler = authorizedHandler(
     }
 
     return deleteItem(moduleTableName, { id })
-      .then(() => successResponse())
+      .then((response) => {
+        if (!response.success) {
+          return errorResponse(response.result);
+        }
+
+        return successResponse();
+      })
       .catch((error) =>
         errorResponse("Couldn't fetch the module item: " + error)
       );

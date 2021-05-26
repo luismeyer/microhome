@@ -145,6 +145,18 @@ functions:
       patterns:
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
+    
+  deleteModule:
+    handler: packages/db-service/dist/handlers/module/delete.deleteModule
+    events:
+      - http:
+          path: services/db/module/{moduleid}
+          method: delete
+          cors: true
+    package:
+      patterns:
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
 
   createUser:
     handler: packages/db-service/dist/handlers/user/create.createUser

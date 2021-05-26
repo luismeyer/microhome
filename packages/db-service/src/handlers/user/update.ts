@@ -1,6 +1,6 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { User } from "@telegram-home-assistant/types";
-import { putItem, moduleTableName } from "../../dynamodb";
+import { putItem, moduleTableName } from "../../db";
 import { findUserByTelegramId } from "../../models/user";
 import { errorResponse, stringify, successResponse } from "../../response";
 import { authorizedHandler, validateNumber } from "../../validation/access";
@@ -27,7 +27,13 @@ export const updateUser: APIGatewayProxyHandler = authorizedHandler(
     };
 
     return putItem(moduleTableName, user)
-      .then(() => successResponse(stringify(user)))
+      .then((response) => {
+        if (!response.success) {
+          return errorResponse(response.result);
+        }
+
+        return successResponse(stringify(user));
+      })
       .catch((error) =>
         errorResponse("Couldn't update the user item: " + error)
       );

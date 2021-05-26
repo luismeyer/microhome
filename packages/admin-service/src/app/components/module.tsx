@@ -50,7 +50,11 @@ export const Module: React.FC<ModuleProps> = ({ id }) => {
           }}
         />
       ) : (
-        <ModuleData {...module} onSubmit={() => setEditing(true)} />
+        <ModuleData
+          {...module}
+          onSubmit={() => setEditing(true)}
+          refetch={refetchModules}
+        />
       )}
     </StyledModule>
   );
