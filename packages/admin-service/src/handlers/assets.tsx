@@ -3,12 +3,19 @@ import { readFileSync } from "fs";
 import { resolve, extname } from "path";
 import mime from "mime-types";
 
-const baseUrl = "/services/admin";
+export const handleRequest: APIGatewayProxyHandler = async ({
+  pathParameters,
+}) => {
+  if (!pathParameters || !pathParameters.proxy) {
+    return {
+      statusCode: 404,
+      body: "Missing proxy parameter",
+    };
+  }
 
-export const handleRequest: APIGatewayProxyHandler = async ({ path }) => {
-  const relativePath = path.replace(baseUrl, "");
+  const relativePath = resolve(__dirname, "../../dist/", pathParameters.proxy);
 
-  const filePath = resolve(__dirname, `../../client-dist${relativePath}`);
+  const filePath = resolve(__dirname, relativePath);
 
   const file = readFileSync(filePath).toString();
   const mimetype = mime.contentType(extname(filePath));

@@ -1,41 +1,57 @@
-import { Module as ModuleType } from "@telegram-home-assistant/types/dist";
+import { Module as ModuleType } from "@telegram-home-assistant/types";
 import React from "react";
 import styled from "styled-components";
-import { EditModule } from "./edit-module";
+import { useDbData } from "../hooks/use-db-data";
+import { ModuleData } from "./module-data";
+import { ModuleInput } from "./module-input";
 
 interface ModuleProps {
-  module: ModuleType;
+  id: number;
 }
 
-const StyledModule = styled.li`
+const StyledModule = styled.div`
   display: flex;
   flex-direction: column;
-  list-style: none;
+  margin-top: 32px;
 `;
 
-export const Module: React.FC<ModuleProps> = ({ module }) => {
+export const StyledModuleHeadline = styled.h3`
+  margin: 0px;
+  margin-right: 12px;
+`;
+
+export const StyledModuleHeader = styled.div`
+  display: flex;
+  margin-bottom: 12px;
+  align-items: center;
+`;
+
+export const StyledModuleGrid = styled.div`
+  display: grid;
+  grid-gap: 4px;
+`;
+
+export const Module: React.FC<ModuleProps> = ({ id }) => {
+  const [module, refetchModules] = useDbData<ModuleType>(`module/${id}`);
+
   const [editing, setEditing] = React.useState(false);
 
-  return (
-    <StyledModule key={module.id}>
-      {editing ? (
-        <EditModule id={module.id} />
-      ) : (
-        <>
-          <h3>
-            {module.id} - {module.name}
-          </h3>
-          <span>
-            Service Url: <a href={module.serviceUrl}>{module.serviceUrl}</a>
-          </span>
-          <span>Functions: {module.functions.join(" | ")}</span>
-          <span>Base action: {module.baseAction}</span>
-        </>
-      )}
+  if (!module) {
+    return null;
+  }
 
-      <button onClick={() => setEditing(!editing)}>
-        {editing ? "save" : "edit"}
-      </button>
+  return (
+    <StyledModule>
+      {editing ? (
+        <ModuleInput
+          {...module}
+          onSubmit={() => {
+            refetchModules().then(() => setEditing(false));
+          }}
+        />
+      ) : (
+        <ModuleData {...module} onSubmit={() => setEditing(true)} />
+      )}
     </StyledModule>
   );
 };

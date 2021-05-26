@@ -2,25 +2,30 @@ import React from "react";
 import { useDbData } from "../hooks/use-db-data";
 import styled from "styled-components";
 import { Module } from "./module";
-import { Module as ModuleType } from "@telegram-home-assistant/types/dist";
+import { Module as ModuleType } from "@telegram-home-assistant/types";
+import { ModuleInput } from "./module-input";
 
-const StyledModuleList = styled.ul`
+const StyledModuleList = styled.div`
   padding: 0;
+  margin-bottom: 64px;
 `;
 
 export const Modules: React.FC = () => {
-  const modules = useDbData<ModuleType[]>("services/db/module");
+  const [modules, refetchModules] = useDbData<ModuleType[]>("module");
 
   return (
     <div>
-      {modules && (
-        <StyledModuleList>
-          <h2>Modules</h2>
-          {modules?.map((module) => (
-            <Module module={module} />
-          ))}
-        </StyledModuleList>
-      )}
+      <StyledModuleList>
+        {modules && (
+          <>
+            <h2>All Modules</h2>
+            {modules?.map((module) => (
+              <Module key={module.id} id={module.id} />
+            ))}
+          </>
+        )}
+      </StyledModuleList>
+      <ModuleInput onSubmit={() => refetchModules()} />
     </div>
   );
 };

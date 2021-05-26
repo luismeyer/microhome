@@ -7,9 +7,10 @@ interface CustomFetchPayload {
 
 export const useDbFetch = (path: string) => {
   const { token, stage } = useToken();
+  const url = `${stage ? "/" + stage : ""}/services/db/${path}`;
 
   return (payload?: CustomFetchPayload) =>
-    fetch(`${stage ? "/" + stage : ""}/${path}`, {
+    fetch(url, {
       headers: { Authorization: `Basic ${payload?.token ?? token}` },
       ...(payload?.init ?? {}),
     });
