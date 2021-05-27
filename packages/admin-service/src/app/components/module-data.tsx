@@ -5,40 +5,23 @@ import {
   StyledModuleHeadline,
 } from "./module";
 import { Module } from "@telegram-home-assistant/types";
-import { useDbFetch } from "../hooks/use-db-fetch";
 
-interface ModuleDataProps extends Module {
-  refetch: () => void;
-  onSubmit: () => void;
+interface ModuleDataProps {
+  readonly onEdit: () => void;
+  readonly data: Module;
 }
 
 export const ModuleData: React.FC<ModuleDataProps> = ({
-  name,
-  id,
-  refetch,
-  serviceUrl,
-  functions,
-  baseAction,
-  onSubmit,
+  data: { name, id, serviceUrl, functions, baseAction },
+  onEdit,
 }) => {
-  const dbFetch = useDbFetch(`module/${id}`);
-
-  const onDelete = () => {
-    dbFetch({
-      init: {
-        method: "delete",
-      },
-    }).then(refetch);
-  };
-
   return (
     <>
       <StyledModuleHeader>
         <StyledModuleHeadline>
           {id} - {name}
         </StyledModuleHeadline>
-        <button onClick={onSubmit}>edit</button>
-        <button onClick={onDelete}>delete</button>
+        <button onClick={onEdit}>edit</button>
       </StyledModuleHeader>
       <StyledModuleGrid>
         <span>

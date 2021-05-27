@@ -32,7 +32,7 @@ export const StyledModuleGrid = styled.div`
 `;
 
 export const Module: React.FC<ModuleProps> = ({ id }) => {
-  const [module, refetchModules] = useDbData<ModuleType>(`module/${id}`);
+  const [module, refetchModule] = useDbData<ModuleType>(`module/${id}`);
 
   const [editing, setEditing] = React.useState(false);
 
@@ -44,17 +44,14 @@ export const Module: React.FC<ModuleProps> = ({ id }) => {
     <StyledModule>
       {editing ? (
         <ModuleInput
-          {...module}
-          onSubmit={() => {
-            refetchModules().then(() => setEditing(false));
-          }}
+          input={module}
+          clearOnSave
+          onSubmit={refetchModule}
+          onDelete={refetchModule}
+          hideInput={() => setEditing(false)}
         />
       ) : (
-        <ModuleData
-          {...module}
-          onSubmit={() => setEditing(true)}
-          refetch={refetchModules}
-        />
+        <ModuleData data={module} onEdit={() => setEditing(true)} />
       )}
     </StyledModule>
   );

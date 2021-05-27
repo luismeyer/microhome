@@ -25,7 +25,7 @@ export const Modules: React.FC = () => {
           </>
         )}
       </StyledModuleList>
-      <ModuleInput onSubmit={() => refetchModules()} />
+      <ModuleInput onSubmit={refetchModules} />
     </div>
   );
 };

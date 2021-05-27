@@ -8,103 +8,170 @@ import {
   StyledModuleGrid,
 } from "./module";
 
-interface EditModuleProps extends Partial<Module> {
-  onSubmit?: () => void;
+interface EditModuleProps {
+  readonly input?: Partial<Module>;
+  readonly clearOnSave?: boolean;
+  readonly onSubmit: () => Promise<void>;
+  readonly onDelete?: () => Promise<void>;
+  readonly hideInput?: () => void;
 }
 
-const StyledInputLabel = styled.label`
+interface DisabledProps {
+  disabled: boolean;
+}
+
+const StyledInputLabel = styled.label<DisabledProps>`
   margin-right: 8px;
+  color: ${(props) => props.disabled && "#dddddd"};
 `;
 
 const StyledInput = styled.input`
   width: 100%;
 `;
 
-export const ModuleInput: React.FC<EditModuleProps> = ({
-  id,
-  name,
-  serviceUrl,
-  functions,
-  baseAction,
-  onSubmit,
-}) => {
-  const [idInput, setIdInput] = useState(id);
-  const [nameInput, setNameInput] = useState(name);
-  const [serviceUrlInput, setServiceUrlInput] = useState(serviceUrl);
-  const [functionsInput, setFunctionsInput] = useState(
-    functions?.join(";") ?? ""
-  );
-  const [baseActionInput, setBaseActionInput] = useState(baseAction);
+const StyledDeleteButton = styled.button`
+  margin-left: 8px;
+`;
 
-  const dbFetch = useDbFetch("module");
+const FUNCTIONS_SEPERATOR = ";";
+
+export const ModuleInput: React.FC<EditModuleProps> = ({
+  input,
+  onSubmit,
+  onDelete,
+  hideInput,
+}) => {
+  const { id, name, serviceUrl, functions, baseAction } = input ?? {};
+
+  const [idInput, setIdInput] = useState(id?.toString() ?? "");
+
+  const [nameInput, setNameInput] = useState(name ?? "");
+  const [serviceUrlInput, setServiceUrlInput] = useState(serviceUrl ?? "");
+  const [functionsInput, setFunctionsInput] = useState(
+    functions?.join(FUNCTIONS_SEPERATOR) ?? ""
+  );
+  const [baseActionInput, setBaseActionInput] = useState(baseAction ?? "");
+
+  const [loading, setLoading] = useState(false);
+
+  const createFetch = useDbFetch("module");
+  const deleteFetch = useDbFetch(`module/${id}`);
 
   const handleSubmit = () => {
-    dbFetch({
+    setLoading(true);
+
+    createFetch({
       init: {
         method: "post",
         body: JSON.stringify({
-          id: idInput,
+          id: parseInt(idInput),
           name: nameInput,
           serviceUrl: serviceUrlInput,
-          functions: functionsInput?.split(";") ?? [],
+          functions: functionsInput?.split(FUNCTIONS_SEPERATOR) ?? [],
           baseAction: baseActionInput,
         }),
       },
-    }).then(onSubmit);
+    }).then(async () => {
+      await onSubmit();
+      setLoading(false);
+      clearInputs();
+
+      if (hideInput) {
+        hideInput();
+      }
+    });
+  };
+
+  const handleDelete = () => {
+    setLoading(true);
+
+    deleteFetch({
+      init: {
+        method: "delete",
+      },
+    }).then(async () => {
+      setLoading(false);
+
+      if (hideInput) {
+        hideInput();
+      }
+
+      if (onDelete) {
+        await onDelete();
+      }
+    });
+  };
+
+  const clearInputs = () => {
+    setIdInput("");
+    setNameInput("");
+    setServiceUrlInput("");
+    setFunctionsInput("");
+    setBaseActionInput("");
   };
 
   return module ? (
     <>
       <StyledModuleHeader>
         <StyledModuleHeadline>
-          {id && name ? `${id}-${name}` : "New Module"}
+          {id && name ? `${id} - ${name}` : "New Module"}
         </StyledModuleHeadline>
         <button onClick={handleSubmit}>save</button>
+        {onDelete && (
+          <StyledDeleteButton onClick={handleDelete}>delete</StyledDeleteButton>
+        )}
       </StyledModuleHeader>
       <StyledModuleGrid>
-        <div>
-          <StyledInputLabel>
-            Module Id {id && "(BE CAREFUL CHANGING THIS)"}
-          </StyledInputLabel>
-          <StyledInput
-            type="number"
-            defaultValue={id}
-            onChange={(e) => setIdInput(parseInt(e.target.value))}
-          />
-        </div>
+        {!id && (
+          <div>
+            <StyledInputLabel disabled={loading}>Module ID</StyledInputLabel>
+            <StyledInput
+              type="text"
+              value={idInput}
+              disabled={loading}
+              onChange={(e) => setIdInput(e.target.value)}
+            />
+          </div>
+        )}
 
         <div>
-          <StyledInputLabel>Module Name</StyledInputLabel>
+          <StyledInputLabel disabled={loading}>Module Name</StyledInputLabel>
           <StyledInput
             type="text"
-            defaultValue={name}
+            value={nameInput}
+            disabled={loading}
             onChange={(e) => setNameInput(e.target.value)}
           />
         </div>
 
         <div>
-          <StyledInputLabel>Service Url</StyledInputLabel>
+          <StyledInputLabel disabled={loading}>Service Url</StyledInputLabel>
           <StyledInput
             type="text"
-            defaultValue={serviceUrl}
+            value={serviceUrlInput}
+            disabled={loading}
             onChange={(e) => setServiceUrlInput(e.target.value)}
           />
         </div>
 
         <div>
-          <StyledInputLabel>Functions</StyledInputLabel>
+          <StyledInputLabel disabled={loading}>
+            Functions (seperate list items with '{FUNCTIONS_SEPERATOR}')
+          </StyledInputLabel>
           <StyledInput
             type="text"
-            defaultValue={functions?.join(";") ?? ""}
+            value={functionsInput}
+            disabled={loading}
             onChange={(e) => setFunctionsInput(e.target.value)}
           />
         </div>
 
         <div>
-          <StyledInputLabel>Base action</StyledInputLabel>
+          <StyledInputLabel disabled={loading}>Base action</StyledInputLabel>
           <StyledInput
             type="text"
-            defaultValue={baseAction}
+            value={baseActionInput}
+            disabled={loading}
             onChange={(e) => setBaseActionInput(e.target.value)}
           />
         </div>
