@@ -18,7 +18,9 @@ export const createUser: APIGatewayProxyHandler = authorizedHandler(
     }
 
     const existingUser = await findUserByTelegramId(userId.result);
-    if (existingUser) return successResponse(stringify(existingUser));
+    if (existingUser) {
+      return successResponse(stringify(existingUser));
+    }
 
     const user: User = {
       id: v1(),

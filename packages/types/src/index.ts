@@ -70,11 +70,6 @@ export type ModuleResponse = {
   serviceRequest: ServiceRequest;
 };
 
-export type Command = () => {
-  command: string;
-  description: string;
-};
-
 export type CallbackData = {
   action: number;
   id?: string;

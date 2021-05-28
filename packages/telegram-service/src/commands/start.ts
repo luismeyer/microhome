@@ -1,25 +1,29 @@
 import { Message } from "node-telegram-bot-api";
-import { Command } from "@telegram-home-assistant/types";
-import { bot } from "../bot";
+
+import { bot, Command } from "../bot";
 import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";
 import { createUser } from "../services/user";
 
 export const Start: Command = () => {
-  const translations = i18n();
+  const { start } = i18n();
 
   return {
-    command: translations.start.name,
-    description: translations.start.description,
+    command: start.name,
+    regex: new RegExp(`/?${start.name}`),
+    description: start.description,
+    handler: replyToStart,
   };
 };
 
 export const Back: Command = () => {
-  const translations = i18n();
+  const { back } = i18n();
 
   return {
-    command: translations.back.name,
-    description: translations.back.description,
+    command: back.name,
+    regex: new RegExp(`/?${back.name}`),
+    description: back.description,
+    handler: replyToBack,
   };
 };
 
@@ -33,7 +37,7 @@ export const replyToStart = async ({ chat, from }: Message) => {
 
   const text = success ? translations.start.message : translations.start.error;
 
-  return generateSendMessageOptions(from.id)
+  await generateSendMessageOptions(from.id)
     .then((options) => bot.sendMessage(chat.id, text, options))
     .catch(() => bot.sendMessage(chat.id, text));
 };
@@ -48,7 +52,7 @@ export const replyToBack = async ({ chat, from }: Message) => {
 
   const text = success ? translations.back.success : translations.back.error;
 
-  return generateSendMessageOptions(from.id)
+  await generateSendMessageOptions(from.id)
     .then((options) => bot.sendMessage(chat.id, text, options))
     .catch(() => bot.sendMessage(chat.id, text));
 };

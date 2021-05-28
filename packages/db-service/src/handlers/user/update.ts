@@ -1,6 +1,6 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { User } from "@telegram-home-assistant/types";
-import { putItem, moduleTableName } from "../../db";
+import { putItem, userTableName } from "../../db";
 import { findUserByTelegramId } from "../../models/user";
 import { errorResponse, stringify, successResponse } from "../../response";
 import { authorizedHandler, validateNumber } from "../../validation/access";
@@ -19,14 +19,16 @@ export const updateUser: APIGatewayProxyHandler = authorizedHandler(
     }
 
     const existingUser = await findUserByTelegramId(userId.result);
-    if (!existingUser) return errorResponse("Wrong userId");
+    if (!existingUser) {
+      return errorResponse("Wrong userId");
+    }
 
     const user: User = {
       ...existingUser,
       language: userInput.result.language,
     };
 
-    return putItem(moduleTableName, user)
+    return putItem(userTableName, user)
       .then((response) => {
         if (!response.success) {
           return errorResponse(response.result);

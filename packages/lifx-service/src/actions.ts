@@ -57,7 +57,10 @@ export const handleGetAction = async (
     return parseResult.body;
   }
 
-  const result = await getLamp(parseResult.body.token, parseResult.body.token);
+  const result = await getLamp(
+    parseResult.body.token,
+    parseResult.body.deviceId
+  );
 
   return result.success == true
     ? createSuccessResult(transformApiLamp(result.result))

@@ -27,8 +27,8 @@ export const replyToReply = async ({
   const markup = pinned_message.reply_markup;
   if (
     !markup ||
-    markup.inline_keyboard.length == 0 ||
-    markup.inline_keyboard[0].length == 0 ||
+    markup.inline_keyboard.length === 0 ||
+    markup.inline_keyboard[0].length === 0 ||
     !markup.inline_keyboard[0][0]
   ) {
     return bot.sendMessage(chat.id, translations.input.markupError);

@@ -24,7 +24,9 @@ export const userTableName = USER_TABLE;
 
 export const dynamoDb = new DynamoDB.DocumentClient();
 
-export const handleCatch = (e: Error): ErrorResult => ({
-  success: false,
-  result: "Couldn't fetch the item: " + e.message,
-});
+export const handleCatch = (e: Error): ErrorResult => {
+  return {
+    success: false,
+    result: "Catch DynamoDB: " + e.message,
+  };
+};

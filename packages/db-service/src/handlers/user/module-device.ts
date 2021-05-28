@@ -27,7 +27,9 @@ export const getUserModuleDevice: APIGatewayProxyHandler = authorizedHandler(
     }
 
     const user = await findUserByTelegramId(userId.result);
-    if (!user) return errorResponse("Wrong userId");
+    if (!user) {
+      return errorResponse("Wrong userId");
+    }
 
     const module = user.modules.find(({ id }) => id === moduleId.result);
     if (!module) return errorResponse("Wrong moduleId");

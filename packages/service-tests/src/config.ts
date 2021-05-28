@@ -18,9 +18,12 @@ const { DB_SERVICE_HEADER } = process.env;
 if (!DB_SERVICE_HEADER)
   throw new Error("Missing Env Variable: 'DB_SERVICE_HEADER'");
 
+const { DB_SERVICE_URL } = process.env;
+if (!DB_SERVICE_URL) throw new Error("Missing Env Variable: 'DB_SERVICE_URL'");
+
 import fetch from "node-fetch";
 const getTestUser = () =>
-  fetch(`https://wpm.mezlaw.de/user/${TEST_USER_ID}/module/${MODULE_ID}`, {
+  fetch(`${DB_SERVICE_URL}${TEST_USER_ID}/module/${MODULE_ID}`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: DB_SERVICE_HEADER,

@@ -1,24 +1,31 @@
 import { Message } from "node-telegram-bot-api";
-import { Command } from "@telegram-home-assistant/types";
 import { sendDeviceList } from "../actions/device-list";
-import { bot } from "../bot";
+import { bot, Command } from "../bot";
 import { i18n } from "../i18n";
 import { findModuleByName } from "../services/module";
 import { setToken } from "../services/user";
 
 export const Fritz: Command = () => {
-  const translations = i18n();
+  const { fritz } = i18n();
 
   return {
-    command: translations.fritz.name,
-    description: translations.fritz.description,
+    command: fritz.name,
+    regex: new RegExp(`/?${fritz.name} ?(.+)?`),
+    description: fritz.description,
+    handler: async (msg, match) => {
+      if (!match) {
+        return;
+      }
+
+      return replyToFritz(msg, match);
+    },
   };
 };
 
 export const replyToFritz = async (
   { from, chat }: Message,
-  match: RegExpExecArray
-) => {
+  match: RegExpMatchArray
+): Promise<void> => {
   if (!from) {
     return;
   }
@@ -45,9 +52,10 @@ export const replyToFritz = async (
     }
 
     if (tokenSuccess || !hasArgs) {
-      return sendDeviceList(from.id, chat.id, module.id);
+      await sendDeviceList(from.id, chat.id, module.id);
+      return;
     }
   }
 
-  return bot.sendMessage(chat.id, translations.fritz.moduleError);
+  await bot.sendMessage(chat.id, translations.fritz.moduleError);
 };

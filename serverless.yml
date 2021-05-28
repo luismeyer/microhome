@@ -1,8 +1,8 @@
 service: telegram-home-assistant
 frameworkVersion: '2'
-useDotenv: true
 
 plugins:
+  - serverless-dotenv-plugin
   - serverless-offline
 
 provider:
@@ -11,8 +11,8 @@ provider:
   runtime: nodejs12.x
   region: eu-central-1
   environment:
-    MODULE_TABLE: ModuleTable
-    USER_TABLE: UserTable
+    MODULE_TABLE: telegram-home-assistant-ModuleTable
+    USER_TABLE: telegram-home-assistant-UserTable
   iam:
     role:
       statements:
@@ -51,8 +51,9 @@ functions:
           cors: true
     package:
       patterns:
-        - packages/lifx-service/dist/**
-        - packages/lifx-service/node_modules/**
+        - '!./**'
+        - 'packages/lifx-service/dist/**'
+        - 'packages/lifx-service/node_modules/**'
   
   # telegram-service
   telegramService:
@@ -64,17 +65,23 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/telegram-service/dist/**
         - packages/telegram-service/node_modules/**
   
   # hue-service
-  hueCallback:
+  hueServiceCallback:
     handler: packages/hue-service/dist/callback.handler
     events:
       - http:
           path: services/hue/callback
           method: any
           cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/hue-service/dist/**
+        - packages/hue-service/node_modules/**
         
   hueService:
     handler: packages/hue-service/dist/handler.handler
@@ -83,7 +90,13 @@ functions:
           path: services/hue/
           method: any
           cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/hue-service/dist/**
+        - packages/hue-service/node_modules/**
 
+  # fritz-service
   fritzService:
     handler: packages/fritz-service/dist/handler.handler
     events:
@@ -91,6 +104,11 @@ functions:
           path: /services/fritz
           method: ANY
           cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/fritz-service/dist/**
+        - packages/fritz-service/node_modules/**
 
   # admin-service
   adminService:
@@ -100,6 +118,11 @@ functions:
           path: /services/admin
           method: any
           cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/admin-service/dist/**
+        - packages/admin-service/node_modules/**
 
   adminServiceAssets:
     handler: packages/admin-service/dist/handlers/assets.handleRequest
@@ -108,9 +131,14 @@ functions:
           path: /services/admin/assets/{proxy}
           method: any
           cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/admin-service/dist/**
+        - packages/admin-service/node_modules/**
 
   # db-service 
-  createModule:
+  dbServiceCreateModule:
     handler: packages/db-service/dist/handlers/module/create.createModule
     events:
       - http:
@@ -119,10 +147,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
 
-  listModules:
+  dbServiceListModules:
     handler: packages/db-service/dist/handlers/module/list.listModule
     events:
       - http:
@@ -131,10 +160,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
         
-  getModule:
+  dbServiceGetModule:
     handler: packages/db-service/dist/handlers/module/get.getModule
     events:
       - http:
@@ -143,10 +173,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
     
-  deleteModule:
+  dbServiceDeleteModule:
     handler: packages/db-service/dist/handlers/module/delete.deleteModule
     events:
       - http:
@@ -155,10 +186,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
 
-  createUser:
+  dbServiceCreateUser:
     handler: packages/db-service/dist/handlers/user/create.createUser
     events:
       - http:
@@ -167,10 +199,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
 
-  getUser:
+  dbServiceGetUser:
     handler: packages/db-service/dist/handlers/user/get.getUser
     events:
       - http:
@@ -179,10 +212,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
 
-  updateUser:
+  dbServiceUpdateUser:
     handler: packages/db-service/dist/handlers/user/update.updateUser
     events:
       - http:
@@ -191,10 +225,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
 
-  deleteUser:
+  dbServiceDeleteUser:
     handler: packages/db-service/dist/handlers/user/delete.deleteUser
     events:
       - http:
@@ -203,10 +238,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**     
   
-  listUsers:
+  dbServiceListUsers:
     handler: packages/db-service/dist/handlers/user/list.listUsers
     events:
       - http:
@@ -215,10 +251,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
           
-  listUserModules:
+  dbServiceListUserModules:
     handler: packages/db-service/dist/handlers/user/list-modules.listUserModules
     events:
       - http:
@@ -227,10 +264,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
   
-  getUserModule:
+  dbServiceGetUserModule:
     handler: packages/db-service/dist/handlers/user/module.getUserModule
     events:
       - http:
@@ -239,10 +277,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
   
-  addUserModule:
+  dbServiceAddUserModule:
     handler: packages/db-service/dist/handlers/user/add-module.addUserModule
     events:
       - http:
@@ -251,10 +290,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
   
-  removeUserModule:
+  dbServiceRemoveUserModule:
     handler: packages/db-service/dist/handlers/user/remove-module.removeUserModule
     events:
       - http:
@@ -263,10 +303,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
 
-  getUserModuleDevice:
+  dbServiceGetUserModuleDevice:
     handler: packages/db-service/dist/handlers/user/module-device.getUserModuleDevice
     events:
       - http:
@@ -275,10 +316,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
 
-  getUserModuleDeviceFunction:
+  dbServiceGetUserModuleDeviceFunction:
     handler: packages/db-service/dist/handlers/user/module-device-function.getUserModuleDeviceFunction
     events:
       - http:
@@ -287,10 +329,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
 
-  updateUserToken:
+  dbServiceUpdateUserToken:
     handler: packages/db-service/dist/handlers/user/token.updateUserToken
     events:
       - http:
@@ -299,10 +342,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
   
-  updateUserModuleToken:
+  dbServiceUpdateUserModuleToken:
     handler: packages/db-service/dist/handlers/user/module-token.updateUserModuleToken
     events:
       - http:
@@ -311,10 +355,11 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
-        - 
-  adminLogin:
+        
+  dbServiceAdminLogin:
     handler: packages/db-service/dist/handlers/admin/login.adminLogin
     events:
       - http:
@@ -323,6 +368,7 @@ functions:
           cors: true
     package:
       patterns:
+        - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
 

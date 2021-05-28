@@ -32,7 +32,9 @@ export const updateUserModuleToken: APIGatewayProxyHandler = authorizedHandler(
     }
 
     const user = await findUserByTelegramId(userId.result);
-    if (!user) return errorResponse("Wrong userid");
+    if (!user) {
+      return errorResponse("Wrong userid");
+    }
 
     const module = user.modules.find((m) => m.id === moduleId.result);
     if (!module) return errorResponse("Wrong edittoken");

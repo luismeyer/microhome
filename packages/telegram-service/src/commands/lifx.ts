@@ -1,23 +1,30 @@
 import { Message } from "node-telegram-bot-api";
-import { Command } from "@telegram-home-assistant/types";
 import { sendDeviceList } from "../actions/device-list";
-import { bot } from "../bot";
+import { bot, Command } from "../bot";
 import { i18n } from "../i18n";
 import { findModuleByName } from "../services/module";
 import { setToken } from "../services/user";
 
 export const Lifx: Command = () => {
-  const translations = i18n();
+  const { lifx } = i18n();
 
   return {
-    command: translations.lifx.name,
-    description: translations.lifx.description,
+    command: lifx.name,
+    regex: new RegExp(`/?${lifx.name} ?(.+)?`),
+    description: lifx.description,
+    handler: async (msg, match) => {
+      if (!match) {
+        return;
+      }
+
+      return replyToLifx(msg, match);
+    },
   };
 };
 
 export const replyToLifx = async (
   { chat, from }: Message,
-  match: RegExpExecArray
+  match: RegExpMatchArray
 ): Promise<void> => {
   if (!from) {
     return;

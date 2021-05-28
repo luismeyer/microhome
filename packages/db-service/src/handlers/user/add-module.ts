@@ -25,9 +25,13 @@ export const addUserModule: APIGatewayProxyHandler = authorizedHandler(
     }
 
     const user = await findUserByTelegramId(userId.result);
-    if (!user) return errorResponse("Wrong userId");
+    if (!user) {
+      return errorResponse("Wrong userId");
+    }
 
-    const moduleResponse = await getItem(moduleTableName, { id: moduleId });
+    const moduleResponse = await getItem(moduleTableName, {
+      id: moduleId.result,
+    });
     if (!moduleResponse.success) {
       return errorResponse("Wrong moduleId " + moduleResponse.result);
     }

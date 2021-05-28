@@ -26,7 +26,7 @@ export const updateUser = async (
 ): Promise<boolean> => {
   const url = `${DB_SERVICE_URL}${basePath}${userId}`;
   return sendPost(url, JSON.stringify({ language }))
-    .then((res) => res.ok)
+    .then(async (res) => res.ok)
     .catch(() => false);
 };
 

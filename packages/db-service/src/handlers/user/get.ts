@@ -15,7 +15,9 @@ export const getUser: APIGatewayProxyHandler = authorizedHandler(
     }
 
     const existingUser = await findUserByTelegramId(userId.result);
-    if (!existingUser) return errorResponse("Wrong userid");
+    if (!existingUser) {
+      return errorResponse("Wrong userid");
+    }
 
     return successResponse(stringify(existingUser));
   }

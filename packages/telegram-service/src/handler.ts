@@ -4,13 +4,16 @@ import { generateBot } from "./bot";
 import { setI18n } from "./i18n";
 import { clearState } from "./utils/state";
 
-const setUserLanguage = async (update: Update) => {
-  if (update.message && update.message.from) {
-    await setI18n(update.message.from.id);
+const setUserLanguage = async ({ message, callback_query }: Update) => {
+  if (message && message.from) {
+    return await setI18n(message.from.id, message.from.language_code);
   }
 
-  if (update.callback_query && update.callback_query.from) {
-    await setI18n(update.callback_query.from.id);
+  if (callback_query && callback_query.from) {
+    return await setI18n(
+      callback_query.from.id,
+      callback_query.from.language_code
+    );
   }
 };
 
@@ -30,15 +33,16 @@ export const handleApiGatewayRequest: APIGatewayProxyHandler = (
   console.log("BODY: ", event.body);
   const update: Update = JSON.parse(event.body);
 
-  const bot = generateBot(() => {
-    clearState();
-    cb(null, {
-      statusCode: 200,
-      body: `{ "message": "success" }`,
-    });
-  });
-
   setUserLanguage(update).then(() => {
+    const bot = generateBot(() => {
+      clearState();
+
+      cb(null, {
+        statusCode: 200,
+        body: `{ "message": "success" }`,
+      });
+    });
+
     bot.processUpdate(update);
   });
 };

@@ -96,14 +96,14 @@ export type TranslationsFunc = () => {
 
 export const translations = [en, de];
 
-export const setI18n = async (userId?: number) => {
+export const setI18n = async (userId?: number, fallback?: string) => {
   if (!userId) {
     return;
   }
 
   const language = await getUser(userId)
     .then((user) => user.language)
-    .catch(() => "en");
+    .catch(() => fallback ?? "en");
 
   setState({
     language,
@@ -112,7 +112,7 @@ export const setI18n = async (userId?: number) => {
 
 export const i18n = () => {
   if (!state.language) {
-    return de();
+    return en();
   }
 
   const strings =

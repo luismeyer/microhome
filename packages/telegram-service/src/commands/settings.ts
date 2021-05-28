@@ -4,8 +4,8 @@ import {
   ReplyKeyboardMarkup,
   SendMessageOptions,
 } from "node-telegram-bot-api";
-import { CallbackData, Command } from "@telegram-home-assistant/types";
-import { bot } from "../bot";
+import { CallbackData } from "@telegram-home-assistant/types";
+import { bot, Command } from "../bot";
 import { i18n, translations } from "../i18n";
 import { generateSwitch } from "../keyboard";
 import { getModules } from "../services/module";
@@ -19,33 +19,39 @@ import { createCallbackData } from "../telegram/callback-data";
 import { Back } from "./start";
 
 export const Settings: Command = () => {
-  const translations = i18n();
+  const { settings } = i18n();
 
   return {
-    command: translations.settings.name,
-    description: translations.settings.description,
+    command: settings.name,
+    regex: new RegExp(`/?${settings.name}`),
+    description: settings.description,
+    handler: replyToSettings,
   };
 };
 
 export const UserSettings: Command = () => {
-  const translations = i18n();
+  const { settings } = i18n();
 
   return {
-    command: translations.settings.user.name,
-    description: translations.settings.user.description,
+    command: settings.user.name,
+    regex: new RegExp(`/?${settings.user.name}`),
+    description: settings.user.description,
+    handler: replyToUserSettings,
   };
 };
 
 export const ModuleSettings: Command = () => {
-  const translations = i18n();
+  const { settings } = i18n();
 
   return {
-    command: translations.settings.module.name,
-    description: translations.settings.module.description,
+    command: settings.module.name,
+    regex: new RegExp(`/?${settings.module.name}`),
+    description: settings.module.description,
+    handler: replyToModuleSettins,
   };
 };
 
-export const replyToSettings = async ({ chat }: Message) => {
+export const replyToSettings = async ({ chat }: Message): Promise<void> => {
   const translations = i18n();
 
   const keyboard: ReplyKeyboardMarkup = {
@@ -55,7 +61,7 @@ export const replyToSettings = async ({ chat }: Message) => {
     ],
   };
 
-  return bot.sendMessage(chat.id, translations.settings.pickPrompt, {
+  await bot.sendMessage(chat.id, translations.settings.pickPrompt, {
     reply_markup: keyboard,
   });
 };
@@ -112,7 +118,7 @@ export const replyToUserSettings = async ({ chat }: Message) => {
     };
   });
 
-  return bot.sendMessage(chat.id, i18n().settings.user.languagePrompt, {
+  await bot.sendMessage(chat.id, i18n().settings.user.languagePrompt, {
     reply_markup: { inline_keyboard: [buttons] },
   });
 };
