@@ -1,4 +1,4 @@
-# @telehome/db-service
+# @microhome/db-service
 
 The DB-Service is a REST interface for interactions with the Database.
 

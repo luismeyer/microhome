@@ -1,7 +1,7 @@
 {
-  "name": "telehome",
+  "name": "microhome",
   "version": "1.0.0",
-  "repository": "git@github.com:luismeyer/telehome.git",
+  "repository": "git@github.com:luismeyer/microhome.git",
   "author": "Luis Meyer <luis_meyer@outlook.de>",
   "license": "MIT",
   "scripts": {

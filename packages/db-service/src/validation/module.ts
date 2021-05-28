@@ -1,5 +1,5 @@
 import { ValidationError } from "runtypes";
-import { Module } from "@telehome/types";
+import { Module } from "@microhome/types";
 import { ModuleObject } from "../models/module";
 import { ValidationResult } from "./typings";
 

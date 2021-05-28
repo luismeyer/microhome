@@ -1,4 +1,4 @@
-# @telehome/admin-service
+# @microhome/admin-service
 
 An React-Application which interacts with the database service.
 

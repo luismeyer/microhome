@@ -1,4 +1,4 @@
-import { FunctionsResponse, ServiceRequest } from "@telehome/types";
+import { FunctionsResponse, ServiceRequest } from "@microhome/types";
 import { DB_SERVICE_URL } from "../utils/const";
 import { sendGet } from "../utils/http";
 

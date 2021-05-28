@@ -1,4 +1,4 @@
-service: telehome
+service: microhome
 frameworkVersion: '2'
 
 plugins:
@@ -11,8 +11,8 @@ provider:
   runtime: nodejs12.x
   region: eu-central-1
   environment:
-    MODULE_TABLE: telehome-ModuleTable
-    USER_TABLE: telehome-UserTable
+    MODULE_TABLE: microhome-ModuleTable
+    USER_TABLE: microhome-UserTable
   iam:
     role:
       statements:

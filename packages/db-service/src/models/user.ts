@@ -1,5 +1,5 @@
 import { Record, String } from "runtypes";
-import { User } from "@telehome/types";
+import { User } from "@microhome/types";
 import { scanItems, userTableName } from "../db";
 
 export type UserInput = {

@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { User } from "@telehome/types";
+import { User } from "@microhome/types";
 import { v1 } from "uuid";
 import { putItem, userTableName } from "../../db";
 import { findUserByTelegramId } from "../../models/user";

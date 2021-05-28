@@ -1,4 +1,4 @@
-import { DeviceListResponse } from "@telehome/types";
+import { DeviceListResponse } from "@microhome/types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { generateDeviceButtons } from "../keyboard";

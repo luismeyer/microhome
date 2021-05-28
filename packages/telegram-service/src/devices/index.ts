@@ -1,5 +1,5 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
-import { Device } from "@telehome/types";
+import { Device } from "@microhome/types";
 import { lampToInlineButton, lampToString } from "./lamp";
 import { thermostatToInlineButton, thermostatToString } from "./thermostat";
 

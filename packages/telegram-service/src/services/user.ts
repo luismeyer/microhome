@@ -1,4 +1,4 @@
-import { ModuleResponse, ServiceRequest, User } from "@telehome/types";
+import { ModuleResponse, ServiceRequest, User } from "@microhome/types";
 import { DB_SERVICE_URL } from "../utils/const";
 import { sendDelete, sendGet, sendPost, sendPut } from "../utils/http";
 

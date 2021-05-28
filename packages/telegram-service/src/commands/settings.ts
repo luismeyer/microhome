@@ -4,7 +4,7 @@ import {
   ReplyKeyboardMarkup,
   SendMessageOptions,
 } from "node-telegram-bot-api";
-import { CallbackData } from "@telehome/types";
+import { CallbackData } from "@microhome/types";
 import { bot, Command } from "../bot";
 import { i18n, translations } from "../i18n";
 import { generateSwitch } from "../keyboard";

@@ -1,5 +1,5 @@
 {
-  "name": "@telehome/fritz-service",
+  "name": "@microhome/fritz-service",
   "version": "1.5.0",
   "description": "",
   "main": "dist",

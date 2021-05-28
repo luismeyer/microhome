@@ -1,4 +1,4 @@
-import { Module } from "@telehome/types";
+import { Module } from "@microhome/types";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useDbFetch } from "../hooks/use-db-fetch";

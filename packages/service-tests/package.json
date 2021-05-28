@@ -1,5 +1,5 @@
 {
-  "name": "@telehome/service-tests",
+  "name": "@microhome/service-tests",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",

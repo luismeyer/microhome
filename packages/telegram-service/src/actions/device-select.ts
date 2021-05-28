@@ -1,4 +1,4 @@
-import { CallbackData, DeviceResponse } from "@telehome/types";
+import { CallbackData, DeviceResponse } from "@microhome/types";
 import { bot } from "../bot";
 import { deviceToString } from "../devices";
 import { i18n } from "../i18n";

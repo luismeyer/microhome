@@ -1,4 +1,4 @@
-import { CallbackData } from "@telehome/types";
+import { CallbackData } from "@microhome/types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";

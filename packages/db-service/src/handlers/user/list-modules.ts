@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { ModuleResponse } from "@telehome/types";
+import { ModuleResponse } from "@microhome/types";
 import { findUserByTelegramId } from "../../models/user";
 import { errorResponse, stringify, successResponse } from "../../response";
 import { authorizedHandler, validateNumber } from "../../validation/access";

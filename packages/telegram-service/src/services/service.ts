@@ -1,4 +1,4 @@
-import { ServiceRequest } from "@telehome/types";
+import { ServiceRequest } from "@microhome/types";
 import { sendPost } from "../utils/http";
 
 export const makeServiceRequest = async <T>(

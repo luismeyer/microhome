@@ -1,4 +1,4 @@
-import { ModuleResponse } from "@telehome/types";
+import { ModuleResponse } from "@microhome/types";
 import { DB_SERVICE_URL } from "../utils/const";
 import { sendGet } from "../utils/http";
 

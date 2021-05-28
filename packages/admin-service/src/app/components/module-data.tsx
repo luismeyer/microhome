@@ -4,7 +4,7 @@ import {
   StyledModuleHeader,
   StyledModuleHeadline,
 } from "./module";
-import { Module } from "@telehome/types";
+import { Module } from "@microhome/types";
 
 interface ModuleDataProps {
   readonly onEdit: () => void;

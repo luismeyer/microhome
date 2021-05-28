@@ -2,7 +2,7 @@ import React from "react";
 import { useDbData } from "../hooks/use-db-data";
 import styled from "styled-components";
 import { Module } from "./module";
-import { Module as ModuleType } from "@telehome/types";
+import { Module as ModuleType } from "@microhome/types";
 import { ModuleInput } from "./module-input";
 
 const StyledModuleList = styled.div`

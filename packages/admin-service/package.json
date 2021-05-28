@@ -1,5 +1,5 @@
 {
-  "name": "@telehome/admin-service",
+  "name": "@microhome/admin-service",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "styled-components": "^5.2.3"
   },
   "devDependencies": {
-    "@telehome/types": "1.0.0",
+    "@microhome/types": "1.0.0",
     "@types/aws-lambda": "^8.10.75",
     "@types/mime-types": "^2.1.0",
     "@types/node": "^14.14.37",

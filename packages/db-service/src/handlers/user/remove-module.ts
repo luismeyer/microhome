@@ -1,4 +1,4 @@
-import { ModuleInput } from "@telehome/types";
+import { ModuleInput } from "@microhome/types";
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { putItem, userTableName } from "../../db";
 import { findUserByTelegramId } from "../../models/user";

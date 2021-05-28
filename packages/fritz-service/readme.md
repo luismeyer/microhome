@@ -1,4 +1,4 @@
-# @telehome/fritz-service
+# @microhome/fritz-service
 
 ## Setup
 

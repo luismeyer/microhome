@@ -1,5 +1,5 @@
 {
-  "name": "@telehome/lifx-service",
+  "name": "@microhome/lifx-service",
   "version": "1.6.0",
   "description": "",
   "main": "dist/handler.js",

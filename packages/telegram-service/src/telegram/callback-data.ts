@@ -1,4 +1,4 @@
-import { CallbackData } from "@telehome/types";
+import { CallbackData } from "@microhome/types";
 
 export const callbackDataId = (moduleId: number, deviceId: string) =>
   `${moduleId}::${deviceId}`;

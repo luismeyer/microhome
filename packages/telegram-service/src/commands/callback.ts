@@ -1,5 +1,5 @@
 import { CallbackQuery } from "node-telegram-bot-api";
-import { CallbackData } from "@telehome/types";
+import { CallbackData } from "@microhome/types";
 import { sendDeviceAction } from "../actions/device-action";
 import { sendDeviceSelect } from "../actions/device-select";
 import { sendModuleToggle } from "../actions/module-toggle";

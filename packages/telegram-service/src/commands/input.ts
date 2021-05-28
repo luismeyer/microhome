@@ -1,5 +1,5 @@
 import { Message } from "node-telegram-bot-api";
-import { CallbackData } from "@telehome/types";
+import { CallbackData } from "@microhome/types";
 import { sendDeviceAction } from "../actions/device-action";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
