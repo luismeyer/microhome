@@ -1,0 +1,13 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/lifx-service" },
+    { "path": "./packages/service-tests" },
+    { "path": "./packages/types" },
+    { "path": "./packages/db-service" },
+    { "path": "./packages/telegram-service" },
+    { "path": "./packages/hue-service" },
+    { "path": "./packages/fritz-service" },
+    { "path": "./packages/admin-service" }
+  ]
+}

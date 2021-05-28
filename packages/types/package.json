@@ -1,0 +1,8 @@
+{
+  "name": "@telegram-home-assistant/types",
+  "version": "1.0.0",
+  "main": "dist",
+  "types": "dist",
+  "license": "MIT",
+  "devDependencies": {}
+}

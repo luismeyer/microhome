@@ -1,0 +1,409 @@
+service: telegram-home-assistant
+frameworkVersion: '2'
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-offline
+
+provider:
+  name: aws
+  lambdaHashingVersion: 20201221
+  runtime: nodejs12.x
+  region: eu-central-1
+  environment:
+    MODULE_TABLE: telegram-home-assistant-ModuleTable
+    USER_TABLE: telegram-home-assistant-UserTable
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.MODULE_TABLE}"
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.USER_TABLE}"
+
+
+package:
+  individually: true
+
+functions:
+  
+  # lifx-service
+  lifxService:
+    handler: packages/lifx-service/dist/handler.api
+    events:
+      - http: 
+          path: services/lifx
+          method: ANY
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - 'packages/lifx-service/dist/**'
+        - 'packages/lifx-service/node_modules/**'
+  
+  # telegram-service
+  telegramService:
+    handler: packages/telegram-service/dist/handler.handleApiGatewayRequest
+    events:
+      - http:
+          path: services/telegram
+          method: any
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/telegram-service/dist/**
+        - packages/telegram-service/node_modules/**
+  
+  # hue-service
+  hueServiceCallback:
+    handler: packages/hue-service/dist/callback.handler
+    events:
+      - http:
+          path: services/hue/callback
+          method: any
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/hue-service/dist/**
+        - packages/hue-service/node_modules/**
+        
+  hueService:
+    handler: packages/hue-service/dist/handler.handler
+    events:
+      - http:
+          path: services/hue/
+          method: any
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/hue-service/dist/**
+        - packages/hue-service/node_modules/**
+
+  # fritz-service
+  fritzService:
+    handler: packages/fritz-service/dist/handler.handler
+    events:
+      - http:
+          path: /services/fritz
+          method: ANY
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/fritz-service/dist/**
+        - packages/fritz-service/node_modules/**
+
+  # admin-service
+  adminService:
+    handler: packages/admin-service/dist/handlers/index.handleRequest
+    events:
+      - http:
+          path: /services/admin
+          method: any
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/admin-service/dist/**
+        - packages/admin-service/node_modules/**
+
+  adminServiceAssets:
+    handler: packages/admin-service/dist/handlers/assets.handleRequest
+    events:
+      - http:
+          path: /services/admin/assets/{proxy}
+          method: any
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/admin-service/dist/**
+        - packages/admin-service/node_modules/**
+
+  # db-service 
+  dbServiceCreateModule:
+    handler: packages/db-service/dist/handlers/module/create.createModule
+    events:
+      - http:
+          path: services/db/module
+          method: post
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+
+  dbServiceListModules:
+    handler: packages/db-service/dist/handlers/module/list.listModule
+    events:
+      - http:
+          path: services/db/module
+          method: get
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+        
+  dbServiceGetModule:
+    handler: packages/db-service/dist/handlers/module/get.getModule
+    events:
+      - http:
+          path: services/db/module/{moduleid}
+          method: get
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+    
+  dbServiceDeleteModule:
+    handler: packages/db-service/dist/handlers/module/delete.deleteModule
+    events:
+      - http:
+          path: services/db/module/{moduleid}
+          method: delete
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+
+  dbServiceCreateUser:
+    handler: packages/db-service/dist/handlers/user/create.createUser
+    events:
+      - http:
+          path: services/db/user/{userid}
+          method: put
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+
+  dbServiceGetUser:
+    handler: packages/db-service/dist/handlers/user/get.getUser
+    events:
+      - http:
+          path: services/db/user/{userid}
+          method: get
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+
+  dbServiceUpdateUser:
+    handler: packages/db-service/dist/handlers/user/update.updateUser
+    events:
+      - http:
+          path: services/db/user/{userid}
+          method: post
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+
+  dbServiceDeleteUser:
+    handler: packages/db-service/dist/handlers/user/delete.deleteUser
+    events:
+      - http:
+          path: services/db/user/{userid}
+          method: delete
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**     
+  
+  dbServiceListUsers:
+    handler: packages/db-service/dist/handlers/user/list.listUsers
+    events:
+      - http:
+          path: services/db/user/
+          method: get
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+          
+  dbServiceListUserModules:
+    handler: packages/db-service/dist/handlers/user/list-modules.listUserModules
+    events:
+      - http:
+          path: services/db/user/{userid}/module
+          method: get
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+  
+  dbServiceGetUserModule:
+    handler: packages/db-service/dist/handlers/user/module.getUserModule
+    events:
+      - http:
+          path: services/db/user/{userid}/module/{moduleid}
+          method: get
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+  
+  dbServiceAddUserModule:
+    handler: packages/db-service/dist/handlers/user/add-module.addUserModule
+    events:
+      - http:
+          path: services/db/user/{userid}/module/{moduleid}
+          method: put
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+  
+  dbServiceRemoveUserModule:
+    handler: packages/db-service/dist/handlers/user/remove-module.removeUserModule
+    events:
+      - http:
+          path: services/db/user/{userid}/module/{moduleid}
+          method: delete
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+
+  dbServiceGetUserModuleDevice:
+    handler: packages/db-service/dist/handlers/user/module-device.getUserModuleDevice
+    events:
+      - http:
+          path: services/db/user/{userid}/module/{moduleid}/devices/{deviceid}/functions
+          method: get
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+
+  dbServiceGetUserModuleDeviceFunction:
+    handler: packages/db-service/dist/handlers/user/module-device-function.getUserModuleDeviceFunction
+    events:
+      - http:
+          path: services/db/user/{userid}/module/{moduleid}/devices/{deviceid}/functions/{function}
+          method: get
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+
+  dbServiceUpdateUserToken:
+    handler: packages/db-service/dist/handlers/user/token.updateUserToken
+    events:
+      - http:
+          path: services/db/user/token/{edittoken}
+          method: post
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+  
+  dbServiceUpdateUserModuleToken:
+    handler: packages/db-service/dist/handlers/user/module-token.updateUserModuleToken
+    events:
+      - http:
+          path: services/db/user/{userid}/module/{moduleid}/token
+          method: post
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+        
+  dbServiceAdminLogin:
+    handler: packages/db-service/dist/handlers/admin/login.adminLogin
+    events:
+      - http:
+          path: services/db/admin/
+          method: any
+          cors: true
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+
+resources:
+  Resources:
+    UserDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.USER_TABLE}
+
+    ModuleDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.MODULE_TABLE}

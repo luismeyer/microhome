@@ -1,0 +1,13 @@
+{
+  "name": "fritz-service",
+  "version": "1.5.0",
+  "description": "",
+  "main": "dist",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fritzapi": "^0.11.0"
+  },
+  "devDependencies": {}
+}
