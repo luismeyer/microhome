@@ -1,5 +1,12 @@
-# Home Assistant
+# Telehome
 
-Der Home Assistant Service erlaubt das verwalten von Smart Home Geräten mit Hilfe der Telegram Api.
+TeleHome is an Application which manages your smarthome devices. With a micro service approach all parts of the application are easy replaceable and expandable.
 
-Mehr Informationen sind in den readme Dateien der einzelnen Projekte vorhanden.
+You can get more informations in the different packages.
+
+## Setup
+
+```bash
+yarn
+yarn start
+```

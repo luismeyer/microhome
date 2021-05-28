@@ -1,11 +1,10 @@
-# React λ
+# @telehome/admin-service
 
-AWS Lambda that creates a SSR React app using [Vite](https://github.com/vitejs/vite).
+An React-Application which interacts with the database service.
 
-## Installation
-
-Setup dependencies:
+## Setup
 
 ```bash
 yarn
+yarn watch & yarn start
 ```

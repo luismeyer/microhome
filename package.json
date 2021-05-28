@@ -1,7 +1,6 @@
 {
   "name": "telehome",
   "version": "1.0.0",
-  "main": "index.js",
   "repository": "git@github.com:luismeyer/telehome.git",
   "author": "Luis Meyer <luis_meyer@outlook.de>",
   "license": "MIT",
@@ -29,7 +28,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "^15.6.0",
     "concurrently": "^6.2.0",
     "lerna": "^4.0.0",
     "prettier": "^2.3.0",

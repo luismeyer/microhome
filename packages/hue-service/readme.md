@@ -1,19 +1,19 @@
 # Hue Service
 
-## Input und Output
+## Input and Output
 
 Payload Structure:
 
 ```json
 {
   "token": "hue refresh api token",
-  "deviceId": "hue lampen id",
-  "action": "auszuführende aktion",
-  "data": "Daten die der command braucht (kann ein atomarer Wert oder weitere JSON Struktur sein)"
+  "deviceId": "hue lamp id",
+  "action": "action",
+  "data": "action data"
 }
 ```
 
-Die Response ist wie folgt strukturiert:
+Response:
 
 ```json
 {
@@ -22,14 +22,14 @@ Die Response ist wie folgt strukturiert:
     "name": "Device Name",
     "id": "Device ID",
     "state": {
-      "on": "Status als Boolean"
+      "on": "Boolean"
     },
     "color": "blue"
   }
 }
 ```
 
-oder
+or
 
 ```json
 {
@@ -47,18 +47,18 @@ oder
 }
 ```
 
-## Commands:
+## Commands
 
-Jeder Command gibt einen neuen Refreshtoken zurück. Aus diesem wird der Accesstoken erneuert, bzw. erneut gelesen.
+Every Command returns a refresh-token. The refresh token is needed to regenerate a new acdess-token.
 
-<b>auth</b>: Gibt die URL als result zurück, über die der Refresh und Accesstoken erzeugt werden kann (data = editToken)
+<b>auth</b>: Return URL to generate an access-token
 
-<b>list</b>: Gibt alle LampenId's und den Status (on: true oder false) für den Token zurück
+<b>list</b>: Returns all lamps
 
-<b>on</b>: Schaltet die Lampe an
+<b>on</b>: Turns on lamp
 
-<b>off</b>: Schaltet die Lampe aus
+<b>off</b>: Turns off lamp
 
-<b>color</b>: Ändert die Farbe der Lampe (die Farbe muss als data übergeben werden)
+<b>color</b>: Changes lamp to input color
 
-<b>get</b>: Gibt den Status einer einzelnen Lampe zurück
+<b>get</b>: Return state of lamp
