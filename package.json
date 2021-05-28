@@ -13,7 +13,7 @@
     "watch": "concurrently 'yarn ts:watch' 'lerna run watch'",
     "build": "concurrently 'yarn ts:build' 'lerna run build'",
     "encrypt": "gpg --symmetric --cipher-algo AES256 .env.prod",
-    "decrypt": "gpg --decrypt --output secrets/.env .env.prod.gpg",
+    "decrypt": "gpg --decrypt --output .env.gpg .env.prod.gpg",
     "start": "sls offline",
     "bootstrap": "lerna bootstrap"
   },
