@@ -1,0 +1,35 @@
+name: Deploy Serverless
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install Serverless Framework
+      run: npm install -g serverless
+    
+    - name: Serverless AWS authentication
+      run: sls config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Decrypt Secrets
+      run: gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.PASSPHRASE }}" --output .env.production .env.production.gpg
+
+    - name: Install
+      run: yarn install --frozen-lockfile
+
+    - name: Deploy Lambda functions
+      run: sls deploy --stage production
