@@ -1,5 +1,5 @@
 {
-  "name": "@telegram-home-assistant/service-tests",
+  "name": "@telehome/service-tests",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -10,11 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node-fetch": "^2.5.7",
     "dotenv": "^8.2.0",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
+    "@types/node-fetch": "^2.5.7",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.2.0",
     "chai": "^4.2.0",

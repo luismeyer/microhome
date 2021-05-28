@@ -1,4 +1,4 @@
-service: telegram-home-assistant
+service: telehome
 frameworkVersion: '2'
 
 plugins:
@@ -11,8 +11,8 @@ provider:
   runtime: nodejs12.x
   region: eu-central-1
   environment:
-    MODULE_TABLE: telegram-home-assistant-ModuleTable
-    USER_TABLE: telegram-home-assistant-UserTable
+    MODULE_TABLE: telehome-ModuleTable
+    USER_TABLE: telehome-UserTable
   iam:
     role:
       statements:

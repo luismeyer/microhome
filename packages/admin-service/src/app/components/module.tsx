@@ -1,4 +1,4 @@
-import { Module as ModuleType } from "@telegram-home-assistant/types";
+import { Module as ModuleType } from "@telehome/types";
 import React from "react";
 import styled from "styled-components";
 import { useDbData } from "../hooks/use-db-data";

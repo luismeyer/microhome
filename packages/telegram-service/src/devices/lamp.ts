@@ -1,5 +1,5 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
-import { CallbackData, Device } from "@telegram-home-assistant/types";
+import { CallbackData, Device } from "@telehome/types";
 import { i18n } from "../i18n";
 import { SELECT_DEVICE } from "../telegram/callback-actions";
 import { callbackDataId } from "../telegram/callback-data";

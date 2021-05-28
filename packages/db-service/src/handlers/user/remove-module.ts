@@ -1,3 +1,4 @@
+import { ModuleInput } from "@telehome/types";
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { putItem, userTableName } from "../../db";
 import { findUserByTelegramId } from "../../models/user";
@@ -27,7 +28,9 @@ export const removeUserModule: APIGatewayProxyHandler = authorizedHandler(
       return errorResponse("Wrong userId");
     }
 
-    user.modules = user.modules.filter(({ id }) => id !== moduleId.result);
+    user.modules = user.modules.filter(
+      ({ id }: ModuleInput) => id !== moduleId.result
+    );
 
     await putItem(userTableName, user);
 

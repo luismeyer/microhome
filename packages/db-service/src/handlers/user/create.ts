@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { User } from "@telegram-home-assistant/types";
+import { User } from "@telehome/types";
 import { v1 } from "uuid";
 import { putItem, userTableName } from "../../db";
 import { findUserByTelegramId } from "../../models/user";

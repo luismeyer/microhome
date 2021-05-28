@@ -1,4 +1,4 @@
-import { CallbackData } from "@telegram-home-assistant/types";
+import { CallbackData } from "@telehome/types";
 
 export const callbackDataId = (moduleId: number, deviceId: string) =>
   `${moduleId}::${deviceId}`;

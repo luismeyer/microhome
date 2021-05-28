@@ -1,5 +1,5 @@
 {
-  "name": "@telegram-home-assistant/lifx-service",
+  "name": "@telehome/lifx-service",
   "version": "1.6.0",
   "description": "",
   "main": "dist/handler.js",

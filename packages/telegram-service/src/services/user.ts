@@ -1,8 +1,4 @@
-import {
-  ModuleResponse,
-  ServiceRequest,
-  User,
-} from "@telegram-home-assistant/types";
+import { ModuleResponse, ServiceRequest, User } from "@telehome/types";
 import { DB_SERVICE_URL } from "../utils/const";
 import { sendDelete, sendGet, sendPost, sendPut } from "../utils/http";
 

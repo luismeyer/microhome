@@ -1,4 +1,4 @@
-import { CallbackData } from "@telegram-home-assistant/types";
+import { CallbackData } from "@telehome/types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";

@@ -1,5 +1,5 @@
 import { Record, String } from "runtypes";
-import { User } from "@telegram-home-assistant/types";
+import { User } from "@telehome/types";
 import { scanItems, userTableName } from "../db";
 
 export type UserInput = {

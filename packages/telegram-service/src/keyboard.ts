@@ -5,11 +5,7 @@ import {
   ReplyKeyboardMarkup,
   SendMessageOptions,
 } from "node-telegram-bot-api";
-import {
-  CallbackData,
-  Device,
-  ModuleResponse,
-} from "@telegram-home-assistant/types";
+import { CallbackData, Device, ModuleResponse } from "@telehome/types";
 import { FIXED_COMMANDS } from "./bot";
 import { deviceToInlineButton } from "./devices";
 import { getUserModules } from "./services/user";

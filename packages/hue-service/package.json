@@ -1,5 +1,5 @@
 {
-  "name": "@telegram-home-assistant/hue-service",
+  "name": "@telehome/hue-service",
   "version": "1.5.0",
   "description": "",
   "main": "dist/handler",

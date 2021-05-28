@@ -36,7 +36,7 @@ export const updateUserModuleToken: APIGatewayProxyHandler = authorizedHandler(
       return errorResponse("Wrong userid");
     }
 
-    const module = user.modules.find((m) => m.id === moduleId.result);
+    const module = user.modules.find(({ id }) => id === moduleId.result);
     if (!module) return errorResponse("Wrong edittoken");
 
     module.token = token;

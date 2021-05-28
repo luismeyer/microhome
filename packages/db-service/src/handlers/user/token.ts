@@ -1,3 +1,4 @@
+import { ModuleInput } from "@telehome/types/dist";
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { putItem, userTableName } from "../../db";
 import { findUserByEditToken } from "../../models/user";
@@ -30,7 +31,9 @@ export const updateUserToken: APIGatewayProxyHandler = authorizedHandler(
       return errorResponse("Couldn't find user");
     }
 
-    const module = user.modules.find((m) => m.token === edittoken);
+    const module = user.modules.find(
+      ({ token }: ModuleInput) => token === edittoken
+    );
     if (!module) {
       return errorResponse("Wrong edittoken");
     }

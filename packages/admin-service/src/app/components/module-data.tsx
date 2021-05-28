@@ -4,7 +4,7 @@ import {
   StyledModuleHeader,
   StyledModuleHeadline,
 } from "./module";
-import { Module } from "@telegram-home-assistant/types";
+import { Module } from "@telehome/types";
 
 interface ModuleDataProps {
   readonly onEdit: () => void;

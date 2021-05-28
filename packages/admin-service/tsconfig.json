@@ -10,5 +10,6 @@
     "jsx": "react",
     "strictNullChecks": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "references": [{ "path": "../types" }]
 }

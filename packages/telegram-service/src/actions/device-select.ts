@@ -1,4 +1,4 @@
-import { CallbackData, DeviceResponse } from "@telegram-home-assistant/types";
+import { CallbackData, DeviceResponse } from "@telehome/types";
 import { bot } from "../bot";
 import { deviceToString } from "../devices";
 import { i18n } from "../i18n";

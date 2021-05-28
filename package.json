@@ -1,9 +1,9 @@
 {
-  "name": "telegram-home-assistant",
+  "name": "telehome",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:luismeyer/telegram-home-assistant.git",
-  "author": "Luis Meyer <luis.meyer@nordakademie.de>",
+  "repository": "git@github.com:luismeyer/telehome.git",
+  "author": "Luis Meyer <luis_meyer@outlook.de>",
   "license": "MIT",
   "scripts": {
     "ts:clean": "tsc --build --clean",
@@ -12,8 +12,8 @@
     "ts:watch": "yarn ts:build --watch --preserveWatchOutput",
     "watch": "concurrently 'yarn ts:watch' 'lerna run watch'",
     "build": "concurrently 'yarn ts:build' 'lerna run build'",
-    "encrypt": "gpg --symmetric --cipher-algo AES256 .env.production",
-    "decrypt": "gpg --decrypt --output secrets/.env .env.production.gpg",
+    "encrypt": "gpg --symmetric --cipher-algo AES256 .env.prod",
+    "decrypt": "gpg --decrypt --output secrets/.env .env.prod.gpg",
     "start": "sls offline",
     "bootstrap": "lerna bootstrap"
   },
@@ -33,6 +33,7 @@
     "concurrently": "^6.2.0",
     "lerna": "^4.0.0",
     "prettier": "^2.3.0",
+    "serverless": "^2.43.1",
     "serverless-dotenv-plugin": "^3.9.0",
     "serverless-offline": "^7.0.0",
     "typescript": "^4.2.4"

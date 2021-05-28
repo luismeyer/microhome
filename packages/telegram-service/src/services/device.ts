@@ -1,7 +1,4 @@
-import {
-  FunctionsResponse,
-  ServiceRequest,
-} from "@telegram-home-assistant/types";
+import { FunctionsResponse, ServiceRequest } from "@telehome/types";
 import { DB_SERVICE_URL } from "../utils/const";
 import { sendGet } from "../utils/http";
 
