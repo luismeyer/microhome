@@ -4,17 +4,11 @@
     "message_id": 1,
     "from": {
       "id": 1234567890,
-      "is_bot": false,
-      "first_name": "Test",
-      "last_name": "Test",
       "language_code": "de"
     },
     "chat": {
-      "id": 1234567890,
-      "first_name": "Test",
-      "last_name": "Test",
-      "type": "private"
+      "id": 1234567890
     },
-    "text": "start"
+    "text": "lifx"
   }
 }

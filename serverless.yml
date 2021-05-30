@@ -14,7 +14,7 @@ provider:
   environment:
     MODULE_TABLE: microhome-ModuleTable
     USER_TABLE: microhome-UserTable
-    STATE_TABLE: microhome-StateTable
+    CALLBACK_DATA_TABLE: microhome-CallbackDataTable
   iam:
     role:
       statements:
@@ -52,6 +52,10 @@ custom:
         sources:
           - table: ${self:provider.environment.MODULE_TABLE}
             sources: [./packages/db-service/db/seeds/modules.json]
+      users:
+        sources:
+          - table: ${self:provider.environment.USER_TABLE}
+            sources: [./packages/db-service/db/seeds/users.json]
 
 package:
   individually: true
@@ -389,11 +393,11 @@ functions:
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
   
-  dbServiceCreateState:
-    handler: packages/db-service/dist/handlers/state/put.putState
+  dbServiceCreateCallbackData:
+    handler: packages/db-service/dist/handlers/callback-data/put.putCallbackData
     events:
       - http:
-          path: services/db/state/{telegramId}
+          path: services/db/callbackdata
           method: put
           cors: true
     package:
@@ -402,11 +406,11 @@ functions:
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
   
-  dbServiceGetState:
-    handler: packages/db-service/dist/handlers/state/get.getState
+  dbServiceGetCallbackData:
+    handler: packages/db-service/dist/handlers/callback-data/get.getCallbackData
     events:
       - http:
-          path: services/db/state/{telegramId}
+          path: services/db/callbackdata/{cbId}
           method: get
           cors: true
     package:
@@ -415,11 +419,11 @@ functions:
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
   
-  dbServiceDeleteState:
-    handler: packages/db-service/dist/handlers/state/delete.deleteState
+  dbServiceDeleteCallbackData:
+    handler: packages/db-service/dist/handlers/callback-data/delete.deleteCallbackData
     events:
       - http:
-          path: services/db/state/{telegramId}
+          path: services/db/callbackdata/{cbId}
           method: delete
           cors: true
     package:
@@ -471,7 +475,7 @@ resources:
         AttributeDefinitions:
           -
             AttributeName: id
-            AttributeType: N
+            AttributeType: S
         KeySchema:
           -
             AttributeName: id
@@ -479,4 +483,4 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.STATE_TABLE}
+        TableName: ${self:provider.environment.CALLBACK_DATA_TABLE}

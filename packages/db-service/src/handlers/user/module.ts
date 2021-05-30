@@ -38,7 +38,7 @@ export const getUserModule: APIGatewayProxyHandler = authorizedHandler(
         serviceUrl: module.serviceUrl,
         body: {
           token: module.token,
-          action: module.baseAction,
+          action: module.baseFunction.name,
         },
       },
     };

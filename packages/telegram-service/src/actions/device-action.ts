@@ -1,16 +1,18 @@
-import { CallbackData, SimpleResponse } from "@microhome/types";
+import {
+  ActionDeviceCallBackDataDetails,
+  SimpleResponse,
+} from "@microhome/types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";
 import { getDeviceFunction } from "../services/device";
 import { makeServiceRequest } from "../services/service";
-import { getCallbackDataId } from "../telegram/callback-data";
 import { updateUser } from "../services/user";
 
 export const sendDeviceAction = async (
   userId: number,
   chatId: number,
-  cbData: CallbackData,
+  cbData: ActionDeviceCallBackDataDetails,
   data?: string
 ) => {
   if (!cbData.data) {
@@ -20,7 +22,7 @@ export const sendDeviceAction = async (
   const translations = i18n();
 
   // Start input dialog
-  if (cbData.data.endsWith("*") && !data) {
+  if (cbData.data.requiresInput && !data) {
     const stateSuccess = await updateUser(userId, { state: cbData });
 
     if (!stateSuccess) {
@@ -38,29 +40,25 @@ export const sendDeviceAction = async (
     );
   }
 
-  const callbackDataId = getCallbackDataId(cbData);
+  const { deviceId, moduleId } = cbData;
 
-  if (!callbackDataId) {
+  if (!deviceId || !moduleId) {
     return;
   }
-
-  const { deviceId, moduleId } = callbackDataId;
 
   const serviceRequest = await getDeviceFunction(
     userId,
     moduleId,
     deviceId,
-    cbData.data
+    cbData.data.name
   );
 
   if (!serviceRequest) {
     return bot.sendMessage(chatId, translations.deviceAction.databaseError);
   }
 
-  // Remove 'input-required' symbol
   const { body } = serviceRequest;
-  if (data && body.action) {
-    body.action = body.action.replace("*", "");
+  if (data) {
     body.data = data;
   }
 

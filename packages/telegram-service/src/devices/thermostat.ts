@@ -1,8 +1,7 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
-import { CallbackData, Device } from "@microhome/types";
+import { Device } from "@microhome/types";
 import { i18n } from "../i18n";
-import { SELECT_DEVICE } from "../telegram/callback-actions";
-import { callbackDataId } from "../telegram/callback-data";
+import { createCallbackData } from "../services/callback-data";
 
 export const thermostatToString = ({
   name,
@@ -25,17 +24,18 @@ export const thermostatToString = ({
   return nameString + statusString + tempString + temp2String;
 };
 
-export const thermostatToInlineButton = (
+export const thermostatToInlineButton = async (
   { id, on, istTemperatur, name }: Device,
   moduleId: number
-): InlineKeyboardButton => {
-  const cbData: CallbackData = {
-    action: SELECT_DEVICE,
-    id: callbackDataId(moduleId, id),
-  };
+): Promise<InlineKeyboardButton> => {
+  const cbData = await createCallbackData({
+    action: "SELECT_DEVICE",
+    moduleId,
+    deviceId: id,
+  });
 
   return {
     text: `${on ? "⚪️" : "⚫️"} ${name} (${istTemperatur}°C)`,
-    callback_data: JSON.stringify(cbData),
+    callback_data: JSON.stringify(cbData.id),
   };
 };

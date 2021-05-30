@@ -4,19 +4,14 @@ import {
   ReplyKeyboardMarkup,
   SendMessageOptions,
 } from "node-telegram-bot-api";
-import { CallbackData } from "@microhome/types";
 import { bot, Command } from "../bot";
 import { i18n, translations } from "../i18n";
 import { generateSwitch } from "../keyboard";
 import { getModules } from "../services/module";
 import { hasModule } from "../services/user";
-import {
-  ACTIVATE_MODULE,
-  DEACTIVATE_MODULE,
-  SET_LANGUAGE,
-} from "../telegram/callback-actions";
-import { createCallbackData } from "../telegram/callback-data";
+import { createCallbackData } from "../services/callback-data";
 import { Back } from "./start";
+import { SetLanguageModuleCallBackDataDetails } from "@microhome/types/src";
 
 export const Settings: Command = () => {
   const { settings } = i18n();
@@ -86,12 +81,14 @@ export const replyToModuleSettins = async ({
       modules.map(async (module) => {
         const userHasModule = await hasModule(id, module.id);
 
-        const action = userHasModule ? DEACTIVATE_MODULE : ACTIVATE_MODULE;
-        const cb = createCallbackData(module.id, "", action);
+        const callbackData = await createCallbackData({
+          moduleId: module.id,
+          action: userHasModule ? "DEACTIVATE_MODULE" : "ACTIVATE_MODULE",
+        });
 
         const options: SendMessageOptions = {
           reply_markup: {
-            inline_keyboard: [[generateSwitch(userHasModule, cb)]],
+            inline_keyboard: [[generateSwitch(userHasModule, callbackData.id)]],
           },
         };
 
@@ -106,17 +103,21 @@ export const replyToModuleSettins = async ({
 };
 
 export const replyToUserSettings = async ({ chat }: Message) => {
-  const buttons: InlineKeyboardButton[] = translations.map((t) => {
-    const cbData: CallbackData = {
-      action: SET_LANGUAGE,
-      data: t().languageName,
-    };
+  const buttons: InlineKeyboardButton[] = await Promise.all(
+    translations.map(async (t) => {
+      const data: Omit<SetLanguageModuleCallBackDataDetails, "id"> = {
+        action: "SET_LANGUAGE",
+        data: t().languageName,
+      };
 
-    return {
-      text: t().languageName,
-      callback_data: JSON.stringify(cbData),
-    };
-  });
+      const callbackData = await createCallbackData(data);
+
+      return {
+        text: t().languageName,
+        callback_data: callbackData.id,
+      };
+    })
+  );
 
   await bot.sendMessage(chat.id, i18n().settings.user.languagePrompt, {
     reply_markup: { inline_keyboard: [buttons] },

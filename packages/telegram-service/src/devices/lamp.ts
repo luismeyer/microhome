@@ -1,8 +1,7 @@
 import { InlineKeyboardButton } from "node-telegram-bot-api";
-import { CallbackData, Device } from "@microhome/types";
+import { Device } from "@microhome/types";
 import { i18n } from "../i18n";
-import { SELECT_DEVICE } from "../telegram/callback-actions";
-import { callbackDataId } from "../telegram/callback-data";
+import { createCallbackData } from "../services/callback-data";
 
 const colorToEmoji = (color: string): string => {
   if (!color) {
@@ -42,17 +41,18 @@ export const lampToString = ({ on, color, name }: Device): string => {
   return `💡 ${translations.devices.lamp}: ${name}\n${stateEmoji} ${translations.devices.status}: ${state}\n🖌 ${translations.devices.color}: ${color}`;
 };
 
-export const lampToInlineButton = (
+export const lampToInlineButton = async (
   { id, on, color, name }: Device,
   moduleId: number
-): InlineKeyboardButton => {
-  const cbData: CallbackData = {
-    action: SELECT_DEVICE,
-    id: callbackDataId(moduleId, id),
-  };
+): Promise<InlineKeyboardButton> => {
+  const cbData = await createCallbackData({
+    action: "SELECT_DEVICE",
+    deviceId: id,
+    moduleId,
+  });
 
   return {
     text: (on ? colorToEmoji(color) + " " : "⚫️ ") + name,
-    callback_data: JSON.stringify(cbData),
+    callback_data: cbData.id,
   };
 };

@@ -1,25 +1,23 @@
-import { AuthResponse, CallbackData } from "@microhome/types";
+import { AuthResponse, CallBackDataDetails } from "@microhome/types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";
 import { makeServiceRequest } from "../services/service";
 import { activateModule, deactivateModule } from "../services/user";
-import { getCallbackDataId } from "../telegram/callback-data";
 
 export const sendModuleToggle = async (
   userId: number,
-  cbData: CallbackData,
+  cbData: CallBackDataDetails,
   activate: boolean
 ) => {
   const translations = i18n();
 
-  const callbackDataId = getCallbackDataId(cbData);
+  const { moduleId } = cbData;
 
-  if (!callbackDataId) {
+  if (!moduleId) {
     return;
   }
 
-  const { moduleId } = callbackDataId;
   let text;
 
   if (activate) {

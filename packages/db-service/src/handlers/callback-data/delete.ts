@@ -1,21 +1,20 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { stateTableName, deleteItem } from "../../db";
+import { callbackDataTableName, deleteItem } from "../../db";
 import { errorResponse, successResponse } from "../../response";
-import { authorizedHandler, validateNumber } from "../../validation/access";
+import { authorizedHandler } from "../../validation/access";
 
-export const deleteState: APIGatewayProxyHandler = authorizedHandler(
+export const deleteCallbackData: APIGatewayProxyHandler = authorizedHandler(
   async (event) => {
     if (!event.pathParameters) {
       return errorResponse("Missing 'pathParameters'");
     }
 
-    const { telegramId } = event.pathParameters;
-    const id = validateNumber(telegramId);
-    if (!id.success) {
-      return errorResponse(id.result);
+    const { cbId } = event.pathParameters;
+    if (!cbId) {
+      return errorResponse("Missing pathParameter: 'cbId'");
     }
 
-    return deleteItem(stateTableName, { id: id.result })
+    return deleteItem(callbackDataTableName, { id: cbId })
       .then((response) => {
         if (!response.success) {
           return errorResponse(response.result);

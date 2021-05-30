@@ -24,7 +24,7 @@ export const handleRequest: APIGatewayProxyHandler = async ({
   );
 
   // inject the baseUrl
-  html = html.replace('src="/client', `src="${assetsUrl(stage)}/client`);
+  html = html.replace('script src="/', `script src="${assetsUrl(stage)}/`);
 
   return {
     statusCode: 200,

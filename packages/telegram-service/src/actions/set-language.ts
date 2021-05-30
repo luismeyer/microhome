@@ -1,4 +1,4 @@
-import { CallbackData } from "@microhome/types";
+import { SetLanguageModuleCallBackDataDetails } from "@microhome/types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
 import { generateSendMessageOptions } from "../keyboard";
@@ -8,7 +8,7 @@ import { setState, state } from "../utils/state";
 export const sendSetLanguage = async (
   userId: number,
   chatId: number,
-  { data }: CallbackData
+  { data }: SetLanguageModuleCallBackDataDetails
 ) => {
   let language = i18n();
 

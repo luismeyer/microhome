@@ -1,18 +1,11 @@
 import { CallbackQuery } from "node-telegram-bot-api";
-import { CallbackData } from "@microhome/types";
 import { sendDeviceAction } from "../actions/device-action";
 import { sendDeviceSelect } from "../actions/device-select";
 import { sendModuleToggle } from "../actions/module-toggle";
 import { sendSetLanguage } from "../actions/set-language";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
-import {
-  ACTION_DEVICE,
-  ACTIVATE_MODULE,
-  DEACTIVATE_MODULE,
-  SELECT_DEVICE,
-  SET_LANGUAGE,
-} from "../telegram/callback-actions";
+import { getCallbackData } from "../services/callback-data";
 
 export const replyToButtons = async ({
   from,
@@ -28,22 +21,23 @@ export const replyToButtons = async ({
   const { chat } = message;
 
   const translations = i18n();
-  const callbackData: CallbackData = JSON.parse(data);
+
+  const callbackData = await getCallbackData(data);
 
   switch (callbackData.action) {
-    case SELECT_DEVICE:
+    case "SELECT_DEVICE":
       await sendDeviceSelect(userId, chat.id, callbackData);
       break;
-    case ACTION_DEVICE:
+    case "ACTION_DEVICE":
       await sendDeviceAction(from.id, message.chat.id, callbackData);
       break;
-    case ACTIVATE_MODULE:
+    case "ACTIVATE_MODULE":
       await sendModuleToggle(userId, callbackData, true);
       break;
-    case DEACTIVATE_MODULE:
+    case "DEACTIVATE_MODULE":
       await sendModuleToggle(userId, callbackData, false);
       break;
-    case SET_LANGUAGE:
+    case "SET_LANGUAGE":
       await sendSetLanguage(userId, chat.id, callbackData);
       break;
     default:

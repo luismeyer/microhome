@@ -1,21 +1,20 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-import { getItem, stateTableName } from "../../db";
+import { getItem, callbackDataTableName } from "../../db";
 import { errorResponse, stringify, successResponse } from "../../response";
-import { authorizedHandler, validateNumber } from "../../validation/access";
+import { authorizedHandler } from "../../validation/access";
 
-export const getState: APIGatewayProxyHandler = authorizedHandler(
+export const getCallbackData: APIGatewayProxyHandler = authorizedHandler(
   async (event) => {
     if (!event.pathParameters) {
       return errorResponse("Missing 'pathParameters'");
     }
 
-    const { telegramId } = event.pathParameters;
-    const id = validateNumber(telegramId);
-    if (!id.success) {
-      return errorResponse(id.result);
+    const { cbId } = event.pathParameters;
+    if (!cbId) {
+      return errorResponse("Missing pathParameter: 'cbId'");
     }
 
-    return getItem(stateTableName, { id: id.result })
+    return getItem(callbackDataTableName, { id: cbId })
       .then((response) => {
         if (!response.success) {
           return errorResponse(response.result);

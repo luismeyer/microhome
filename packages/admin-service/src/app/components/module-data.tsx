@@ -3,6 +3,7 @@ import {
   StyledModuleGrid,
   StyledModuleHeader,
   StyledModuleHeadline,
+  transformFunctionObject,
 } from "./module";
 import { Module } from "@microhome/types";
 
@@ -12,7 +13,7 @@ interface ModuleDataProps {
 }
 
 export const ModuleData: React.FC<ModuleDataProps> = ({
-  data: { name, id, serviceUrl, functions, baseAction },
+  data: { name, id, serviceUrl, functions, baseFunction },
   onEdit,
 }) => {
   return (
@@ -27,8 +28,10 @@ export const ModuleData: React.FC<ModuleDataProps> = ({
         <span>
           Service Url: <a href={serviceUrl}>{serviceUrl}</a>
         </span>
-        <span>Functions: {functions.join(" ; ")}</span>
-        <span>Base action: {baseAction}</span>
+        <span>
+          Functions: {functions.map(transformFunctionObject).join(" ; ")}
+        </span>
+        <span>Base function: {transformFunctionObject(baseFunction)}</span>
       </StyledModuleGrid>
     </>
   );

@@ -4,49 +4,20 @@
     "id": "123",
     "from": {
       "id": 1234567890,
-      "is_bot": false,
-      "first_name": "test",
-      "last_name": "test",
-      "username": "test",
       "language_code": "de"
     },
     "message": {
       "message_id": 123,
       "from": {
-        "id": 1234567890,
-        "is_bot": true,
-        "first_name": "Home Assistant",
-        "username": "wp_home_assistant_bot"
+        "id": 1234567890
       },
       "chat": {
-        "id": 1234567890,
-        "first_name": "test",
-        "last_name": "test",
-        "username": "test",
-        "type": "private"
+        "id": 1234567890
       },
       "date": 123,
-      "text": "some text",
-      "reply_markup": {
-        "inline_keyboard": [
-          [
-            {
-              "text": "color*",
-              "callback_data": "{\"action\":2,\"id\":\"1::lampid\",\"function\":\"color*\"}"
-            },
-            {
-              "text": "off",
-              "callback_data": "{\"action\":2,\"id\":\"1::lampid\",\"function\":\"off\"}"
-            },
-            {
-              "text": "on",
-              "callback_data": "{\"action\":2,\"id\":\"1::lampid\",\"function\":\"on\"}"
-            }
-          ]
-        ]
-      }
+      "text": "off"
     },
     "chat_instance": "-4845920082127934866",
-    "data": "{\"action\":5,\"id\":\"1::lampid\",\"data\":\"de\"}"
+    "data": "db15c420-c185-11eb-98af-3b309d6d2e66"
   }
 }

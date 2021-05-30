@@ -6,6 +6,9 @@ import {
   StyledModuleHeader,
   StyledModuleHeadline,
   StyledModuleGrid,
+  transformFunctionObject,
+  FUNCTIONS_SEPERATOR,
+  transformFunctionString,
 } from "./module";
 
 interface EditModuleProps {
@@ -33,24 +36,24 @@ const StyledDeleteButton = styled.button`
   margin-left: 8px;
 `;
 
-const FUNCTIONS_SEPERATOR = ";";
-
 export const ModuleInput: React.FC<EditModuleProps> = ({
   input,
   onSubmit,
   onDelete,
   hideInput,
 }) => {
-  const { id, name, serviceUrl, functions, baseAction } = input ?? {};
+  const { id, name, serviceUrl, functions, baseFunction } = input ?? {};
 
   const [idInput, setIdInput] = useState(id?.toString() ?? "");
 
   const [nameInput, setNameInput] = useState(name ?? "");
   const [serviceUrlInput, setServiceUrlInput] = useState(serviceUrl ?? "");
   const [functionsInput, setFunctionsInput] = useState(
-    functions?.join(FUNCTIONS_SEPERATOR) ?? ""
+    functions?.map(transformFunctionObject).join(FUNCTIONS_SEPERATOR) ?? ""
   );
-  const [baseActionInput, setBaseActionInput] = useState(baseAction ?? "");
+  const [baseActionInput, setBaseActionInput] = useState(
+    baseFunction ? transformFunctionObject(baseFunction) : ""
+  );
 
   const [loading, setLoading] = useState(false);
 
@@ -67,8 +70,11 @@ export const ModuleInput: React.FC<EditModuleProps> = ({
           id: parseInt(idInput),
           name: nameInput,
           serviceUrl: serviceUrlInput,
-          functions: functionsInput?.split(FUNCTIONS_SEPERATOR) ?? [],
-          baseAction: baseActionInput,
+          functions:
+            functionsInput
+              ?.split(FUNCTIONS_SEPERATOR)
+              .map(transformFunctionString) ?? [],
+          baseFunction: transformFunctionString(baseActionInput),
         }),
       },
     }).then(async () => {

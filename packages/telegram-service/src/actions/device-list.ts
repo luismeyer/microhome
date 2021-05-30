@@ -29,7 +29,7 @@ export const sendDeviceList = async (
         chatId,
         translations.deviceList.title(module.name),
         {
-          reply_markup: generateDeviceButtons(devices, moduleId),
+          reply_markup: await generateDeviceButtons(devices, moduleId),
         }
       );
     }

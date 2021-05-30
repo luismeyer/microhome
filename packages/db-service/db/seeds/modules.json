@@ -1,23 +1,71 @@
 [
   {
-    "baseAction": "list",
-    "functions": ["on", "off", "color*"],
     "id": 1,
     "name": "lifx",
-    "serviceUrl": "http://localhost:3000/dev/services/lifx"
+    "baseFunction": {
+      "name": "list",
+      "requiresInput": false
+    },
+    "serviceUrl": "http://localhost:3000/dev/services/lifx",
+    "functions": [
+      {
+        "name": "on",
+        "requiresInput": false
+      },
+      {
+        "name": "off",
+        "requiresInput": false
+      },
+      {
+        "name": "color",
+        "requiresInput": true
+      }
+    ]
   },
   {
-    "baseAction": "list",
-    "functions": ["get", "on", "off", "color*"],
     "id": 2,
     "name": "hue",
-    "serviceUrl": "http://localhost:3000/dev/services/hue"
+    "baseFunction": {
+      "name": "list",
+      "requiresInput": false
+    },
+    "serviceUrl": "http://localhost:3000/dev/services/hue",
+    "functions": [
+      {
+        "name": "on",
+        "requiresInput": false
+      },
+      {
+        "name": "off",
+        "requiresInput": false
+      },
+      {
+        "name": "color",
+        "requiresInput": true
+      }
+    ]
   },
   {
-    "baseAction": "list",
-    "functions": ["on", "off", "temperatur*"],
     "id": 3,
     "name": "fritz",
-    "serviceUrl": "http://localhost:3000/dev/services/fritz"
+    "baseFunction": {
+      "name": "list",
+      "requiresInput": false
+    },
+    "serviceUrl": "http://localhost:3000/dev/services/fritz",
+    "functions": [
+      {
+        "name": "on",
+        "requiresInput": false
+      },
+      {
+        "name": "off",
+        "requiresInput": false
+      },
+      {
+        "name": "temperatur",
+        "requiresInput": true
+      }
+    ]
   }
 ]

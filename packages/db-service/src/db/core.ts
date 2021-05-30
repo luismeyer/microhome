@@ -1,6 +1,7 @@
 import { DynamoDB } from "aws-sdk";
 
-const { MODULE_TABLE, USER_TABLE, IS_OFFLINE, STATE_TABLE } = process.env;
+const { MODULE_TABLE, USER_TABLE, IS_OFFLINE, CALLBACK_DATA_TABLE } =
+  process.env;
 if (!MODULE_TABLE) {
   throw new Error("Missing Env Variable: 'DYNAMODB_TABLE'");
 }
@@ -9,8 +10,8 @@ if (!USER_TABLE) {
   throw new Error("Missing Env Variable: 'USER_TABLE'");
 }
 
-if (!STATE_TABLE) {
-  throw new Error("Missing Env Variable: 'TELEGRAM_STATE_TABLE'");
+if (!CALLBACK_DATA_TABLE) {
+  throw new Error("Missing Env Variable: 'CALLBACK_DATA_TABLE'");
 }
 
 export type SuccessResult<T> = {
@@ -25,7 +26,7 @@ export type ErrorResult = {
 
 export const moduleTableName = MODULE_TABLE;
 export const userTableName = USER_TABLE;
-export const stateTableName = STATE_TABLE;
+export const callbackDataTableName = CALLBACK_DATA_TABLE;
 
 const localOptions = {
   region: "localhost",

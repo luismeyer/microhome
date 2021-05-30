@@ -15,10 +15,10 @@ export const deviceToString = (device: Device): string => {
   return "WRONG DEVICE ID";
 };
 
-export const deviceToInlineButton = (
+export const deviceToInlineButton = async (
   device: Device,
   moduleId: number
-): InlineKeyboardButton => {
+): Promise<InlineKeyboardButton> => {
   if (device.type === "THERMOSTAT") {
     return thermostatToInlineButton(device, moduleId);
   }

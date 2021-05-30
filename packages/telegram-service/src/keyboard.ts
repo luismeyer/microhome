@@ -5,12 +5,16 @@ import {
   ReplyKeyboardMarkup,
   SendMessageOptions,
 } from "node-telegram-bot-api";
-import { CallbackData, Device, ModuleResponse } from "@microhome/types";
+import {
+  ActionDeviceCallBackDataDetails,
+  Device,
+  ModuleFunction,
+  ModuleResponse,
+} from "@microhome/types";
 import { FIXED_COMMANDS } from "./bot";
 import { deviceToInlineButton } from "./devices";
 import { getUserModules } from "./services/user";
-import { ACTION_DEVICE } from "./telegram/callback-actions";
-import { createCallbackData } from "./telegram/callback-data";
+import { createCallbackData } from "./services/callback-data";
 
 export const generateMarkup = (
   moduleResponses: ModuleResponse[]
@@ -29,26 +33,43 @@ export const generateMarkup = (
   };
 };
 
-export const generateDeviceButtons = (
+export const generateDeviceButtons = async (
   devices: Device[][],
   moduleId: number
-): InlineKeyboardMarkup => ({
-  inline_keyboard: devices.map((row) =>
-    row.map((device) => deviceToInlineButton(device, moduleId))
-  ),
-});
+): Promise<InlineKeyboardMarkup> => {
+  const inlineKeyboard = await Promise.all(
+    devices.map((row) =>
+      Promise.all(row.map((device) => deviceToInlineButton(device, moduleId)))
+    )
+  );
 
-export const generateFunctionButtons = (
-  functions: string[],
+  return {
+    inline_keyboard: inlineKeyboard,
+  };
+};
+
+export const generateFunctionButtons = async (
+  functions: ModuleFunction[],
   deviceId: string,
   moduleId: number
-): InlineKeyboardMarkup => {
-  const row: InlineKeyboardButton[] = functions.map((func) => ({
-    callback_data: JSON.stringify(
-      createCallbackData(moduleId, deviceId, ACTION_DEVICE, func)
-    ),
-    text: func,
-  }));
+): Promise<InlineKeyboardMarkup> => {
+  const row: InlineKeyboardButton[] = await Promise.all(
+    functions.map(async (func) => {
+      const data: Omit<ActionDeviceCallBackDataDetails, "id"> = {
+        action: "ACTION_DEVICE",
+        moduleId,
+        deviceId,
+        data: func,
+      };
+
+      const cbData = await createCallbackData(data);
+
+      return {
+        callback_data: cbData.id,
+        text: func.name,
+      };
+    })
+  );
 
   return {
     inline_keyboard: [row],
@@ -64,8 +85,8 @@ export const generateSendMessageOptions = async (
 
 export const generateSwitch = (
   on: boolean,
-  cbData: CallbackData
+  cbDataId: string
 ): InlineKeyboardButton => ({
   text: on ? "deaktivieren" : "aktivieren",
-  callback_data: JSON.stringify(cbData),
+  callback_data: cbDataId,
 });
