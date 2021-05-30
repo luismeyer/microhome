@@ -1,6 +1,6 @@
 import { DynamoDB } from "aws-sdk";
 
-const { MODULE_TABLE, USER_TABLE } = process.env;
+const { MODULE_TABLE, USER_TABLE, IS_OFFLINE } = process.env;
 if (!MODULE_TABLE) {
   throw new Error("Missing Env Variable: 'DYNAMODB_TABLE'");
 }
@@ -22,7 +22,14 @@ export type ErrorResult = {
 export const moduleTableName = MODULE_TABLE;
 export const userTableName = USER_TABLE;
 
-export const dynamoDb = new DynamoDB.DocumentClient();
+const localOptions = {
+  region: "localhost",
+  endpoint: "http://localhost:8000",
+};
+
+export const dynamoDb = new DynamoDB.DocumentClient(
+  IS_OFFLINE ? localOptions : {}
+);
 
 export const handleCatch = (e: Error): ErrorResult => {
   return {

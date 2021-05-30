@@ -265,3 +265,4 @@ local
 bin
 .project
 client-dist
+*.db

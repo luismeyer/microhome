@@ -2,6 +2,8 @@ import { Record, String } from "runtypes";
 import { User } from "@microhome/types";
 import { scanItems, userTableName } from "../db";
 
+const { IS_OFFLINE } = process.env;
+
 export type UserInput = {
   language: string;
 };
@@ -9,6 +11,8 @@ export type UserInput = {
 export const UserInputObject = Record({
   language: String,
 });
+
+const isTestUser = (id: number) => IS_OFFLINE && id === 1234567890;
 
 export const findUserByTelegramId = (
   telegramId: number
@@ -20,7 +24,9 @@ export const findUserByTelegramId = (
 
     return res.result
       .map((item) => item as User)
-      .find((item) => item.telegramId === telegramId);
+      .find(
+        (item) => item.telegramId === telegramId || isTestUser(item.telegramId)
+      );
   });
 
 export const findUserByEditToken = (

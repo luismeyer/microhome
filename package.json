@@ -13,8 +13,10 @@
     "build": "concurrently 'yarn ts:build' 'lerna run build'",
     "encrypt": "gpg --symmetric --cipher-algo AES256 .env.prod",
     "decrypt": "gpg --decrypt --output .env.gpg .env.prod.gpg",
-    "start": "sls offline",
-    "bootstrap": "lerna bootstrap"
+    "start": "sls offline start",
+    "bootstrap": "lerna bootstrap",
+    "db:install": "sls dynamodb install",
+    "db:start": "sls dynamodb start"
   },
   "private": true,
   "workspaces": {
@@ -34,6 +36,7 @@
     "prettier": "^2.3.0",
     "serverless": "^2.43.1",
     "serverless-dotenv-plugin": "^3.9.0",
+    "serverless-dynamodb-local": "^0.2.39",
     "serverless-offline": "^7.0.0",
     "typescript": "^4.2.4"
   }

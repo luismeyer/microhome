@@ -6,6 +6,7 @@ import { replyToReply } from "./commands/input";
 import { Lifx } from "./commands/lifx";
 import { ModuleSettings, Settings, UserSettings } from "./commands/settings";
 import { Back, Start } from "./commands/start";
+import { interceptTelegramMethods } from "./utils/local";
 
 const { BOT_TOKEN } = process.env;
 if (!BOT_TOKEN) {
@@ -19,6 +20,9 @@ export const bot = new TelegramBot(BOT_TOKEN, {
   polling: false,
 });
 
+// For local development replace api methods
+interceptTelegramMethods();
+
 export type Command = () => {
   command: string;
   description: string;
@@ -29,22 +33,20 @@ export type Command = () => {
   ) => Promise<void>;
 };
 
-const generateCommands = () => [
-  Start(),
-  Back(),
-  Settings(),
-  ModuleSettings(),
-  UserSettings(),
-  Lifx(),
-  Hue(),
-  Fritz(),
-];
-
 const errorResponse = (chatId: number) => (error: any) =>
   bot.sendMessage(chatId, `Error: ${error}`);
 
 export const generateBot = (callback: () => void) => {
-  const commands = generateCommands();
+  const commands = [
+    Start(),
+    Back(),
+    Settings(),
+    ModuleSettings(),
+    UserSettings(),
+    Lifx(),
+    Hue(),
+    Fritz(),
+  ];
 
   bot.clearTextListeners();
   bot.removeAllListeners("sticker");

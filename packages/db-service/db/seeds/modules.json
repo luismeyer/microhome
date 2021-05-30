@@ -1,0 +1,23 @@
+[
+  {
+    "baseAction": "list",
+    "functions": ["on", "off", "color*"],
+    "id": 1,
+    "name": "lifx",
+    "serviceUrl": "http://localhost:3000/dev/services/lifx"
+  },
+  {
+    "baseAction": "list",
+    "functions": ["get", "on", "off", "color*"],
+    "id": 2,
+    "name": "hue",
+    "serviceUrl": "http://localhost:3000/dev/services/hue"
+  },
+  {
+    "baseAction": "list",
+    "functions": ["on", "off", "temperatur*"],
+    "id": 3,
+    "name": "fritz",
+    "serviceUrl": "http://localhost:3000/dev/services/fritz"
+  }
+]

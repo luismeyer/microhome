@@ -2,6 +2,7 @@ import translate from "translate";
 
 const { GOOGLE_API_KEY } = process.env;
 if (!GOOGLE_API_KEY) throw new Error("Missing env Variable: GOOGLE_API_KEY");
+translate.engine = "google";
 translate.key = GOOGLE_API_KEY;
 
 import { LambdaBody } from "./handler";
