@@ -1,5 +1,5 @@
 import convert from "color-convert";
-import translate from "translate";
+import { translate } from "@microhome/translate";
 import {
   connectToApi,
   createErrorResponse,
@@ -21,10 +21,13 @@ import {
 const { LightState } = require("node-hue-api").v3.lightStates;
 
 const { GOOGLE_API_KEY, HUE_CLIENT_ID } = process.env;
-translate.key = GOOGLE_API_KEY;
 
-if (!GOOGLE_API_KEY) throw new Error("Missing env Variable: GOOGLE_API_KEY");
-if (!HUE_CLIENT_ID) throw new Error("Missing env Variable HUE_CLIENT_ID");
+if (!GOOGLE_API_KEY) {
+  throw new Error("Missing env Variable: GOOGLE_API_KEY");
+}
+if (!HUE_CLIENT_ID) {
+  throw new Error("Missing env Variable HUE_CLIENT_ID");
+}
 
 const checkBaseParams = (body: LambdaBody): ParseResult => {
   if (!body.token) {
@@ -113,10 +116,9 @@ export const handleColorAction = async (
     return createErrorResponse("Keine Farbe");
   }
 
-  let translatedColor = parsedBody.result.data;
-  if (!parsedBody.result.data.startsWith("#")) {
-    translatedColor = await translate(body.data, { from: "de", to: "en" });
-  }
+  const translatedColor = parsedBody.result.data.startsWith("#")
+    ? parsedBody.result.data
+    : await translate(GOOGLE_API_KEY, body.data);
 
   const color = convert.keyword.rgb(translatedColor);
 

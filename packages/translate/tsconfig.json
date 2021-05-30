@@ -7,6 +7,5 @@
     "rootDir": "src",
     "strictNullChecks": true
   },
-  "include": ["src/**/*"],
-  "references": [{ "path": "../translate" }]
+  "include": ["src/**/*"]
 }

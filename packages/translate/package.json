@@ -1,0 +1,13 @@
+{
+  "name": "@microhome/translate",
+  "version": "1.0.0",
+  "main": "dist",
+  "types": "dist",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.10"
+  }
+}

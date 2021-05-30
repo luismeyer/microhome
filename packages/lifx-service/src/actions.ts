@@ -1,9 +1,7 @@
-import translate from "translate";
+import { translate } from "@microhome/translate";
 
 const { GOOGLE_API_KEY } = process.env;
 if (!GOOGLE_API_KEY) throw new Error("Missing env Variable: GOOGLE_API_KEY");
-translate.engine = "google";
-translate.key = GOOGLE_API_KEY;
 
 import { LambdaBody } from "./handler";
 import {
@@ -111,10 +109,9 @@ export const handleColorAction = async (
     return createErrorResult("Keine Farbe");
   }
 
-  let color = body.data;
-  if (!body.data.startsWith("#")) {
-    color = await translate(body.data, { from: "de", to: "en" });
-  }
+  const color = body.data.startsWith("#")
+    ? body.data
+    : await translate(GOOGLE_API_KEY, body.data);
 
   return setLampState({
     token: body.token,
