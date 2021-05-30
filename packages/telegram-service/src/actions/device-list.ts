@@ -1,9 +1,26 @@
-import { DeviceListResponse } from "@microhome/types";
+import { Device, DeviceListResponse } from "@microhome/types";
+import { InlineKeyboardMarkup } from "node-telegram-bot-api";
+import { deviceToInlineButton } from "../devices";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
-import { generateDeviceButtons } from "../keyboard";
+
 import { makeServiceRequest } from "../services/service";
 import { getUserModule } from "../services/user";
+
+const generateDeviceButtons = async (
+  devices: Device[][],
+  moduleId: number
+): Promise<InlineKeyboardMarkup> => {
+  const inlineKeyboard = await Promise.all(
+    devices.map((row) =>
+      Promise.all(row.map((device) => deviceToInlineButton(device, moduleId)))
+    )
+  );
+
+  return {
+    inline_keyboard: inlineKeyboard,
+  };
+};
 
 export const sendDeviceList = async (
   userId: number,

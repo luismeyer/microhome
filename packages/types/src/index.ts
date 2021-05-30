@@ -76,14 +76,14 @@ export type ModuleResponse = {
   serviceRequest: ServiceRequest;
 };
 
-export type SelectDeviceCallBackDataDetails = {
+export type SelectDeviceData = {
   id: string;
   action: "SELECT_DEVICE";
   deviceId?: string;
   moduleId?: number;
 };
 
-export type ActionDeviceCallBackDataDetails = {
+export type ActionDeviceData = {
   id: string;
   action: "ACTION_DEVICE";
   deviceId?: string;
@@ -91,21 +91,21 @@ export type ActionDeviceCallBackDataDetails = {
   data?: ModuleFunction;
 };
 
-export type ActivateModuleCallBackDataDetails = {
+export type ActivateModuleData = {
   id: string;
   action: "ACTIVATE_MODULE";
   deviceId?: string;
   moduleId?: number;
 };
 
-export type DeactivateModuleCallBackDataDetails = {
+export type DeactivateModuleData = {
   id: string;
   action: "DEACTIVATE_MODULE";
   deviceId?: string;
   moduleId?: number;
 };
 
-export type SetLanguageModuleCallBackDataDetails = {
+export type SetLanguageData = {
   id: string;
   action: "SET_LANGUAGE";
   deviceId?: string;
@@ -113,10 +113,10 @@ export type SetLanguageModuleCallBackDataDetails = {
   data?: string;
 };
 
-export type CallBackDataDetails =
-  | SelectDeviceCallBackDataDetails
-  | ActionDeviceCallBackDataDetails
-  | ActivateModuleCallBackDataDetails
-  | DeactivateModuleCallBackDataDetails
-  | SelectDeviceCallBackDataDetails
-  | SetLanguageModuleCallBackDataDetails;
+export type CallBackData =
+  | SelectDeviceData
+  | ActionDeviceData
+  | ActivateModuleData
+  | DeactivateModuleData
+  | SelectDeviceData
+  | SetLanguageData;

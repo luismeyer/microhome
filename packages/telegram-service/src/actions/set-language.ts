@@ -1,14 +1,14 @@
-import { SetLanguageModuleCallBackDataDetails } from "@microhome/types";
+import { SetLanguageData } from "@microhome/types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
-import { generateSendMessageOptions } from "../keyboard";
+import { settingsKeyboardMarkup } from "../keyboard";
 import { updateUser } from "../services/user";
 import { setState, state } from "../utils/state";
 
 export const sendSetLanguage = async (
   userId: number,
   chatId: number,
-  { data }: SetLanguageModuleCallBackDataDetails
+  { data }: SetLanguageData
 ) => {
   let language = i18n();
 
@@ -28,7 +28,7 @@ export const sendSetLanguage = async (
     return bot.sendMessage(
       chatId,
       language.setLanguage.success,
-      await generateSendMessageOptions(userId)
+      settingsKeyboardMarkup()
     );
   } else {
     return bot.sendMessage(chatId, language.setLanguage.error);

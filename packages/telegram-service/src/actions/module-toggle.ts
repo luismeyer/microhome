@@ -1,13 +1,13 @@
-import { AuthResponse, CallBackDataDetails } from "@microhome/types";
+import { AuthResponse, CallBackData } from "@microhome/types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
-import { generateSendMessageOptions } from "../keyboard";
+import { dashboardKeyboardMarkup } from "../keyboard";
 import { makeServiceRequest } from "../services/service";
 import { activateModule, deactivateModule } from "../services/user";
 
 export const sendModuleToggle = async (
   userId: number,
-  cbData: CallBackDataDetails,
+  cbData: CallBackData,
   activate: boolean
 ) => {
   const translations = i18n();
@@ -39,9 +39,5 @@ export const sendModuleToggle = async (
       : translations.moduleToggle.error;
   }
 
-  return bot.sendMessage(
-    userId,
-    text,
-    await generateSendMessageOptions(userId)
-  );
+  return bot.sendMessage(userId, text, await dashboardKeyboardMarkup(userId));
 };

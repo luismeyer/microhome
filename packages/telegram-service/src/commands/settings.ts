@@ -1,17 +1,15 @@
+import { SetLanguageData } from "@microhome/types/src";
 import {
   InlineKeyboardButton,
   Message,
-  ReplyKeyboardMarkup,
   SendMessageOptions,
 } from "node-telegram-bot-api";
+import { settingsKeyboardMarkup } from "../keyboard";
 import { bot, Command } from "../bot";
 import { i18n, translations } from "../i18n";
-import { generateSwitch } from "../keyboard";
+import { createCallbackData } from "../services/callback-data";
 import { getModules } from "../services/module";
 import { hasModule } from "../services/user";
-import { createCallbackData } from "../services/callback-data";
-import { Back } from "./start";
-import { SetLanguageModuleCallBackDataDetails } from "@microhome/types/src";
 
 export const Settings: Command = () => {
   const { settings } = i18n();
@@ -49,16 +47,11 @@ export const ModuleSettings: Command = () => {
 export const replyToSettings = async ({ chat }: Message): Promise<void> => {
   const translations = i18n();
 
-  const keyboard: ReplyKeyboardMarkup = {
-    keyboard: [
-      [{ text: UserSettings().command }, { text: ModuleSettings().command }],
-      [{ text: Back().command }],
-    ],
-  };
-
-  await bot.sendMessage(chat.id, translations.settings.pickPrompt, {
-    reply_markup: keyboard,
-  });
+  await bot.sendMessage(
+    chat.id,
+    translations.settings.pickPrompt,
+    settingsKeyboardMarkup()
+  );
 };
 
 export const replyToModuleSettins = async ({
@@ -76,36 +69,45 @@ export const replyToModuleSettins = async ({
     bot.sendMessage(chat.id, `${translations.settings.module.error}: ${e}`);
   });
 
-  if (modules) {
-    await Promise.all(
-      modules.map(async (module) => {
-        const userHasModule = await hasModule(id, module.id);
-
-        const callbackData = await createCallbackData({
-          moduleId: module.id,
-          action: userHasModule ? "DEACTIVATE_MODULE" : "ACTIVATE_MODULE",
-        });
-
-        const options: SendMessageOptions = {
-          reply_markup: {
-            inline_keyboard: [[generateSwitch(userHasModule, callbackData.id)]],
-          },
-        };
-
-        return bot.sendMessage(
-          chat.id,
-          translations.settings.module.module + ": " + module.name,
-          options
-        );
-      })
-    );
+  if (!modules) {
+    return;
   }
+
+  await Promise.all(
+    modules.map(async (module) => {
+      const userHasModule = await hasModule(id, module.id);
+
+      const callbackData = await createCallbackData({
+        moduleId: module.id,
+        action: userHasModule ? "DEACTIVATE_MODULE" : "ACTIVATE_MODULE",
+      });
+
+      const options: SendMessageOptions = {
+        reply_markup: {
+          inline_keyboard: [
+            [
+              {
+                text: userHasModule ? "deaktivieren" : "aktivieren",
+                callback_data: callbackData.id,
+              },
+            ],
+          ],
+        },
+      };
+
+      return bot.sendMessage(
+        chat.id,
+        translations.settings.module.module + ": " + module.name,
+        options
+      );
+    })
+  );
 };
 
 export const replyToUserSettings = async ({ chat }: Message) => {
   const buttons: InlineKeyboardButton[] = await Promise.all(
     translations.map(async (t) => {
-      const data: Omit<SetLanguageModuleCallBackDataDetails, "id"> = {
+      const data: Omit<SetLanguageData, "id"> = {
         action: "SET_LANGUAGE",
         data: t().languageName,
       };

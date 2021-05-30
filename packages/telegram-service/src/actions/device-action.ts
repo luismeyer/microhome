@@ -1,10 +1,7 @@
-import {
-  ActionDeviceCallBackDataDetails,
-  SimpleResponse,
-} from "@microhome/types";
+import { ActionDeviceData, SimpleResponse } from "@microhome/types";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
-import { generateSendMessageOptions } from "../keyboard";
+import { dashboardKeyboardMarkup } from "../keyboard";
 import { getDeviceFunction } from "../services/device";
 import { makeServiceRequest } from "../services/service";
 import { updateUser } from "../services/user";
@@ -12,7 +9,7 @@ import { updateUser } from "../services/user";
 export const sendDeviceAction = async (
   userId: number,
   chatId: number,
-  cbData: ActionDeviceCallBackDataDetails,
+  cbData: ActionDeviceData,
   data?: string
 ) => {
   if (!cbData.data) {
@@ -71,6 +68,6 @@ export const sendDeviceAction = async (
   return bot.sendMessage(
     chatId,
     message,
-    await generateSendMessageOptions(userId)
+    await dashboardKeyboardMarkup(userId)
   );
 };

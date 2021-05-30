@@ -1,4 +1,4 @@
-import { CallBackDataDetails } from "@microhome/types/src";
+import { CallBackData } from "@microhome/types/src";
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { v1 } from "uuid";
 import { callbackDataTableName, putItem } from "../../db";
@@ -14,7 +14,7 @@ export const putCallbackData: APIGatewayProxyHandler = authorizedHandler(
     }
 
     const stateInput = JSON.parse(event.body);
-    const dbInput: CallBackDataDetails = { id, ...stateInput };
+    const dbInput: CallBackData = { id, ...stateInput };
 
     return putItem(callbackDataTableName, dbInput)
       .then((response) => {

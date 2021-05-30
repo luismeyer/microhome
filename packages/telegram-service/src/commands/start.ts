@@ -2,7 +2,7 @@ import { Message } from "node-telegram-bot-api";
 
 import { bot, Command } from "../bot";
 import { i18n } from "../i18n";
-import { generateSendMessageOptions } from "../keyboard";
+import { dashboardKeyboardMarkup } from "../keyboard";
 import { createUser } from "../services/user";
 
 export const Start: Command = () => {
@@ -37,7 +37,7 @@ export const replyToStart = async ({ chat, from }: Message) => {
 
   const text = success ? translations.start.message : translations.start.error;
 
-  await generateSendMessageOptions(from.id)
+  await dashboardKeyboardMarkup(from.id)
     .then((options) => bot.sendMessage(chat.id, text, options))
     .catch(() => bot.sendMessage(chat.id, text));
 };
@@ -52,7 +52,7 @@ export const replyToBack = async ({ chat, from }: Message) => {
 
   const text = success ? translations.back.success : translations.back.error;
 
-  await generateSendMessageOptions(from.id)
+  await dashboardKeyboardMarkup(from.id)
     .then((options) => bot.sendMessage(chat.id, text, options))
     .catch(() => bot.sendMessage(chat.id, text));
 };
