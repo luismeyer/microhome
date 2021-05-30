@@ -35,7 +35,7 @@ export const replyToButtons = async ({
       await sendDeviceSelect(userId, chat.id, callbackData);
       break;
     case ACTION_DEVICE:
-      await sendDeviceAction(from.id, message.chat.id, callbackData, message);
+      await sendDeviceAction(from.id, message.chat.id, callbackData);
       break;
     case ACTIVATE_MODULE:
       await sendModuleToggle(userId, callbackData, true);

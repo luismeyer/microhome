@@ -51,7 +51,6 @@ export const generateBot = (callback: () => void) => {
   bot.clearTextListeners();
   bot.removeAllListeners("sticker");
   bot.removeAllListeners("callback_query");
-  bot.removeAllListeners("pinned_message");
 
   bot.onText(new RegExp(""), async (msg, defaultMatch) => {
     const { text } = msg;
@@ -98,8 +97,6 @@ export const generateBot = (callback: () => void) => {
 
     callback();
   });
-
-  bot.on("pinned_message", callback);
 
   return bot;
 };

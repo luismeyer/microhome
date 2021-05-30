@@ -56,8 +56,7 @@ export type TranslationsFunc = () => {
     description: string;
   };
   input: {
-    pinnedMessageError: string;
-    markupError: string;
+    dbError: string;
   };
   deviceAction: {
     inputPrompt: string;

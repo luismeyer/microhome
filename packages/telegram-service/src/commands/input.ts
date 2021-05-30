@@ -3,6 +3,7 @@ import { CallbackData } from "@microhome/types";
 import { sendDeviceAction } from "../actions/device-action";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
+import { deleteState, getState } from "../services/state";
 
 export const replyToReply = async ({
   reply_to_message,
@@ -10,35 +11,20 @@ export const replyToReply = async ({
   from,
   text,
 }: Message) => {
-  if (!reply_to_message) {
+  if (!reply_to_message || !from) {
     return;
   }
   const translations = i18n();
 
   await bot.deleteMessage(chat.id, reply_to_message.message_id.toString());
 
-  const { pinned_message } = await bot.getChat(chat.id);
-  if (!pinned_message) {
-    return bot.sendMessage(chat.id, translations.input.pinnedMessageError);
+  const stateData = await getState<CallbackData>(from.id);
+
+  if (!stateData?.data) {
+    return bot.sendMessage(chat.id, translations.input.dbError);
   }
 
-  await bot.unpinAllChatMessages(chat.id);
+  await deleteState(from.id);
 
-  const markup = pinned_message.reply_markup;
-  if (
-    !markup ||
-    markup.inline_keyboard.length === 0 ||
-    markup.inline_keyboard[0].length === 0 ||
-    !markup.inline_keyboard[0][0]
-  ) {
-    return bot.sendMessage(chat.id, translations.input.markupError);
-  }
-
-  const button = markup.inline_keyboard[0][0];
-  if (!button.callback_data || !from) {
-    return;
-  }
-
-  const cbData: CallbackData = JSON.parse(button.callback_data);
-  return sendDeviceAction(from.id, chat.id, cbData, pinned_message, text);
+  return sendDeviceAction(from.id, chat.id, stateData.data, text);
 };

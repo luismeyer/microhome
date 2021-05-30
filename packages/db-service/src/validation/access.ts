@@ -6,7 +6,6 @@ import { ValidationResult } from "./typings";
 export const authorizedHandler = (handler: APIGatewayProxyHandler) => {
   const authHandler: APIGatewayProxyHandler = (event, context, callback) => {
     if (authorized(event)) {
-      console.log("HANDLING: ", event);
       return handler(event, context, callback);
     }
 

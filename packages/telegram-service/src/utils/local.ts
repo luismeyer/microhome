@@ -38,4 +38,9 @@ export const interceptTelegramMethods = () => {
     telegramLog("answerCallbackQuery", `args: ${callbackQueryId}, ${options}`);
     return true;
   };
+
+  bot.deleteMessage = async (chatId, messageId) => {
+    telegramLog("deleteMessage", `args: ${chatId}, ${messageId}`);
+    return true;
+  };
 };

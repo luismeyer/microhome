@@ -52,8 +52,7 @@ export const en: TranslationsFunc = () => ({
     description: "Opens the hue device menu",
   },
   input: {
-    markupError: "Internal Error. Wrong answer format",
-    pinnedMessageError: "No pinned message",
+    dbError: "Internal Error. Database didn't answer",
   },
   deviceAction: {
     inputPrompt: "Answer to this message with you input data",

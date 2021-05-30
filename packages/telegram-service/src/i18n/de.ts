@@ -52,7 +52,7 @@ export const de: TranslationsFunc = () => ({
     description: "Öffnet das Hue Gerätemenü",
   },
   input: {
-    markupError: "Interner Fehler. Falsches Antworten Format",
+    dbError: "Internal Error. Datenbank fehler",
     pinnedMessageError: "Keine angepinnte Nachricht",
   },
   deviceAction: {
