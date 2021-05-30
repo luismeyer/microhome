@@ -11,17 +11,22 @@ export const createUser = async (userId: number): Promise<boolean> => {
     .catch(() => false);
 };
 
-export const getUser = async (userId: number): Promise<User> => {
+export const getUser = async <S>(userId: number): Promise<User<S>> => {
   const url = `${DB_SERVICE_URL}${basePath}${userId}`;
   return sendGet(url).then((res) => res.ok && res.json());
 };
 
+type UpdateUserInput = {
+  language?: string;
+  state?: unknown;
+};
+
 export const updateUser = async (
   userId: number,
-  language?: string
+  input: UpdateUserInput
 ): Promise<boolean> => {
   const url = `${DB_SERVICE_URL}${basePath}${userId}`;
-  return sendPost(url, JSON.stringify({ language }))
+  return sendPost(url, JSON.stringify(input))
     .then(async (res) => res.ok)
     .catch(() => false);
 };

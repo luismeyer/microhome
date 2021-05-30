@@ -1,15 +1,17 @@
-import { Record, String } from "runtypes";
+import { Record, String, Unknown, Optional } from "runtypes";
 import { User } from "@microhome/types";
 import { scanItems, userTableName } from "../db";
 
 const { IS_OFFLINE } = process.env;
 
 export type UserInput = {
-  language: string;
+  language?: string;
+  state?: unknown;
 };
 
 export const UserInputObject = Record({
-  language: String,
+  language: Optional(String),
+  state: Optional(Unknown),
 });
 
 const isTestUser = (id: number) => IS_OFFLINE && id === 1234567890;

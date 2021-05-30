@@ -16,7 +16,7 @@ export const sendSetLanguage = async (
     return bot.sendMessage(chatId, language.setLanguage.missingData);
   }
 
-  const success = await updateUser(userId, data);
+  const success = await updateUser(userId, { language: data });
   if (success) {
     setState({
       ...state,

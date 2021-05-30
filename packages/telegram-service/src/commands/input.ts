@@ -3,7 +3,7 @@ import { CallbackData } from "@microhome/types";
 import { sendDeviceAction } from "../actions/device-action";
 import { bot } from "../bot";
 import { i18n } from "../i18n";
-import { deleteState, getState } from "../services/state";
+import { getUser } from "../services/user";
 
 export const replyToReply = async ({
   reply_to_message,
@@ -18,13 +18,11 @@ export const replyToReply = async ({
 
   await bot.deleteMessage(chat.id, reply_to_message.message_id.toString());
 
-  const stateData = await getState<CallbackData>(from.id);
+  const { state } = await getUser<CallbackData>(from.id);
 
-  if (!stateData?.data) {
+  if (!state) {
     return bot.sendMessage(chat.id, translations.input.dbError);
   }
 
-  await deleteState(from.id);
-
-  return sendDeviceAction(from.id, chat.id, stateData.data, text);
+  return sendDeviceAction(from.id, chat.id, state, text);
 };

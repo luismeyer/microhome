@@ -5,7 +5,7 @@ import { generateSendMessageOptions } from "../keyboard";
 import { getDeviceFunction } from "../services/device";
 import { makeServiceRequest } from "../services/service";
 import { getCallbackDataId } from "../telegram/callback-data";
-import { createState } from "../services/state";
+import { updateUser } from "../services/user";
 
 export const sendDeviceAction = async (
   userId: number,
@@ -21,7 +21,7 @@ export const sendDeviceAction = async (
 
   // Start input dialog
   if (cbData.data.endsWith("*") && !data) {
-    const stateSuccess = await createState(userId, cbData);
+    const stateSuccess = await updateUser(userId, { state: cbData });
 
     if (!stateSuccess) {
       return bot.sendMessage(chatId, translations.deviceAction.databaseError);

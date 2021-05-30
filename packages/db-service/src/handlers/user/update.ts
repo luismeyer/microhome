@@ -25,7 +25,7 @@ export const updateUser: APIGatewayProxyHandler = authorizedHandler(
 
     const user: User = {
       ...existingUser,
-      language: userInput.result.language,
+      ...userInput.result,
     };
 
     return putItem(userTableName, user)

@@ -10,11 +10,12 @@ export type ModuleInput = Module & {
   token?: string;
 };
 
-export type User = {
+export type User<S = unknown> = {
   id: string;
   telegramId: number;
   modules: ModuleInput[];
   language: string;
+  state?: S;
 };
 
 export type Device = {
