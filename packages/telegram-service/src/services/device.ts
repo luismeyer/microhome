@@ -7,7 +7,7 @@ export const getDeviceFunctions = async (
   moduleId: number,
   deviceId: string
 ): Promise<FunctionsResponse | undefined> => {
-  const url = `${DB_SERVICE_URL}user/${userId}/module/${moduleId}/devices/${deviceId}/functions`;
+  const url = `${DB_SERVICE_URL}/user/${userId}/module/${moduleId}/devices/${deviceId}/functions`;
   const res = await sendGet(url);
 
   if (res && res.ok) {
@@ -23,7 +23,7 @@ export const getDeviceFunction = async (
   deviceId: string,
   func: string
 ): Promise<ServiceRequest | undefined> => {
-  const url = `${DB_SERVICE_URL}user/${userId}/module/${moduleId}/devices/${deviceId}/functions/${func}`;
+  const url = `${DB_SERVICE_URL}/user/${userId}/module/${moduleId}/devices/${deviceId}/functions/${func}`;
   const res = await sendGet(url);
 
   if (res && res.ok) {

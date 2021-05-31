@@ -26,11 +26,7 @@ export const dashboardKeyboardMarkup = async (
 ): Promise<SendMessageOptions | undefined> => {
   const userModules = await getUserModules(userId);
 
-  if (!userModules) {
-    return;
-  }
-
-  const row1: KeyboardButton[] = userModules.length
+  const row1: KeyboardButton[] = userModules?.length
     ? userModules.map((module) => ({ text: module.name }))
     : [];
 

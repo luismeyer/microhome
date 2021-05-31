@@ -64,7 +64,7 @@ export const createErrorResponse = (error: string | Error): ErrorResponse => ({
 
 export const editDBToken = (token: string, editToken: string) => {
   console.log("New Token: ", token);
-  const url = `${DB_SERVICE_URL}user/token/${editToken}?token=${token}`;
+  const url = `${DB_SERVICE_URL}/user/token/${editToken}?token=${token}`;
   return fetch(url, {
     method: "POST",
     headers: {
