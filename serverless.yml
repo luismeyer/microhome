@@ -432,6 +432,11 @@ functions:
       - http:
           path: services/db/cleanup
           method: any
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
 
 resources:
   Resources:
