@@ -78,7 +78,6 @@ functions:
       - http: 
           path: services/lifx
           method: ANY
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -92,7 +91,6 @@ functions:
       - http:
           path: services/telegram
           method: any
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -106,7 +104,6 @@ functions:
       - http:
           path: services/hue/callback
           method: any
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -119,7 +116,6 @@ functions:
       - http:
           path: services/hue/
           method: any
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -133,7 +129,6 @@ functions:
       - http:
           path: /services/fritz
           method: ANY
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -147,7 +142,6 @@ functions:
       - http:
           path: /services/admin
           method: any
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -160,7 +154,6 @@ functions:
       - http:
           path: /services/admin/assets/{proxy}
           method: any
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -174,7 +167,6 @@ functions:
       - http:
           path: services/db/module
           method: post
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -187,7 +179,6 @@ functions:
       - http:
           path: services/db/module
           method: get
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -200,7 +191,6 @@ functions:
       - http:
           path: services/db/module/{moduleid}
           method: get
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -213,7 +203,6 @@ functions:
       - http:
           path: services/db/module/{moduleid}
           method: delete
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -226,7 +215,6 @@ functions:
       - http:
           path: services/db/user/{userid}
           method: put
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -239,7 +227,6 @@ functions:
       - http:
           path: services/db/user/{userid}
           method: get
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -252,7 +239,6 @@ functions:
       - http:
           path: services/db/user/{userid}
           method: post
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -265,7 +251,6 @@ functions:
       - http:
           path: services/db/user/{userid}
           method: delete
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -278,7 +263,6 @@ functions:
       - http:
           path: services/db/user/
           method: get
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -291,7 +275,6 @@ functions:
       - http:
           path: services/db/user/{userid}/module
           method: get
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -304,7 +287,6 @@ functions:
       - http:
           path: services/db/user/{userid}/module/{moduleid}
           method: get
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -317,7 +299,6 @@ functions:
       - http:
           path: services/db/user/{userid}/module/{moduleid}
           method: put
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -330,7 +311,6 @@ functions:
       - http:
           path: services/db/user/{userid}/module/{moduleid}
           method: delete
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -343,7 +323,6 @@ functions:
       - http:
           path: services/db/user/{userid}/module/{moduleid}/devices/{deviceid}/functions
           method: get
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -356,7 +335,6 @@ functions:
       - http:
           path: services/db/user/{userid}/module/{moduleid}/devices/{deviceid}/functions/{function}
           method: get
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -369,7 +347,6 @@ functions:
       - http:
           path: services/db/user/token/{edittoken}
           method: post
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -382,7 +359,6 @@ functions:
       - http:
           path: services/db/user/{userid}/module/{moduleid}/token
           method: post
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -395,7 +371,6 @@ functions:
       - http:
           path: services/db/admin/
           method: any
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -408,7 +383,6 @@ functions:
       - http:
           path: services/db/callbackdata
           method: put
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -421,7 +395,6 @@ functions:
       - http:
           path: services/db/callbackdata/{cbId}
           method: get
-          cors: true
     package:
       patterns:
         - '!./**'
@@ -434,12 +407,31 @@ functions:
       - http:
           path: services/db/callbackdata/{cbId}
           method: delete
-          cors: true
     package:
       patterns:
         - '!./**'
         - packages/db-service/dist/**
         - packages/db-service/node_modules/**
+
+  dbServiceListCallbackData:
+    handler: packages/db-service/dist/handlers/callback-data/list.listCallbackData
+    events:
+      - http:
+          path: services/db/callbackdata/
+          method: get
+    package:
+      patterns:
+        - '!./**'
+        - packages/db-service/dist/**
+        - packages/db-service/node_modules/**
+  
+  dbServiceCleanup:
+    handler: packages/db-service/dist/handlers/cleanup.cleanupData
+    events:
+      - schedule: cron(0 0 * * ? *)
+      - http:
+          path: services/db/cleanup
+          method: any
 
 resources:
   Resources:
@@ -477,7 +469,7 @@ resources:
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.MODULE_TABLE}
     
-    TelegramStateDynamoDbTable:
+    CallbackDataDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:

@@ -2,11 +2,11 @@ import { AWSError, DynamoDB } from "aws-sdk";
 import { PromiseResult } from "aws-sdk/lib/request";
 import { dynamoDb, ErrorResult, handleCatch, SuccessResult } from "./core";
 
-type Result = SuccessResult<DynamoDB.DocumentClient.ItemList> | ErrorResult;
+type Result<T> = SuccessResult<T> | ErrorResult;
 
-const handleResult = (
+const handleResult = <T>(
   result: PromiseResult<DynamoDB.DocumentClient.ScanOutput, AWSError>
-): Result => {
+): Result<T> => {
   if (result.$response.error) {
     return {
       success: false,
@@ -23,19 +23,19 @@ const handleResult = (
 
   return {
     success: true,
-    result: result.Items,
+    result: result.Items as unknown as T,
   };
 };
 
-export const scanItems = (
+export const scanItems = <T>(
   tablename: string,
   filter?: DynamoDB.DocumentClient.ScanInput["ScanFilter"]
-): Promise<Result> =>
+): Promise<Result<T>> =>
   dynamoDb
     .scan({
       TableName: tablename,
       ScanFilter: filter,
     })
     .promise()
-    .then(handleResult)
+    .then((res) => handleResult<T>(res))
     .catch(handleCatch);

@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { TokenContext, ITokenContext } from "../context/token";
 import { usePersistedState } from "../hooks/use-persisted-state";
+import { CallbackDataList } from "./callback-data-list";
 import { Modules } from "./modules";
 import { SettingsInput } from "./settings-input";
 
@@ -26,6 +27,7 @@ export const App: React.FC = () => {
           updateStage={(stage) => setSettings({ ...settings, stage })}
         />
         <Modules />
+        <CallbackDataList />
       </StyledContainer>
     </TokenContext.Provider>
   );

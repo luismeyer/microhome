@@ -19,27 +19,25 @@ const isTestUser = (id: number) => IS_OFFLINE && id === 1234567890;
 export const findUserByTelegramId = (
   telegramId: number
 ): Promise<User | undefined> =>
-  scanItems(userTableName).then((res) => {
+  scanItems<User[]>(userTableName).then((res) => {
     if (!res.success) {
       return;
     }
 
-    return res.result
-      .map((item) => item as User)
-      .find(
-        (item) => item.telegramId === telegramId || isTestUser(item.telegramId)
-      );
+    return res.result.find(
+      (item) => item.telegramId === telegramId || isTestUser(item.telegramId)
+    );
   });
 
 export const findUserByEditToken = (
   editToken: string
 ): Promise<User | undefined> =>
-  scanItems(userTableName).then((res) => {
+  scanItems<User[]>(userTableName).then((res) => {
     if (!res.success) {
       return;
     }
 
-    return res.result
-      .map((item) => item as User)
-      .find((item) => item.modules.some((m) => m.token === editToken));
+    return res.result.find((item) =>
+      item.modules.some((m) => m.token === editToken)
+    );
   });
